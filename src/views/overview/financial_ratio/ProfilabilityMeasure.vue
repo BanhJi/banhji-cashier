@@ -24,7 +24,7 @@
       <v-col sm="2" cols="12" class="py-1 pl-0 pt-9">
         <v-btn
           color="primary"
-          class="text-capitalize white--text"
+          class=" white--text"
           @click="search"
         >
           {{ $t("run_report") }}

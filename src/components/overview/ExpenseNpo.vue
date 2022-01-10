@@ -1,34 +1,37 @@
 <template>
-    <v-card
-        color="white"
-        outlined
-        dense
+    <div>
+    <LoadingMe
+      :isLoading="showLoading"
+      :fullPage="false"
+      :myLoading="true"
+      :type="'loading'"
+    />
+
+    <h2
+      style="line-height: 22px"
+      class="primary--text niradei_black mb-1 pa-0 text-right col-sm-12"
     >
-        <h2 class="primary--text mb-0 pa-0 niradei_black mb-0 col-sm-12 text-right">
-            {{ Number(totalExpense).toLocaleString() }}
-        </h2>
+      {{ Number(totalExpense).toLocaleString() }}
+    </h2>
 
-        <chart ref="expenseChart"
-            :legend-visible="false"
-            :series="series"
-            :series-defaults-type="'pie'"
-            :series-defaults-labels-visible="true"
-            :series-defaults-labels-position="'outsideEnd'"
-            :series-defaults-labels-background="'transparent'"
-            :series-defaults-labels-template="labelTemplate"
-            :tooltip-visible="true"
-            :chartArea="chartArea"
-            :tooltip-template="tooltipTemplate"
-            :theme="'sass'"
-            fit
-        />
-
-        <LoadingMe
-            type="loading"
-            :isLoading="showLoading"
-            :myLoading="true"
-            :fullPage="false" />
-    </v-card>
+    <chart
+      ref="expenseChart"
+      :data-source="pieData"
+      :chart-area-background="''"
+      :legend-visible="false"
+      :series-defaults-type="'pie'"
+      :series="series"
+      :series-defaults-labels-visible="true"
+      :series-defaults-labels-position="'outsideEnd'"
+      :series-defaults-labels-background="'transparent'"
+      :series-defaults-labels-template="labelTemplate"
+      :tooltip-visible="true"
+      :tooltip-template="tooltipTemplate"
+      :chartArea="chartArea"
+      fit
+      :theme="'sass'"
+    />
+  </div>
 </template>
 
 <script>
@@ -54,8 +57,8 @@
             showLoading: false,
             chartArea: {
                 background: "transparent",
-                margin:0,
-                height: 198,
+                margin: 10,
+                height: 200,
             },
         }),
         methods: {
@@ -95,12 +98,15 @@
                             g[value.type].value += value.balance;
                         }else{
                             let color = [
-                                '#c80000',
-                                '#f44336',
-                                '#d85604',
-                                '#ED1A3A',
-                                '#cc1e1e',
-                                '#e88d14'
+                                "#c80000",
+                                "#642828",
+                                "#f44336",
+                                "#522D2DFF",
+                                "#d85604",
+                                "#ED1A3A",
+                                "#7a4141",
+                                "#e88d14",
+                                "#f1aa45"
                             ]
                         
                             g[value.type] = { category: value.type, value: value.balance, color: color[i]};

@@ -3,11 +3,11 @@
 		<v-row class="mt-0">
 			<v-col cols="12" sm="12" class="pt-0">
 				<v-row>
-					<v-col cols="12" sm="12" class="py-0">
+					<!-- <v-col cols="12" sm="12" class="py-0">
 						<h2 class="mb-3 font_20 float-left">
 							{{ $t("financial_ratio") }}
 						</h2>
-					</v-col> 
+					</v-col>  -->
 					<v-col cols="12" sm="12" class="py-0">
 						<v-row>
 							<v-col cols="12" sm="3"  class="py-0">
@@ -20,7 +20,7 @@
 							</v-col>
 							<v-col cols="12" sm="3"  class="py-0">
 								<v-btn color="primary"
-									class=" white--text mt-6 float-right text-capitalize"
+									class=" white--text mt-6 float-right"
 									@click="search">
 									{{$t('run_report')}}
 								</v-btn>
@@ -42,25 +42,25 @@
 								<template v-slot:default>
 								<thead>
 									<tr>
-										<th class="text-left">
+										<th class="text-left text-uppercase ">
 											{{$t('financial_ratio')}}
 										</th>
 										<th class="text-left">
 											
 										</th>
-										<th class="text-right">
+										<th class="text-right text-uppercase">
 											{{$t('accumulated')}}
 										</th>
-										<th class="text-right">
+										<th class="text-right text-uppercase">
 											{{$t('base_month')}}
 										</th>
-										<th class="text-right">
+										<th class="text-right text-uppercase">
 											{{$t('compare_month')}}
 										</th>
 										<th class="text-right">
 											%
 										</th>
-										<th class="text-right">
+										<th class="text-right text-uppercase">
 											{{$t('previous_month')}}
 										</th>
 										<th class="text-right">
@@ -91,7 +91,6 @@
 								</template>
 							</v-simple-table>
 						</template>
-
 						<LoadingMe
 							:isLoading="showLoading"
 							:fullPage="false"
@@ -121,7 +120,7 @@
 			lang : "en",
 			languages : [
 				{ text: "English", value: "en" },
-				{ text: "Local", value: "kh" },
+				{ text: "ខ្មែរ", value: "kh" },
 			],
 			ratios : [],
 			defaultRatios : {

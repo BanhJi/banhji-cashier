@@ -6,7 +6,7 @@ const ImageminPlugin = require('imagemin-webpack-plugin').default
 let d = new Date();
 let month = d.getMonth() < 10 ? '0' + (parseInt(d.getMonth()) + 1) : parseInt(d.getMonth()) + 1;
 let day = d.getDate() < 10 ? '0' + d.getDate() : d.getDate();
-let name_folder = 'acbiz-'+d.getFullYear() + '-' + month + '-' + day + '-' + process.env.VUE_APP_MODE;
+let name_folder = 'banhjicashier-'+d.getFullYear() + '-' + month + '-' + day + '-' + process.env.VUE_APP_MODE;
 let outputFolder = 'dev'
 if (process.env.VUE_APP_MODE == 'production') {
     outputFolder = `./production/${name_folder}`

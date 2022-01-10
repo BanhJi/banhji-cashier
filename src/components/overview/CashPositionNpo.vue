@@ -1,9 +1,5 @@
 <template>
   <v-card  style="background: transparent ;" elevation="0" dense>
-    <h2 style="line-height: 35px;" class="primary--text mb-0 pa-0 niradei_black mb-0 col-sm-12 text-right">
-      {{ Number(totalCash).toLocaleString() }}
-    </h2>
-
     <chart
       ref="cashBankChart"
       :legend-position="'bottom'"

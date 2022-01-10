@@ -335,53 +335,37 @@ export default {
     activeClass2: "",
     activeClass3: "",
     items: [
-      // {
-      //   id: 1,
-      //   class: "",
-      //   activeClass: "active",
-      //   name: "Overview",
-      //   menuTex: "overview",
-      //   path: "/en",
-      // },
+      {
+        id: 1,
+        class: "",
+        activeClass: "active",
+        name: "Sessions",
+        menuTex: "sessions",
+        path: "/session",
+      },
       {
         id: 2,
         class: "",
         activeClass: "",
-        name: "Customers",
-        menuTex: "receiveable_revenue",
-        path: "/customers",
+        name: "Receipt",
+        menuTex: "receipt",
+        path: "/receipt",
       },
       {
         id: 3,
         class: "",
         activeClass: "",
-        name: "vendors",
-        menuTex: "payable_purchase_expense",
-        path: "/vendors",
+        name: "Reconcile",
+        menuTex: "reconcile",
+        path: "/reconcile",
       },
-      // {
-      //   id: 7,
-      //   class: "",
-      //   activeClass: "",
-      //   name: "Working Capital",
-      //   menuTex: "cash_funds",
-      //   path: "/working_capital",
-      // },
       {
         id: 4,
         class: "",
         activeClass: "",
-        name: "Products",
-        menuTex: "products_productions",
-        path: "/products",
-      },
-      {
-        id: 5,
-        class: "",
-        activeClass: "",
-        name: "Services",
-        menuTex: "services",
-        path: "/services_projects",
+        name: "Report",
+        menuTex: "report",
+        path: "/report",
       },
       { class: "mx-3 my-1 v-divider" },
       {
@@ -433,9 +417,9 @@ export default {
       });
     },
     clickMe(data) {
-      if (data.id == 1) {
-        this.$router.push(`${i18n.locale}`);
-      }
+      // if (data.id == 1) {
+      //   this.$router.push(`${i18n.locale}`);
+      // }
       if(data.id == 12){
         window.location.href= process.env.VUE_APP_ACC_URL
       }

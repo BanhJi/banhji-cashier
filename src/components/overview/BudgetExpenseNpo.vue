@@ -12,15 +12,15 @@
             :legend-visible="false"
             :series="series"
             :series-defaults-type="'pie'"
-            :series-defaults-labels-visible="true"
+            :series-defaults-labels-visible="false"
             :series-defaults-labels-position="'outsideEnd'"
             :series-defaults-labels-background="'transparent'"
             :series-defaults-labels-template="labelTemplate"
             :tooltip-visible="true"
+            :categoryAxis="{visible: false}"
             :chartArea="chartArea"
             :tooltip-template="tooltipTemplate"
             :theme="'sass'"
-            fit
         />
 
         <LoadingMe
@@ -48,14 +48,14 @@
         data: () => ({
             totalExpense : 0,
             series: [],
-            labelTemplate: " #= kendo.format('{0:P}', percentage)#",
-            tooltipTemplate:"#= category # : #= kendo.toString(value, 'n') # (#= kendo.format('{0:P}', percentage) #)",
+            labelTemplate: "#= category # - #= kendo.format('{0:P}', percentage)#",
+            tooltipTemplate: "#= category # - #= kendo.format('{0:P}', percentage) #",
             // LoadingMe
             showLoading: false,
             chartArea: {
                 background: "transparent",
-                margin:0,
-                height: 198,
+                margin: 0,
+                height: 230,
             },
         }),
         methods: {

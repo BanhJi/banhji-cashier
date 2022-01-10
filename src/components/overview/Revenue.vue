@@ -39,7 +39,7 @@
     import AccountModel from "@/scripts/model/Account.js";
 
     const budgetHandler = require("@/scripts/handler/workingcapital/budgetHandler.js");
-    const accountHandler = require("@/scripts/handler/accounting/accountHandler.js");
+    const accountHandler = require("@/scripts/handler/accounting/account.js");
     const NumberInWord = require("@/scripts/default_setup/NumberInWord.js");
     const AccountTypeCode = require("@/scripts/default_setup/AccountTypeCode.js");
 
@@ -104,7 +104,7 @@
                 /* Gathering from line */
                 budget.lines.forEach(value => {
                     /* Set Account Information */
-                    let account = new AccountModel(accounts.find(item => item.uuid === value.account_uuid));
+                    let account = new AccountModel(accounts.data.find(item => item.uuid === value.account_uuid));
                     
                     /* Reverse Nature */
                     if(account.account_type.nature.toLowerCase() === "cr"){
@@ -139,17 +139,21 @@
 
                 actuals.data.forEach(value => {
                     /* Set Account Information */
-                    let account = new AccountModel(accounts.find(item => item.uuid === value.accountUUID));
+                    let account = new AccountModel(accounts.data.find(item => item.uuid === value.accountUUID));
 
                     /* Reverse Nature */
                     if(account.account_type.nature.toLowerCase() === "cr"){
                         /* Amount */
                         value.amount = value.amount * -1;
 
-                        /* Monthly Amount */
-                        value.monthly_amount.forEach(ele => {
-                            ele.amount = ele.amount * -1;
-                        });
+                        const monthly_amount = value.monthly_amount ? value.monthly_amount : []
+                        if (monthly_amount.length > 0) {
+                            /* Monthly Amount */
+                            value.monthly_amount.forEach(ele => {
+                                ele.amount = ele.amount * -1;
+                            });
+                        }
+
                     }
 
                     /* Filter Only Revenue */
@@ -161,6 +165,8 @@
 
                             actualSeries[i] += value[indexName];
                         }
+                    } else {
+                        totalRevenue = 0
                     }
                 });
                 /* End Actual Series */

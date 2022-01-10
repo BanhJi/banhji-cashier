@@ -19,8 +19,7 @@ let getCookie = function (cname) {
 }
 
 let getCookieData =  function (){
-    var cookie = getCookie ('banhji-token')
-    var cookieAccbiz = getCookie ('accbiz-token')
+    var cookie = getCookie ('banhji-tokendev')
     if (cookie !== ''){
         jwt.verify(cookie,process.env.VUE_APP_JWT_SESCRET, (err, decoded) => {
             if (!err){
@@ -52,9 +51,4 @@ let getCookieData =  function (){
     }else{
         dataStore.isValidUser = false
     }
-    jwt.verify(cookieAccbiz,process.env.VUE_APP_JWT_SESCRET, (err, decoded) => {
-        if (!err)
-        dataStore.businessType = decoded.businessType
-        else dataStore.isValidUser = false
-    });
 }

@@ -10,7 +10,6 @@
             class="pa-4  no_border"
             min-height="348"
           >
-      
             <v-row>
               <v-col class="py-0">
                 <h1
@@ -19,8 +18,13 @@
                 >
                   {{ $t("welcome") }}
                 </h1>
-                <v-icon @click="loadFunction()" size="40" color="primary" class="insight_reload"
-                  >mdi-reload</v-icon>
+                <v-icon
+                  @click="loadFunction()"
+                  size="30"
+                  color="primary"
+                  class="insight_reload"
+                  >mdi-reload</v-icon
+                >
                 <p class="mb-1">{{ $t("here_is_your_business_glance") }}</p>
                 <div class="d-flex">
                   <div class="flex-1">
@@ -40,7 +44,7 @@
                         <h4
                           class="py-0 text-uppercase line_14 text-right col-sm-12 col-md-5 font_13"
                         >
-                          {{ $t("due_this_week") }}
+                          {{ $t("active_projects") }}
                         </h4>
                       </v-row>
                     </v-card>
@@ -61,8 +65,8 @@
                     </h6>
                     <h4
                       class="py-0 text-uppercase col-sm-12 text-right line_14 col-md-5 font_13"
-                    >
-                      {{ $t("to_be_pay_this_week") }}
+                    >   
+                      {{ $t("active_projects") }}
                     </h4>
                   </v-row>
                 </v-card>
@@ -82,7 +86,7 @@
                     <h4
                       class="py-0 text-uppercase line_14 col-sm-12 text-right col-md-5 font_13"
                     >
-                      {{ $t("days_payroll") }}
+                      {{ $t("active_projects") }}
                     </h4>
                   </v-row>
                 </v-card>
@@ -102,7 +106,7 @@
                     <h4
                       class="py-0 text-uppercase col-sm-12 line_14 text-right col-md-5 font_13"
                     >
-                      {{ $t("days_till_next_tax_filling") }}
+                      {{ $t("active_projects") }}
                     </h4>
                   </v-row>
                 </v-card>
@@ -115,23 +119,22 @@
               />
             </v-row>
           </v-card>
-
           <v-card
             color="white"
             outlined
             dense
-            class="pa-4 mt-4 no_border"
+            class="mt-4 pa-4 no_border"
             min-height="338"
           >
             <h3 class="font_20" :class="{ line_34: this.$i18n.locale == 'kh' }">
               {{ $t("your_cash_position") }}
             </h3>
             <p class="mb-0">
-              {{ $t("cash_balance_its_reconciliation_as_of_today") }}
+              {{ $t("cash_balance_bank_as_of_today") }}
             </p>
             <v-row>
               <v-col sm="12" class="py-0" cols="12">
-                <CashPosition height="178" />
+                <CashPosition height="188" />
               </v-col>
             </v-row>
             <v-row>
@@ -159,102 +162,88 @@
             color="white"
             outlined
             dense
-            class="pa-4 no_border"
-            min-height="347"
+            class="pa-4  no_border"
+            min-height="338"
           >
-            <LoadingMe
-              :isLoading="showLoading"
-              :fullPage="false"
-              type="loading"
-              :myLoading="true"
-            />
             <h3 class="font_20" :class="{ line_34: this.$i18n.locale == 'kh' }">
-              {{ $t("expected_due") }}
+              {{ $t("fund_receipts") }}
             </h3>
-            <p class="mb-0">{{ $t("amount_to_receive") }}</p>
-            <h2
-              class="col-sm-12 niradei_black pa-0 primary--text text-right mb-1"
-            >
-              {{ expectedBalance }}
-            </h2>
-            <template>
-              <v-simple-table class="my-7">
-                <template>
-                  <tbody>
-                    <tr v-for="item in expectedDue" :key="item.name">
-                      <td style="width:30px" class="text-left pr-0 pl-0">
-                        <span class="niradei_medium font_14 grey--text">
-                          {{ item.name }} {{ $t(item.locale) }}
-                        </span>
-                      </td>
-                      <td class="text-center pr-0">
-                        <span class="niradei_heavy font_18 dark_grey">
-                          {{
-                            numberFormat(item.openbalanceP, item.decimalFormat)
-                          }}%
-                        </span>
-                      </td>
-                      <td class="text-right pr-0">
-                        <span class="niradei_heavy font_18 dark_grey">
-                          {{ numberFormat(item.value, item.decimalFormat) }}
-                        </span>
-                      </td>
-                    </tr>
-                    <!--                        <tr>-->
-                    <!--                          <td class="text-left pl-0">-->
-                    <!--                            <span class="niradei_medium font_14 grey&#45;&#45;text">-->
-                    <!--                              1 – 2 {{ $t("weeks") }}-->
-                    <!--                            </span>-->
-                    <!--                          </td>-->
-                    <!--                          <td class="text-center pr-0">-->
-                    <!--                            <span class="niradei_heavy font_18 dark_grey">-->
-                    <!--                              40%-->
-                    <!--                            </span>-->
-                    <!--                          </td>-->
-                    <!--                          <td class="text-right pr-0">-->
-                    <!--                            <span class="niradei_heavy font_18 dark_grey">-->
-                    <!--                              8,000-->
-                    <!--                            </span>-->
-                    <!--                          </td>-->
-                    <!--                        </tr>-->
-                    <!--                        <tr>-->
-                    <!--                          <td class="text-left pl-0">-->
-                    <!--                            <span class="niradei_medium font_14 grey&#45;&#45;text">-->
-                    <!--                              > 2 {{ $t("weeks") }}-->
-                    <!--                            </span>-->
-                    <!--                          </td>-->
-                    <!--                          <td class="text-center pr-0">-->
-                    <!--                            <span class="niradei_heavy font_18 dark_grey">-->
-                    <!--                              30%-->
-                    <!--                            </span>-->
-                    <!--                          </td>-->
-                    <!--                          <td class="text-right pr-0">-->
-                    <!--                            <span class="niradei_heavy font_18 dark_grey">-->
-                    <!--                              2,000-->
-                    <!--                            </span>-->
-                    <!--                          </td>-->
-                    <!--                        </tr>-->
-                  </tbody>
-                </template>
-              </v-simple-table>
-            </template>
+            <p class="mb-0">{{ $t("by_donors") }}</p>
+            <ExpenseNpo />
+          </v-card>
+
+          <v-card
+            outlined
+            dense
+            class="pa-4  mt-4 no_border"
+            min-height="318px"
+            color="white"
+          >
             <v-row>
-              <v-col sm="6" class="pr-0 py-0">
-                <v-btn
-                  :to="lang + '/cash_receipt'"
-                  class="text-capitalize font_16 rounded-0 white--text"
-                  color="primary"
+              <v-col sm="12" cols="12" class="py-0">
+                <h3
+                  class="font_20"
+                  :class="{ line_34: this.$i18n.locale == 'kh' }"
                 >
-                  + {{ $t("receipt") }}
-                </v-btn>
+                  {{ $t("budgeted_expenditures") }}
+                </h3>
+                <p class="mb-0">
+                  {{ $t("by_projects") }}
+                </p>
+                <LoadingMe
+                  :isLoading="loadingFundReceipt"
+                  :fullPage="false"
+                  :myLoading="true"
+                  :type="'loading'"
+                >
+                </LoadingMe>
+                 <BudgetExpenseNpo />
               </v-col>
-              <v-col sm="6" class="pl-0 text-right pt-2">
-                <span
-                  @click="CheckPart"
-                  class="mb-0 py-5 pointer niradei_bold font_16 primary--text text-right"
+            </v-row>
+          </v-card>
+        </v-col>
+        <v-col class="py-0 pl-md-2" sm="4" cols="12">
+          <v-card
+            outlined
+            dense
+            class="pa-4 no_border"
+            min-height="348"
+            color="white"
+          >
+            <v-row>
+              <v-col sm="12" cols="12" class="py-0">
+                <h3
+                  class="font_20"
+                  :class="{ line_34: this.$i18n.locale == 'kh' }"
                 >
-                  {{ $t("view_report") }}
-                </span>
+                  {{ $t("actual_expenditures") }}
+                </h3>
+                <p class="mb-3">
+                  {{ $t("by_functions") }}
+                </p>
+                <LoadingMe
+                  :isLoading="loadingFundReceipt"
+                  :fullPage="false"
+                  :myLoading="true"
+                  :type="'loading'"
+                >
+                </LoadingMe>
+                <chart
+                  :title-text="''"
+                  :chartArea="chartAreaChartActualExpense"
+                  :legend-visible="false"
+                  :series-defaults-type="'column'"
+                  :series="actualexpenseSery"
+                  :category-axis="categoryAxisActualExpense"
+                  :value-axis="valueAxisActualExpense"
+                  :tooltip="{
+                    visible: true,
+                    template:
+                      '#= series.name #: #= kendo.toString(value,`n2`) #',
+                  }"
+                  :theme="'sass'"
+                >
+                </chart>
               </v-col>
             </v-row>
           </v-card>
@@ -263,46 +252,8 @@
             outlined
             dense
             class="pa-4 mt-4 no_border"
-            min-height="338"
+            min-height="348px"
           >
-            <h3 class="font_20" :class="{ line_34: this.$i18n.locale == 'kh' }">
-              {{ $t("revenue") }}
-            </h3>
-            <p class="mb-0">{{ $t("from_beginning_year") }}</p>
-            <v-row class="mt-0">
-              <v-col sm="12" cols="12" class="pl-1  py-0">
-                <Revenue />
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col sm="6" class="pr-0 py-0">
-                <v-btn
-                  :to="lang + '/invoice'"
-                  class="mt-2 font_16 text-capitalize rounded-0 white--text"
-                  color="primary"
-                >
-                  + {{ $t("invoice") }}
-                </v-btn>
-              </v-col>
-              <v-col sm="6" class="pl-0 text-right pt-2">
-                <router-link
-                  :to="lang + '/statement_of_profit_or_loss'"
-                  class="mb-0 py-5 niradei_bold font_16 primary--text text-right"
-                  >{{ $t("view_report") }}
-                </router-link>
-              </v-col>
-            </v-row>
-          </v-card>
-        </v-col>
-        <v-col class="py-0 pl-md-2" sm="4" cols="12">
-          <v-card
-            color="white"
-            outlined
-            dense
-            class="pa-4 no_border"
-            min-height="347"
-          >
-    
             <LoadingMe
               :isLoading="showLoading2"
               :fullPage="false"
@@ -310,9 +261,9 @@
               :myLoading="true"
             />
             <h3 class="font_20" :class="{ line_34: this.$i18n.locale == 'kh' }">
-              {{ $t("amount_to_pay") }}
+              {{ $t("budget_performance") }}
             </h3>
-            <p class="mb-0">{{ $t("amount_to_pay_to_suppliers") }}</p>
+            <p class="mb-0">{{ $t("for_current_year") }}</p>
             <h2
               class="primary--text niradei_black mb-1 pa-0 text-right col-sm-12"
             >
@@ -322,112 +273,67 @@
               <v-simple-table class="my-7">
                 <template>
                   <tbody>
-                    <tr v-for="item in amountToPay" :key="item.name">
+                    <!-- <tr v-for="item in amountToPay" :key="item.name"> -->
+                    <tr>
                       <td style="width:30px" class="text-left px-0">
                         <span class="niradei_medium font_14 grey--text">
-                          {{ item.name }} {{ $t(item.locale) }}
+                          <!-- {{ item.name }} {{ $t(item.locale) }} -->
+                          {{$t('budget')}}
                         </span>
                       </td>
-                      <td class="text-center pr-0">
-                        <span class="niradei_heavy font_18 dark_grey">
-                          {{
-                            numberFormat(item.openbalanceP, item.decimalFormat)
-                          }}%
-                        </span>
-                      </td>
+                  
                       <td class="text-right pr-0">
                         <span class="niradei_heavy font_18 dark_grey">
-                          {{ numberFormat(item.value, item.decimalFormat) }}
+                          200,000
                         </span>
                       </td>
                     </tr>
-                    <!--                      <tr>-->
-                    <!--                        <td style="width:30px" class="text-left px-0">-->
-                    <!--                            <span class="niradei_medium font_14 grey&#45;&#45;text">-->
-                    <!--                              1 – 2 {{ $t("weeks") }}-->
-                    <!--                            </span>-->
-                    <!--                        </td>-->
-                    <!--                        <td class="text-center pr-0">-->
-                    <!--                            <span class="niradei_heavy font_18 dark_grey">-->
-                    <!--                              40%-->
-                    <!--                            </span>-->
-                    <!--                        </td>-->
-                    <!--                        <td class="text-right pr-0">-->
-                    <!--                            <span class="niradei_heavy font_18 dark_grey">-->
-                    <!--                              8,000-->
-                    <!--                            </span>-->
-                    <!--                        </td>-->
-                    <!--                      </tr>-->
-                    <!--                      <tr>-->
-                    <!--                        <td style="width:30px" class="text-left px-0">-->
-                    <!--                            <span class="niradei_medium font_14 grey&#45;&#45;text">-->
-                    <!--                              > 2 {{ $t("weeks") }}-->
-                    <!--                            </span>-->
-                    <!--                        </td>-->
-                    <!--                        <td class="text-center pr-0">-->
-                    <!--                            <span class="niradei_heavy font_18 dark_grey">-->
-                    <!--                              30%-->
-                    <!--                            </span>-->
-                    <!--                        </td>-->
-                    <!--                        <td class="text-right pr-0">-->
-                    <!--                            <span class="niradei_heavy font_18 dark_grey">-->
-                    <!--                              2,000-->
-                    <!--                            </span>-->
-                    <!--                        </td>-->
-                    <!--                      </tr>-->
+                        <tr>
+                      <td style="width:30px" class="text-left px-0">
+                        <span class="niradei_medium font_14 grey--text">
+                          <!-- {{ item.name }} {{ $t(item.locale) }} -->
+                          {{$t('actual')}}
+                        </span>
+                      </td>
+                  
+                      <td class="text-right pr-0">
+                        <span class="niradei_heavy font_18 dark_grey">
+                          200,000
+                        </span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="width:30px" class="text-left px-0">
+                        <span class="niradei_medium font_14 grey--text">
+                          <!-- {{ item.name }} {{ $t(item.locale) }} -->
+                          {{$t('used')}}
+                        </span>
+                      </td>
+                  
+                      <td class="text-right pr-0">
+                        <span class="niradei_heavy font_18 dark_grey">
+                          50%
+                        </span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="width:30px" class="text-left px-0">
+                        <span class="niradei_medium font_14 grey--text">
+                          <!-- {{ item.name }} {{ $t(item.locale) }} -->
+                          {{$t('remaining')}}
+                        </span>
+                      </td>
+                  
+                      <td class="text-right pr-0">
+                        <span class="niradei_heavy font_18 dark_grey">
+                          100,000
+                        </span>
+                      </td>
+                    </tr>
                   </tbody>
                 </template>
               </v-simple-table>
             </template>
-            <v-row>
-              <v-col sm="6" class="pr-0 py-0">
-                <v-btn
-                  :to="lang + '/cash_payment'"
-                  class="text-capitalize font_16 rounded-0 white--text"
-                  color="primary"
-                >
-                  + {{ $t("payment") }}
-                </v-btn>
-              </v-col>
-              <v-col sm="6" class="pl-0 text-right pt-2">
-                <span
-                  @click="ReprotAmontTopay"
-                  class="mb-0 py-5 pointer niradei_bold font_16 primary--text text-right"
-                  >{{ $t("view_report") }}
-                </span>
-              </v-col>
-            </v-row>
-          </v-card>
-          <v-card
-            color="white"
-            outlined
-            dense
-            class="pa-4 mt-4 no_border"
-            min-height="338"
-          >
-            <h3 class="font_20" :class="{ line_34: this.$i18n.locale == 'kh' }">
-              {{ $t("expense") }}
-            </h3>
-            <p class="mb-0">{{ $t("from_beginning_year") }}</p>
-            <Expense />
-            <v-row>
-              <v-col sm="6" class="pr-0 mt-2 py-0">
-                <v-btn
-                  :to="lang + '/credit_purchase'"
-                  class="text-capitalize font_16 rounded-0 white--text"
-                  color="primary"
-                >
-                  + {{ $t("purchase") }}
-                </v-btn>
-              </v-col>
-              <v-col sm="6" class="pl-0 text-right pt-2">
-                <router-link
-                  :to="lang + '/statement_of_profit_or_loss'"
-                  class="mb-0 py-5 niradei_bold font_16 primary--text text-right"
-                  >{{ $t("view_report") }}
-                </router-link>
-              </v-col>
-            </v-row>
           </v-card>
         </v-col>
       </v-row>
@@ -443,6 +349,7 @@
 <script>
 import { i18n } from "@/i18n";
 import kendo from "@progress/kendo-ui";
+import { Chart } from "@progress/kendo-charts-vue-wrapper";
 
 // const instituteHandler = require("@/scripts/instituteHandler");
 // const otherHandler = require("@/scripts/otherHandler");
@@ -456,12 +363,66 @@ import {
 } from "@/observable/store";
 export default {
   components: {
+    chart: Chart,
     LoadingMe: () => import(`@/components/Loading`),
-    Expense: () => import(`@/components/overview/Expense`),
-    Revenue: () => import(`@/components/overview/Revenue`),
+    ExpenseNpo: () => import(`@/components/overview/ReceiptBydonor`),
+    BudgetExpenseNpo: () => import(`@/components/overview/BudgetExpenseNpo`),
     CashPosition: () => import(`@/components/overview/CashPosition`),
   },
   data: () => ({
+    //bar
+    loadingFundReceipt: false,
+    chartAreaChartActualExpense: {
+      background: "transparent",
+      height: 260,
+    },
+    actualexpenseSery: [
+      {
+        field: "value",
+        colorField: "chartColor",
+        name: "Total",
+        data: [
+          { value: "100", chartColor: "#c80000" },
+          { value: "70", chartColor: "#f44336" },
+          { value: "50", chartColor: "#ED1A3A" },
+        ],
+        //     '100', '70', '50'],
+        // color: ['#00b050','#92d050','#212a35'],
+        border: {
+          width: 0,
+        },
+      },
+    ],
+    valueAxisActualExpense: [
+      {
+        max: 100,
+        line: {
+          visible: false,
+        },
+        minorGridLines: {
+          visible: false,
+        },
+        labels: {
+          visible: true,
+          font: "10px",
+        },
+      },
+    ],
+    categoryAxisActualExpense: {
+      categories: [
+        'MAE',
+        'PSE',
+        'FE',
+      ],
+      majorGridLines: {
+        visible: false,
+      },
+    },
+
+    tooltip: {
+      visible: true,
+      template: "#= series.name #: #= kendo.toString(value, `n2`) #",
+    },
     //Bar
     isLoading: true,
     institutes: [],
@@ -625,9 +586,7 @@ export default {
 };
 </script>
 <style scoped>
-.k-chart {
-  height: 173px !important;
-}
+
 
 .five {
   font-weight: 700;
