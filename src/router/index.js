@@ -24,13 +24,14 @@ const routes = [{
     beforeEnter: Trans.routeMiddleware,
     children: [
         {
-            path: '/',
-            name: 'Overview',
-            component: load('overview/OverviewTab'),
+            path: '',
+            name: 'HomeDashboard',
+            component: load('Dashboard'),
             meta: {
-                moduleId: 1,
                 mainMenu: 'welcome',
-                title: 'Overview'
+                is_first : true,
+                title:'BanhJi Casheir'
+
             }
         },
         {
