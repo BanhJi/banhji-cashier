@@ -45,7 +45,7 @@ const routes = [{
         {
             path: 'receipt',
             name: 'Receipt',
-            component: () => import('../views/receipt/Receipt'),
+            component: () => import('../views/receipt/CashReceipt'),
             meta: {
                 title: 'Receipt'
             }
@@ -61,9 +61,17 @@ const routes = [{
         {
             path: 'report',
             name: 'Report',
-            component: () => import('../views/report/Index'),
+            component: () => import('../views/report/ReportTab'),
             meta: {
                 title: 'Report'
+            }
+        },
+        {
+            path: 'setting',
+            name: 'Setting',
+            component: () => import('../views/setting/SettingTab'),
+            meta: {
+                title: 'Setting'
             }
         }
     ]

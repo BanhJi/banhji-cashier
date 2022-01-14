@@ -8,17 +8,28 @@
                             <v-col class="bigSide py-0" sm="12" cols="12" style="transition: .3s ease-in;"
                                    :class="{'hide_big_bar_class':isHideBar}">
                                 <v-form ref="form" v-model="valid" lazy-validation>
-                                    <v-card outlined dense class="no_border d-flex justify-space-between">
-
-                                        <h2 class="mb-0">{{ $t('cash_payment') }} #{{ cashPayment.referenceNo }}</h2>
-                                        <v-icon
-                                            @click="cancel()"
-                                            style="cursor: pointer; color: #333; font-size: 40px;"
-                                            class="float-right"
+                                    <v-card outlined dense class="no_border">
+                                        <h2 class="mb-0">{{ $t('cash_receipt') }} #{{ cashReceipt.referenceNo }}</h2>
+                                        <v-icon v-if="!isHideBar"
+                                                @click="cancel()"
+                                                style="cursor: pointer; color: #333; font-size: 40px;"
+                                                class="float-right"
                                         >close
                                         </v-icon>
+                                        <!--                                        <span style="transition: .3s ease-in; z-index:10;"-->
+                                        <!--                                              :class="{'iconArrow': !isHideBar,'iconArrowHide': isHideBar }">-->
+                                        <!--                                            <v-icon size="22"-->
+                                        <!--                                                    class="arr_icon"-->
+                                        <!--                                                    @click="hideSmallSidebar"-->
+                                        <!--                                                    v-if="isHideBar"> mdi-chevron-left-circle-->
+                                        <!--                                            </v-icon>-->
+                                        <!--                                            <v-icon size="22"-->
+                                        <!--                                                    class="arr_icon"-->
+                                        <!--                                                    @click="hideSmallSidebar"-->
+                                        <!--                                                    v-if="!isHideBar"> mdi-chevron-right-circle-->
+                                        <!--                                            </v-icon></span>-->
                                     </v-card>
-                                    <v-card outlined dense class="px-3 no_border" color="grayBg">
+                                    <v-card outlined dense class="px-3 no_border" color="grayBg" height="175px">
                                         <v-row>
                                             <v-col sm="7" cols="12" class="pb-0">
                                                 <label class="label">{{ $t('select_option') }}</label>
@@ -26,17 +37,32 @@
                                                           v-model="mPaymentOption"
                                                           :items="paymentOptions"
                                                           @change="searchOptionChanged"
-                                                          :disabled="true"
                                                           :placeholder="$t('search')"
                                                           outlined>
                                                 </v-select>
-                                                <v-row class="pt-3">
+
+                                                <v-row class="pt-3" v-if="!showMe">
+                                                    <v-col cols="10" class="pr-1">
+                                                        <v-text-field
+                                                            class=""
+                                                            v-model="search"
+                                                            outlined
+                                                            :placeholder="$t('search')"
+                                                        />
+                                                    </v-col>
+                                                    <v-col cols="2" class="pl-1">
+                                                        <v-btn color="primary white--text" @click="searchInvoice">
+                                                            <i class="b-search"
+                                                               style="font-size: 18px; color:#fff !important;"/>
+                                                        </v-btn>
+                                                    </v-col>
+                                                </v-row>
+                                                <v-row class="pt-3" v-if="showMe">
                                                     <v-col cols="10" class="kendo_dropdown_custom mt-2 pb-3 pt-0 pr-0">
                                                         <dropdownlist
-                                                            :data-items="suppliers"
+                                                            :data-items="customers"
                                                             @change="onCustomerChanged"
-                                                            :value="mSupplier"
-                                                            :disabled="enabled"
+                                                            :value="mCustomer"
                                                             :data-item-key="'id'"
                                                             :text-field="'name'"
                                                             :default-item="defaultItem"
@@ -45,21 +71,20 @@
                                                         </dropdownlist>
                                                     </v-col>
                                                     <v-col cols="2" class="pl-1">
-                                                        <v-btn color="primary white--text"
-                                                               @click="searchPurchaseOrderExpense"
-                                                               :disabled="enabled">
-                                                            <i class="b-search" style="font-size: 18px; color:#fff"/>
+                                                        <v-btn color="primary white--text" @click="searchInvoice">
+                                                            <i class="b-search"
+                                                               style="font-size: 18px; color:#fff !important;"/>
                                                         </v-btn>
                                                     </v-col>
                                                 </v-row>
                                             </v-col>
                                             <v-col sm="5" cosl="12">
                                                 <label class="label">{{ $t('date') }}</label>
-                                                <app-datepicker :initialDate="cashPayment.transactionDate"
+                                                <app-datepicker :initialDate="cashReceipt.transactionDate"
                                                                 :disabled="disabledMe"
                                                                 @onChanged="onTransactionDateChanged"
-                                                                @emitDate="transactionDate = $event"/>
-                                                <label class="label">{{ $t('name') }}</label>
+                                                                @emitDate="cashReceipt.transactionDate = $event"/>
+                                                <label class="label">{{ $t('customer_name') }}</label>
                                                 <v-text-field
                                                     class="mt-1"
                                                     v-model="name"
@@ -71,6 +96,18 @@
 
 
                                                     </v-col>
+                                                    <!--                                                    <v-col sm="6" cols="12" class="py-0">-->
+                                                    <!--                                                        <div class="d-flex justify-space-between">-->
+                                                    <!--                                                            <div>-->
+                                                    <!--                                                                <p class="label mb-0">{{ $t('currency') }}</p>-->
+                                                    <!--                                                                <p class="label mb-0">{{ currencyCode }}</p>-->
+                                                    <!--                                                            </div>-->
+                                                    <!--                                                            <div>-->
+                                                    <!--                                                                <p class="label mb-0">{{ $t('rate') }}</p>-->
+                                                    <!--                                                                <p class="label mb-0">{{ transactionRate }}</p>-->
+                                                    <!--                                                            </div>-->
+                                                    <!--                                                        </div>-->
+                                                    <!--                                                    </v-col>-->
                                                 </v-row>
                                             </v-col>
                                         </v-row>
@@ -80,38 +117,49 @@
                                         <v-col sm="12" cols="12" class="pt-0">
                                             <LoadingMe
                                                 :isLoading="showLoading"
-                                                :fullPage="true"
+                                                :fullPage="false"
                                                 :myLoading="true"
-                                                type="loading"
                                                 :alertMessage="loadingAlert"
                                                 :color="loadingColorAlert"
                                                 :alertText="loadingTextAlert"/>
-                                            <kendo-datasource ref="itemLineDS"
-                                                              :schema="schemaDefinition"
+                                            <kendo-datasource ref="cashReceiptItemLineDS"
                                                               :change="dataSourceChanged"
                                                               :data="itemLines"/>
-                                            <kendo-grid id="grid" class="grid-function"
-                                                        :data-source-ref="'itemLineDS'"
+                                            <kendo-grid id="gridCashReceipt" class="grid-function"
+                                                        :data-source-ref="'cashReceiptItemLineDS'"
                                                         :sortable="false"
-                                                        :groupable="true"
+                                                        :groupable="false"
                                                         :filterable="false"
                                                         :column-menu="true"
+                                                        :resizable="true"
                                                         :editable="true"
                                                         :noRecords="true">
-                                                <kendo-grid-column
-                                                    :field="'check'"
-                                                    :title="''"
-                                                    :headerTemplate="headerTemplate"
-                                                    :template="checkTemplate"
-                                                    :width="60"
-                                                    :column-menu="false"
-                                                    :editable="()=>{ return false}"
-                                                    :locked="true"
-                                                    :headerAttributes="{ style: 'background-color: #EDF1F5;', class: 'text-center'	}"
-                                                    :attributes="{style: 'text-align: center'}"/>
+                                                <!--                                                <kendo-grid-column-->
+                                                <!--                                                    :title="$t('no.')"-->
+                                                <!--                                                    :width="55"-->
+                                                <!--                                                    :column-menu="false"-->
+                                                <!--                                                    :template="rowNumberTmpl"-->
+                                                <!--                                                    :headerAttributes="{-->
+                                                <!--                                                                    style: 'background-color: #EDF1F5;',-->
+                                                <!--                                                                    class: 'text-products'-->
+                                                <!--                                                                }"-->
+                                                <!--                                                    :attributes="{-->
+                                                <!--                                                                    style: 'text-align: products'-->
+                                                <!--                                                                }"/>-->
+                                                <!--                        <kendo-grid-column-->
+                                                <!--                            :field="'check'"-->
+                                                <!--                            :title="''"-->
+                                                <!--                            :headerTemplate="headerTemplate"-->
+                                                <!--                            :template="checkTemplate"-->
+                                                <!--                            :width="60"-->
+                                                <!--                            :column-menu="false"-->
+                                                <!--                            :editable="()=>{ return false}"-->
+                                                <!--                            :locked="true"-->
+                                                <!--                            :headerAttributes="{ style: 'background-color: #EDF1F5;', class: 'text-center'	}"-->
+                                                <!--                            :attributes="{style: 'text-align: center'}"/>-->
                                                 <kendo-grid-column
                                                     :field="'referenceNo'"
-                                                    :title="$t('purchase_no')"
+                                                    :title="$t('invoice_no')"
                                                     :width="200"
                                                     :editable="()=>{ return false}"
                                                     :template="referenceNoTmp"
@@ -120,12 +168,24 @@
                                                                     style: 'background-color: #EDF1F5'
                                                                 }"/>
                                                 <kendo-grid-column
-                                                    :field="'billNumber'"
-                                                    :title="$t('suppliers_invoice_no')"
-                                                    :width="200"
+                                                    :field="'crn'"
+                                                    :title="$t('crn')"
+                                                    :width="100"
+                                                    :template="crnTmp"
+                                                    :hidden="true"
                                                     :editable="()=>{ return false}"
-                                                    :template="billNumberTmp"
                                                     :locked="true"
+                                                    :headerAttributes="{
+                                                                    style: 'background-color: #EDF1F5'
+                                                                }"/>
+                                                <kendo-grid-column
+                                                    :field="'paymentCode'"
+                                                    :title="$t('payment_code')"
+                                                    :width="180"
+                                                    :template="paymentCodeTmp"
+                                                    :editable="()=>{ return false}"
+                                                    :locked="true"
+                                                    :lockable="false"
                                                     :headerAttributes="{
                                                                     style: 'background-color: #EDF1F5'
                                                                 }"/>
@@ -139,6 +199,16 @@
                                                     :headerAttributes="{
                                                                     style: 'background-color: #EDF1F5'
                                                                 }"/>
+                                                <kendo-grid-column
+                                                    :field="'txnNote'"
+                                                    :title="$t('note')"
+                                                    :width="200"
+                                                    :editable="()=>{ return false}"
+                                                    :hidden="true"
+                                                    :lockable="false"
+                                                    :headerAttributes="{ style: 'text-align: left; background-color: #EDF1F5',}"
+                                                    :attributes="{ style: 'text-align: left; ' }"
+                                                />
                                                 <kendo-grid-column
                                                     :field="'overDue'"
                                                     :title="$t('over_due')"
@@ -154,22 +224,22 @@
                                                 <kendo-grid-column
                                                     :field="'paymentTerm'"
                                                     :title="$t('payment_term')"
-                                                    :width="200"
+                                                    :width="220"
                                                     :lockable="false"
                                                     :hidden="true"
                                                     :template="settlementDiscount"
                                                     :editable="()=>{ return false}"
                                                     :headerAttributes="{style: 'text-align: right; background-color: #EDF1F5'}"
                                                     :attributes="{style: 'text-align: right; '}"/>
-                                                <!--                                                <kendo-grid-column-->
-                                                <!--                                                    :field="'paymentOption'"-->
-                                                <!--                                                    :title="$t('payment_option')"-->
-                                                <!--                                                    :width="200"-->
-                                                <!--                                                    :lockable="false"-->
-                                                <!--                                                    :template="PMTTemplate"-->
-                                                <!--                                                    :editor="PaymentMethodDropDownEditor"-->
-                                                <!--                                                    :headerAttributes="{style: 'text-align: right; background-color: #EDF1F5'}"-->
-                                                <!--                                                    :attributes="{style: 'text-align: right; '}"/>-->
+                                                <kendo-grid-column
+                                                    :field="'paymentOption'"
+                                                    :title="$t('payment_option')"
+                                                    :width="200"
+                                                    :lockable="false"
+                                                    :template="PMTTemplate"
+                                                    :editor="PaymentOptionEditor"
+                                                    :headerAttributes="{style: 'text-align: right; background-color: #EDF1F5'}"
+                                                    :attributes="{style: 'text-align: right; '}"/>
                                                 <kendo-grid-column
                                                     :field="'bankReferenceNo'"
                                                     :title="$t('bank_reference_no')"
@@ -205,12 +275,20 @@
                                                     :lockable="false"
                                                     :editable="()=>{ return false}"
                                                     :template="amount"
-                                                    :attributes="{
-                                                                        style: 'text-align: right'
-                                                                    }"
+                                                    :attributes="{style: 'text-align: right; '}"
                                                     :headerAttributes="{
                                                                     style: 'background-color: #EDF1F5'
                                                                 }"/>
+
+                                                <kendo-grid-column
+                                                    :field="'penalty'"
+                                                    :title="$t('penalty')"
+                                                    :width="150"
+                                                    :lockable="false"
+                                                    :editor="penaltyEditor"
+                                                    :template="penalty"
+                                                    :headerAttributes="{style: 'text-align: right; background-color: #EDF1F5'}"
+                                                    :attributes="{style: 'text-align: right; '}"/>
                                                 <kendo-grid-column
                                                     :field="'discount'"
                                                     :title="$t('discount')"
@@ -227,7 +305,7 @@
                                                 <kendo-grid-column
                                                     :field="'amountTobePaid'"
                                                     :title="$t('amount_to_be_paid')"
-                                                    :width="200"
+                                                    :width="210"
                                                     :lockable="false"
                                                     :editable="()=>{ return false}"
                                                     :template="amountTobePaid"
@@ -256,7 +334,7 @@
                                                                 <label>{{ $t('message_on_receipt') }}</label>
                                                                 <v-textarea class="mt-1"
                                                                             outlined
-                                                                            v-model="cashPayment.transactionNote"
+                                                                            v-model="cashReceipt.transactionNote"
                                                                             no-resize
                                                                             height="70px"
                                                                             rows="3"
@@ -267,7 +345,7 @@
                                                                 <label>{{ $t('message_for_journal') }}</label>
                                                                 <v-textarea class="mt-1"
                                                                             outlined
-                                                                            v-model="cashPayment.journalNote"
+                                                                            v-model="cashReceipt.journalNote"
                                                                             no-resize
                                                                             height="70px"
                                                                             rows="3"
@@ -298,13 +376,21 @@
                                                         <template v-slot:default>
                                                             <tbody>
                                                             <tr>
+                                                                <td class="text-left text-uppercase">{{ $t('penalty') }}
+                                                                </td>
+                                                                <td class="text-center">:</td>
+                                                                <td class="text-left primary--text text-bold">
+                                                                    {{ numberFormat(cashReceipt.penalty) }}
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
                                                                 <td class="text-left text-uppercase">{{
                                                                         $t('discount')
                                                                     }}
                                                                 </td>
                                                                 <td class="text-center">:</td>
                                                                 <td class="text-left primary--text text-bold">
-                                                                    {{ numberFormat(cashPayment.discount) }}
+                                                                    {{ numberFormat(cashReceipt.discount) }}
                                                                 </td>
                                                             </tr>
                                                             <!--                                                            <tr>-->
@@ -321,9 +407,10 @@
                                                                 </td>
                                                                 <td class="text-center">:</td>
                                                                 <td class="text-left primary--text text-bold">
-                                                                    {{ numberFormat(cashPayment.exchangeAmount) }}
+                                                                    {{ numberFormat(cashReceipt.exchangeAmount) }}
                                                                 </td>
                                                             </tr>
+
                                                             <tr hidden>
                                                                 <td class="text-left text-uppercase">
                                                                     {{ $t('dr') }}
@@ -353,57 +440,67 @@
 
                                     <v-divider/>
                                     <v-card outlined dense class="no_border function_footer">
-                                        <!-- <v-menu>
-                                          <template v-slot:activator="{ on }">
-                                            <v-btn color="black" outlined
-                                                   class="mr-2 text-capitalize rounded-pill black--text float-left"
-                                                   v-on="on">
-                                              {{ $t('select_template') }}
-                                              <v-icon size="" class="ma-1">expand_more</v-icon>
-                                            </v-btn>
-                                          </template>
-                                          <v-list>
-                                            <v-list-item v-for="(item, index) in templates" :key="index">
-                                              <v-list-item-title>{{ item.title }}</v-list-item-title>
-                                            </v-list-item>
-                                          </v-list>
-                                        </v-menu> -->
+                                        <!--                    <v-menu>-->
+                                        <!--                      <template v-slot:activator="{ on }">-->
+                                        <!--                        <v-btn color="black" outlined-->
+                                        <!--                               class="mr-2 text-capitalize  black&#45;&#45;text float-left"-->
+                                        <!--                               v-on="on">-->
+                                        <!--                          {{ $t('select_template') }}-->
+                                        <!--                          <v-icon size="" class="ma-1">expand_more</v-icon>-->
+                                        <!--                        </v-btn>-->
+                                        <!--                      </template>-->
+                                        <!--                      <v-list>-->
+                                        <!--                        <v-list-item v-for="(item, index) in templates" :key="index">-->
+                                        <!--                          <v-list-item-title>{{ item.title }}</v-list-item-title>-->
+                                        <!--                        </v-list-item>-->
+                                        <!--                      </v-list>-->
+                                        <!--                    </v-menu>-->
                                         <v-btn color="black"
-                                               class="text-capitalize rounded-pill white--text float-left"
+                                               outlined
+                                               class="text-capitalize  black--text float-left"
                                                @click="cancel">{{ $t('cancel') }}
                                         </v-btn>
-                                        <v-menu>
-                                            <template v-slot:activator="{ on }">
-                                                <v-btn color="primary"
-                                                       class="ml-2 float-right text-capitalize rounded-pill white--text"
-                                                       v-on="on">
-                                                    {{ $t('save_option') }}
-                                                    <v-icon size="" class="ma-1">expand_more</v-icon>
-                                                </v-btn>
-                                            </template>
-                                            <v-list rounded>
-                                                <v-list-item-group>
-                                                    <v-list-item @click="onSaveClose(true)">
-                                                        <v-list-item-content>
-                                                            <v-list-item-title>{{ $t('save_print') }}
-                                                            </v-list-item-title>
-                                                        </v-list-item-content>
-                                                    </v-list-item>
-                                                    <!-- <v-list-item>
-                                                      <v-list-item-content>
-                                                        <v-list-item-title>{{ $t('save_draft') }}
-                                                        </v-list-item-title>
-                                                      </v-list-item-content>
-                                                    </v-list-item> -->
-                                                </v-list-item-group>
-                                            </v-list>
-                                        </v-menu>
-                                        <v-btn color="secondary"
-                                               class="float-right white--text text-capitalize rounded-pill"
-                                               @click="onSaveClose(false)">
+                                        <!--                    <v-menu>-->
+                                        <!--                      <template v-slot:activator="{ on }">-->
+                                        <!--                        <v-btn color="primary"-->
+                                        <!--                               class="ml-2 float-right text-capitalize  white&#45;&#45;text"-->
+                                        <!--                               v-on="on">-->
+                                        <!--                          {{ $t('save_option') }}-->
+                                        <!--                          <v-icon size="" class="ma-1">expand_more</v-icon>-->
+                                        <!--                        </v-btn>-->
+                                        <!--                      </template>-->
+                                        <!--                      <v-list rounded>-->
+                                        <!--                        <v-list-item-group>-->
+                                        <!--                          <v-list-item>-->
+                                        <!--                            <v-list-item-content>-->
+                                        <!--                              <v-list-item-title>{{ $t('save_print') }}-->
+                                        <!--                              </v-list-item-title>-->
+                                        <!--                            </v-list-item-content>-->
+                                        <!--                          </v-list-item>-->
+                                        <!--                          <v-list-item>-->
+                                        <!--                            <v-list-item-content>-->
+                                        <!--                              <v-list-item-title>{{ $t('save_draft') }}-->
+                                        <!--                              </v-list-item-title>-->
+                                        <!--                            </v-list-item-content>-->
+                                        <!--                          </v-list-item>-->
+                                        <!--                        </v-list-item-group>-->
+                                        <!--                      </v-list>-->
+                                        <!--                    </v-menu>-->
+                                        <v-btn color="primary"
+                                               class="float-right white--text text-capitalize "
+                                               @click="onSaveClose('close')">
                                             {{ $t('save_close') }}
                                         </v-btn>
-
+                                        <v-btn v-if="!check_id_edit" color="secondary"
+                                               style="margin-right: 10px !important"
+                                               class="white--text float-right text-capitalize"
+                                               @click="onSaveClose('new')">{{ $t("save_new") }}
+                                        </v-btn>
+                                        <v-btn v-if="check_id_edit" color="secondary"
+                                               class="white--text mx-2 float-right text-capitalize"
+                                               @click="_print(4)">
+                                            {{ $t("print") }}
+                                        </v-btn>
                                     </v-card>
                                 </v-form>
                             </v-col>
@@ -417,39 +514,44 @@
 </template>
 
 <script>
-import {DropDownList} from '@progress/kendo-vue-dropdowns'
 import {i18n} from '@/i18n';
+import {DropDownList} from '@progress/kendo-vue-dropdowns'
+
 import DatePickerComponent from '@/components/custom_templates/DatePickerComponent'
-import CashPaymentModel from "@/scripts/cash-payment/model/CashPayment";
-import ItemLineModel from "@/scripts/cash-payment/model/ItemLine";
+import CashReceiptModel from "@/scripts/cash-receipt/model/CashReceipt";
+import ItemLineModel from "@/scripts/cash-receipt/model/ItemLine";
 import kendo from "@progress/kendo-ui";
+import PaymentOptionEditor from "@/scripts/kendo_editor/PaymentOptionEditor";
+import Helper from "@/helper";
 
 const prefixHandler = require("@/scripts/prefixHandler")
-const purchaseFormContentHandler = require("@/scripts/purchaseFormContentHandler")
+const saleFormContentHandler = require("@/scripts/saleFormContentHandler")
 const billingHandler = require("@/scripts/invoice/handler/billingHandler")
-const supplierHandler = require("@/scripts/supplierHandler")
-
-const $ = kendo.jQuery
-const paymentOptionHandler = require("@/scripts/paymentOptionHandler")
+const customerHandler = require("@/scripts/customerHandler")
 const settingHandler = require("@/scripts/settingsHandler")
 
-const cashPaymentModel = new CashPaymentModel({})
+const $ = kendo.jQuery //require("jquery")
+const paymentOptionHandler = require("@/scripts/paymentOptionHandler")
+// const paymentOptionHandler = require("@/scripts/paymentOptionHandler")
+
+const cashReceiptModel = new CashReceiptModel(new Object())
 const itemLineModel = new ItemLineModel({})
 
 const keyField = 'id'
 const textField = 'numberName'
-const defaultItem = {[textField]: 'Select vendor...', [keyField]: null}
+const defaultItem = {[textField]: 'Select customer...', [keyField]: null}
 const emptyItem = {[textField]: 'loading ...'}
-const OPTION_TYPE = 'Supplier'
+const OPTION_TYPE = 'Customer'
 const strFilter = '?optionType=' + OPTION_TYPE
-const TXN_TYPE = 'cash payment'
-const TRANSACTION_TYPE = 'Cash Payment'
-import {getPrint} from "@/form/paymentVoucher";
-import {dataStore} from '@/observable/store'
-const loanHandler = require("@/scripts/loanHandler")
+
+const cookieJS = require("@/cookie.js");
+const cookie = cookieJS.getCookie();
+// from
+const {getFormSetting} = require("@/scripts/settingsHandler.js")
+import {print} from "@/form/Sale.js";
 
 export default {
-    name: "Report",
+    name: "CashReceipt",
     props: ['id'],
     components: {
         LoadingMe: () => import(`@/components/Loading`),
@@ -457,17 +559,18 @@ export default {
         'dropdownlist': DropDownList
     },
     data: () => ({
+        check_id_edit: false,
+        PaymentOptionEditor: PaymentOptionEditor,
         showLoading: false,
         loadingAlert: false,
         loadingColorAlert: '',
         loadingTextAlert: '',
         alert: false,
         files: [],
-        errors: [],
         valid: true,
         loggedUser: {
-            id: 'cf3d10ab-bce6-47b3-8405-b448c23dad84',
-            name: 'Mr. Inspector'
+            id: cookie.creator,
+            name: cookie.email
         },
         itemLines: [],
         templates: [
@@ -479,25 +582,25 @@ export default {
         col_expand: 9,
         col_hide: 3,
         isHideBar: false,
-        paymentOptions: ['Vendor'],
-        mPaymentOption: 'Vendor',
-        paymentMethod: {},
+        paymentOptions: ['Invoice', 'CRN', 'Payment Code', 'Customer'],
+        mPaymentOption: 'Invoice',
+        paymentMethod: ['Cash', 'Cheque'],
         transactionDate: new Date().toISOString().substr(0, 10),
-        cashPayment: cashPaymentModel,
+        cashReceipt: cashReceiptModel,
         itemLine: itemLineModel,
-        purchaseFormContent: {},
+        saleFormContent: {},
         search: '',
         transactionTypes: [],
-        suppliers: [],
-        mSupplier: {},
+        customers: [],
+        mCustomer: {},
         defaultItem: defaultItem,
-        supBaseUrl: supplierHandler.search(),
+        cusBaseUrl: customerHandler.search(),
         filter: '',
         name: '',
         referenceNo: '',
         oldTotal: 0,
         dateFormat: itemLineModel.dateFormat,
-        group: {field: 'supplier.name'},
+        group: {field: 'customer.name'},
         banks: [],
         txnList: [],
         currencyCode: '',
@@ -512,8 +615,11 @@ export default {
                     amount: {type: 'number'},
                     amountTobePaid: {type: 'number'},
                     overDue: {type: 'number'},
+                    crn: {type: 'string'},
                     paidAmount: {type: 'number'},
-                    discount: {type: 'number'}
+                    discount: {type: 'number'},
+                    penalty: {type: 'number'},
+                    paymentCode: {type: 'number'}
                 }
             }
         },
@@ -526,15 +632,55 @@ export default {
         penaltyDescription: 'penalty',
         cr: 0,
         dr: 0,
-        segment: {}
+
     }),
     methods: {
-        savePrint() {
+        _print(id) {
+            let print_data = this.cashReceipt;
+            print_data['baseCurrencyCode'] = this.baseCurrencyCode
+            let params = "?formType=CashReceipt"
+            getFormSetting(params).then(res => {
+                if (res.data.statusCode === 200) {
+                    if (res.data.data.length > 0) {
+                        window.console.log(res.data.data["0"].settings);
+                        print(print_data, id, res.data.data["0"].settings);
+                    } else {
+                        this.$snotify.error(i18n.t('please_save_form_in_setting'))
+                    }
+                }
+            });
+        },
+        removeDuplicate(array) {
+            const result = [];
+            const map = new Map();
+            for (const item of array) {
+                if (!map.has(item.id)) {
+                    map.set(item.id, true);    // set any value to Map
+                    result.push(item)
+                }
+            }
+            return result
+        },
+        crnTmp(dataItem) {
+            if (dataItem) {
+                if (dataItem.hasOwnProperty('crn')) {
+                    return dataItem.crn
+                }
+            }
+            return ''
         },
         currency(dataItem) {
             if (dataItem) {
                 if (dataItem.hasOwnProperty('currencyCode')) {
                     return dataItem.currencyCode
+                }
+            }
+            return ''
+        },
+        paymentCodeTmp(dataItem) {
+            if (dataItem) {
+                if (dataItem.hasOwnProperty('paymentCode')) {
+                    return dataItem.paymentCode
                 }
             }
             return ''
@@ -547,49 +693,49 @@ export default {
             }
             return ''
         },
-        billNumberTmp(dataItem) {
-            if (dataItem) {
-                if (dataItem.hasOwnProperty('billNumber')) {
-                    return dataItem.billNumber
-                }
-            }
-            return ''
-        },
         paidAmountTmp(dataItem) {
             if (dataItem) {
                 if (dataItem.hasOwnProperty('paidAmount')) {
-                    return kendo.toString(dataItem.paidAmount, dataItem.decimalFormat)
+                    return kendo.toString(dataItem.paidAmount || 0, dataItem.decimalFormat)
                 }
             }
-            return ''
+            return 0
         },
         amountTobePaid(dataItem) {
             if (dataItem) {
                 if (dataItem.hasOwnProperty('amountTobePaid')) {
-                    return kendo.toString(dataItem.amountTobePaid, dataItem.decimalFormat)
+                    return kendo.toString(dataItem.amountTobePaid || 0, dataItem.decimalFormat)
                 }
             }
-            return ''
+            return 0
         },
         discount(dataItem) {
             if (dataItem) {
                 if (dataItem.hasOwnProperty('discount')) {
-                    return kendo.toString(dataItem.discount, dataItem.decimalFormat)
+                    return kendo.toString(dataItem.discount || 0, dataItem.decimalFormat)
                 }
             }
-            return ''
+            return 0
         },
         amount(dataItem) {
             if (dataItem) {
                 if (dataItem.hasOwnProperty('amount')) {
-                    return kendo.toString(dataItem.amount, dataItem.decimalFormat)
+                    return kendo.toString(dataItem.amount || 0, dataItem.decimalFormat)
                 }
             }
-            return ''
+            return 0
+        },
+        penalty(dataItem) {
+            if (dataItem) {
+                if (dataItem.hasOwnProperty('penalty')) {
+                    return kendo.toString(dataItem.penalty || 0, dataItem.decimalFormat)
+                }
+            }
+            return 0
         },
         bankReferenceNo(dataItem) {
             if (dataItem) {
-                if (dataItem.hasOwnProperty('overDue')) {
+                if (dataItem.hasOwnProperty('bankReferenceNo')) {
                     return dataItem.bankReferenceNo
                 }
             }
@@ -598,7 +744,7 @@ export default {
         overDue(dataItem) {
             if (dataItem) {
                 if (dataItem.hasOwnProperty('overDue')) {
-                    return dataItem.overDue
+                    return dataItem.overDue || 0
                 }
             }
             return 0
@@ -629,6 +775,7 @@ export default {
         // },
         async initData() {
             if (this.$route.params.id !== undefined) {
+                this.check_id_edit = true
                 const queryString = this.$route.query
                 let type = ''
                 let option = 0
@@ -638,13 +785,14 @@ export default {
                     if (type === 'pmt') {
                         this.mPaymentOption = option
                         this.search = this.$route.params.id
-                        this.searchPurchaseOrderExpense()
+                        this.searchInvoice()
                     }
                 } else {
-                    await this.loadCashPaymentView()
+                    await this.loadCashReceiptView()
                 }
 
             } else {
+                this.check_id_edit = false
                 this.initRow()
             }
         },
@@ -653,7 +801,7 @@ export default {
                 .appendTo(container)
                 .kendoNumericTextBox({
                     decimals: 30,
-                    format: `n${this.purchaseFormContent.decimal}`,
+                    format: `n${this.saleFormContent.decimal}`,
                     min: 0
                 });
         },
@@ -662,50 +810,52 @@ export default {
                 .appendTo(container)
                 .kendoNumericTextBox({
                     decimals: 30,
-                    format: `n${this.purchaseFormContent.decimal}`,
+                    format: `n${this.saleFormContent.decimal}`,
+                    min: 0
+                });
+        },
+        penaltyEditor(container, options) {
+            kendo.jQuery('<input data-bind="value:' + options.field + '"/>')
+                .appendTo(container)
+                .kendoNumericTextBox({
+                    decimals: 30,
+                    format: `n${this.saleFormContent.decimal}`,
                     min: 0
                 });
         },
         onTransactionDateChanged() {
-            if (this.cashPayment.supplier) {
-                const supplier = this.cashPayment.supplier || {}
-                const supId = supplier.id || ''
-                if (supId) {
-                    this.generateNumber()
-                    this.searchPurchaseOrderExpense()
-                }
-            }
-
+            this.generateNumber()
+            this.searchInvoice()
         },
         generateNumber() {
             if (this.$route.params.id) {
-                const tranDate = new Date(this.transactionDate)
-                const tranDateReceipt = new Date(this.cashPayment.transactionDate)
+                const tranDate = new Date(this.cashReceipt.transactionDate)
+                const tranDateReceipt = new Date(this.cashReceipt.transactionDate)
                 const tranDateM = tranDate.getFullYear() + tranDate.getMonth()
                 const tranDateReceiptM = tranDateReceipt.getFullYear() + tranDateReceipt.getMonth()
                 if (tranDateM === tranDateReceiptM) {
-                    this.cashPayment.referenceNo = this.referenceNo
+                    this.cashReceipt.referenceNo = this.referenceNo
                     return
                 }
             }
-            if (this.transactionDate !== '' && this.transactionTypes.length > 0) {
+            if (this.cashReceipt.transactionDate !== '' && this.transactionTypes.length > 0) {
                 let data = {
-                    abbr: this.cashPayment.transactionType.abbr,
-                    structure: this.cashPayment.transactionType.structure,
-                    transactionDate: this.transactionDate,
-                    sequcencing: this.cashPayment.transactionType.sequcencing,
-                    type: TRANSACTION_TYPE,
+                    abbr: this.cashReceipt.transactionType.abbr,
+                    structure: this.cashReceipt.transactionType.structure,
+                    transactionDate: this.cashReceipt.transactionDate,
+                    sequcencing: this.cashReceipt.transactionType.sequcencing,
+                    type: 'Cash Receipt',
                     entity: 1
                 }
                 billingHandler.lastNumber(data).then(response => {
                     if (response.data.statusCode === 200) {
                         const res = response.data.data
-                        const lastNumber = this.zeroPad(parseInt(res.lastNumber), this.cashPayment.transactionType.format)
-                        const number = res.suffix + this.cashPayment.transactionType.numberSeparator + lastNumber
-                        this.cashPayment.number = number
-                        if (this.cashPayment.transactionType.hasOwnProperty('prefixSeparator')) {
-                            const prefixSep = this.cashPayment.transactionType.prefixSeparator
-                            this.cashPayment.referenceNo = this.cashPayment.transactionType.abbr + prefixSep + number
+                        const lastNumber = this.zeroPad(parseInt(res.lastNumber), this.cashReceipt.transactionType.format)
+                        const number = res.suffix + this.cashReceipt.transactionType.numberSeparator + lastNumber
+                        this.cashReceipt.number = number
+                        if (this.cashReceipt.transactionType.hasOwnProperty('prefixSeparator')) {
+                            const prefixSep = this.cashReceipt.transactionType.prefixSeparator
+                            this.cashReceipt.referenceNo = this.cashReceipt.transactionType.abbr + prefixSep + number
                         }
                     }
                 }).catch(e => {
@@ -716,18 +866,31 @@ export default {
         zeroPad(num, places) {
             return String(num).padStart(places, '0')
         },
+        getCircularReplacer() {
+            const seen = new WeakSet();
+            return (key, value) => {
+                if (typeof value === "object" && value !== null) {
+                    if (seen.has(value)) {
+                        return;
+                    }
+                    seen.add(value);
+                }
+                return value;
+            };
+        },
         autoCalculate() {
-            let ds = this.$refs.itemLineDS.kendoWidget(),
-                receiptAmount = 0, discount = 0, convertedAmount = 0, exchangeDiscount = 0, exchangeDiscountTxn = 0,
-                paidAmountTxn = 0
+            //todo: note : rateTobase is cash receipt rate , txnRate is invoice rate
+            let ds = this.$refs.cashReceiptItemLineDS.kendoWidget(),
+                receiptAmount = 0, discount = 0, penalty = 0, convertedAmount = 0, exchangeDiscount = 0,
+                exchangePenalty = 0, paidAmountTxn = 0, exchangePenaltyTxn = 0, exchangeDiscountTxn = 0
+            const row = ds.data().filter(n => n.paidAmount > 0)
             this.jRaw = []
-            const rows = ds.data().filter(m => m.paidAmount > 0)
-            rows.forEach(value => {
-                let nature = '', purchaseRate = 0, paymentRate = 0, rawPaidAmount = 0, rawDiscountAmount = 0,
-                    currencyCode = ''
-                let discountAmount = 0, apAmount = 0, refNo = '', payOption = {},
+            row.forEach(value => {
+                let paidAmt = 0, nature = '', invRate = 0, receiptRate = 0, rawPaidAmount = 0, rawDiscountAmount = 0,
+                    rawPenaltyAmount = 0, currencyCode = ''
+                let discountAmount = 0, arAmount = 0, refNo = '', payOption = {}, penaltyAmount = 0,
                     currency = {}, gainLoss = 0, lastXRate = {}, location = {}, segment = {}, project = {},
-                    locationId = '', segmentId = '', projectId = '', txnId = '', invRate = 1
+                    locationId = '', segmentId = '', projectId = '', txnId = ''
                 if (value.referenceNo) {
                     refNo = value.referenceNo
                 }
@@ -735,7 +898,7 @@ export default {
                     txnId = value.id || ''
                 }
                 if (value.txnRate) {
-                    purchaseRate = parseFloat(value.txnRate)
+                    invRate = parseFloat(value.txnRate)
                 }
                 if (value.currencyCode) {
                     currencyCode = (value.currencyCode) || ''
@@ -764,104 +927,233 @@ export default {
                 if (value.exchangeRate) {
                     lastXRate = (value.exchangeRate) || {}
                 }
-                if (value.txnRate) {
-                    invRate = parseFloat(value.txnRate)
-                }
                 if (value.rateTobase) {
-                    paymentRate = parseFloat(value.rateTobase)
+                    receiptRate = parseFloat(value.rateTobase)
                 }
                 if (value.paidAmount) {
                     receiptAmount += kendo.parseFloat(value.paidAmount)
-                    convertedAmount += (kendo.parseFloat(value.paidAmount) * value.rateTobase)
+                    convertedAmount += (kendo.parseFloat(value.paidAmount) * receiptRate)
                     paidAmountTxn += (kendo.parseFloat(value.paidAmount) * invRate)
-                    // paidAmt = kendo.parseFloat(value.paidAmount) * purchaseRate
+                    paidAmt = kendo.parseFloat(value.paidAmount) * receiptRate
                     rawPaidAmount = kendo.parseFloat(value.paidAmount)
+                    window.console.log('convertedAmount', convertedAmount, '-', receiptRate)
                 }
                 if (value.discount) {
                     // discount += kendo.parseFloat(value.discount)
-                    discount += (kendo.parseFloat(value.discount) * value.rateTobase)
-                    exchangeDiscount += (kendo.parseFloat(value.exchangeDiscount) * value.rateTobase)
+                    discount += (kendo.parseFloat(value.discount) * receiptRate)
+                    exchangeDiscount += (kendo.parseFloat(value.exchangeDiscount) * receiptRate)
                     exchangeDiscountTxn += (kendo.parseFloat(value.discount) * invRate)
-                    discountAmount = kendo.parseFloat(value.discount) * paymentRate
+                    discountAmount = kendo.parseFloat(value.discount) * receiptRate
                     rawDiscountAmount = kendo.parseFloat(value.discount)
                 }
+                if (value.penalty) {
+                    // penalty += kendo.parseFloat(value.penalty)
+                    penalty += (kendo.parseFloat(value.penalty) * receiptRate)
+                    penaltyAmount = (kendo.parseFloat(value.penalty)) * receiptRate
+                    exchangePenalty += (kendo.parseFloat(value.exchangePenalty) * receiptRate)
+                    rawPenaltyAmount = kendo.parseFloat(value.penalty)
+                    exchangePenaltyTxn += kendo.parseFloat(value.penalty) * invRate
+                    // todo: Other Revenue Penalty
+                    if (penaltyAmount > 0) {
+                        if (penaltyAmount * -1 > 0) {
+                            nature = 'dr'
+                        } else {
+                            nature = 'cr'
+                        }
+                        if (this.otherRevenueAcc.hasOwnProperty('id')) {
+                            const obj = {
+                                id: this.otherRevenueAcc.id + '-' + nature + '-' + currencyCode + '-' + invRate + '-' + locationId + '-' + projectId + '-' + segmentId + '-' + txnId,
+                                txnId: txnId,
+                                projectId: projectId,
+                                locationId: locationId,
+                                segmentId: segmentId,
+                                currencyCode: currencyCode,
+                                currency: currency,
+                                lastXRate: lastXRate,
+                                referenceNo: refNo,
+                                transactionDate: value.transactionDate || '',
+                                paymentOption: value.paymentOption || '',
+                                bankReferenceNo: value.bankReferenceNo || '',
+                                // line: new ItemLineModel(value),
+                                receiptRate: receiptRate,
+                                description: 'Penalty',
+                                cashBasicEntries: {},
+                                account: this.otherRevenueAcc,
+                                accountId: this.otherRevenueAcc.id,
+                                amount: rawPenaltyAmount * -1,
+                                exchangeAmount: penaltyAmount * -1,
+                                type: nature,
+                                typeAs: 'Penalty'
+                            }
+                            const objCashBasic = {
+                                id: this.otherRevenueAcc.id + '-' + nature + '-' + currencyCode + '-' + invRate + '-' + locationId + '-' + projectId + '-' + segmentId + '-' + txnId,
+                                txnId: txnId,
+                                projectId: projectId,
+                                locationId: locationId,
+                                segmentId: segmentId,
+                                currencyCode: currencyCode,
+                                currency: currency,
+                                lastXRate: lastXRate,
+                                referenceNo: refNo,
+                                transactionDate: value.transactionDate || '',
+                                paymentOption: value.paymentOption || '',
+                                bankReferenceNo: value.bankReferenceNo || '',
+                                // line: new ItemLineModel(value),
+                                receiptRate: receiptRate,
+                                description: 'Penalty',
+                                account: this.otherRevenueAcc,
+                                accountId: this.otherRevenueAcc.id,
+                                amount: rawPenaltyAmount * -1,
+                                exchangeAmount: penaltyAmount * -1,
+                                type: nature,
+                                typeAs: 'Penalty'
+                            }
+                            obj.cashBasicEntries = objCashBasic
+                            this.jRaw.push(obj)
+                        }
+                    }
+                }
                 // todo: gain or loss exchange rate
-                gainLoss = parseFloat((purchaseRate - paymentRate) * (rawPaidAmount + rawDiscountAmount)) * -1
+                gainLoss = parseFloat((invRate - receiptRate) * (rawPaidAmount + rawDiscountAmount - rawPenaltyAmount))
                 if (gainLoss !== 0) {
                     if (gainLoss > 0) {
                         nature = 'dr'
                     } else {
                         nature = 'cr'
                     }
-                    window.console.log('gainLoss', gainLoss)
-                    if (gainLoss) {
-                        if (this.gainLossAcc.hasOwnProperty('id')) {
-                            this.jRaw.push({
-                                id: this.gainLossAcc.id + '-' + nature + '-' + currencyCode + '-' + purchaseRate + '-' + locationId + '-' + projectId + '-' + segmentId + '-' + txnId,
-                                txnId: txnId,
-                                project: project,
-                                location: location,
-                                segment: segment,
-                                projectId: projectId,
-                                locationId: locationId,
-                                segmentId: segmentId,
-                                currencyCode: currencyCode,
-                                currency: currency,
-                                lastXRate: lastXRate,
-                                line: new ItemLineModel(value),
-                                receiptRate: gainLoss > 0 ? paymentRate : purchaseRate,
-                                description: this.gainOrLossDescription,
-                                account: this.gainLossAcc,
-                                accountId: this.gainLossAcc.id,
-                                amount: 0,
-                                exchangeAmount: gainLoss,
-                                type: nature,
-                                typeAs: 'GainOrLoss'
-                            })
+                    window.console.log('gainLoss', gainLoss, paidAmt, this.gainLossAcc)
+                    // if (gainLoss) {
+                    if (this.gainLossAcc.hasOwnProperty('id')) {
+                        const obj = {
+                            id: this.gainLossAcc.id + '-' + nature + '-' + currencyCode + '-' + invRate + '-' + locationId + '-' + projectId + '-' + segmentId + '-' + txnId,
+                            txnId: txnId,
+                            projectId: projectId,
+                            locationId: locationId,
+                            segmentId: segmentId,
+                            currencyCode: currencyCode,
+                            currency: currency,
+                            lastXRate: lastXRate,
+                            referenceNo: refNo,
+                            transactionDate: value.transactionDate || '',
+                            paymentOption: value.paymentOption || '',
+                            bankReferenceNo: value.bankReferenceNo || '',
+                            // line: new ItemLineModel(value),
+                            receiptRate: gainLoss > 0 ? receiptRate : invRate,
+                            description: this.gainOrLossDescription,
+                            account: this.gainLossAcc,
+                            cashBasicEntries: {},
+                            accountId: this.gainLossAcc.id,
+                            amount: 0,
+                            exchangeAmount: gainLoss,
+                            type: nature,
+                            typeAs: 'GainOrLoss'
                         }
+                        const objCashBasic = {
+                            id: this.gainLossAcc.id + '-' + nature + '-' + currencyCode + '-' + invRate + '-' + locationId + '-' + projectId + '-' + segmentId + '-' + txnId,
+                            txnId: txnId,
+                            projectId: projectId,
+                            locationId: locationId,
+                            segmentId: segmentId,
+                            currencyCode: currencyCode,
+                            currency: currency,
+                            lastXRate: lastXRate,
+                            referenceNo: refNo,
+                            transactionDate: value.transactionDate || '',
+                            paymentOption: value.paymentOption || '',
+                            bankReferenceNo: value.bankReferenceNo || '',
+                            // line: new ItemLineModel(value),
+                            receiptRate: gainLoss > 0 ? receiptRate : invRate,
+                            description: this.gainOrLossDescription,
+                            account: this.gainLossAcc,
+                            accountId: this.gainLossAcc.id,
+                            amount: 0,
+                            exchangeAmount: gainLoss,
+                            type: nature,
+                            typeAs: 'GainOrLoss'
+                        }
+                        obj.cashBasicEntries = objCashBasic
+                        this.jRaw.push(obj)
                     }
+                    // }
                 }
-                //Todo: AP  Dr
-                apAmount = (rawPaidAmount + rawDiscountAmount)
-                if (apAmount > 0) {
+
+                //Todo: AR  Cr
+                arAmount = (rawPaidAmount + rawDiscountAmount - rawPenaltyAmount)
+                if (arAmount * -1 > 0) {
                     nature = 'dr'
                 } else {
                     nature = 'cr'
                 }
-                if (value.hasOwnProperty('apAcc')) {
-                    const apAcc = value.apAcc
-                    if (apAcc) {
-                        if (apAcc.hasOwnProperty('id')) {
-                            this.jRaw.push({
-                                id: apAcc.id + '-' + nature + '-' + currencyCode + '-' + purchaseRate + '-' + locationId + '-' + projectId + '-' + segmentId + '-' + txnId,
-                                txnId: txnId,
-                                project: project,
-                                location: location,
-                                segment: segment,
-                                projectId: projectId,
-                                locationId: locationId,
-                                segmentId: segmentId,
-                                currencyCode: currencyCode,
-                                currency: currency,
-                                lastXRate: lastXRate,
-                                line: new ItemLineModel(value),
-                                receiptRate: purchaseRate,
-                                description: refNo,
-                                account: apAcc,
-                                accountId: apAcc.id,
-                                amount: apAmount,
-                                exchangeAmount: apAmount * purchaseRate,
-                                type: nature,
-                                typeAs: 'AP'
-                            })
-                        }
+                if (value.hasOwnProperty('receivableAcc')) {
+                    let cashBasicEntries = []
+                    if (value.hasOwnProperty('cashBasicIncomeAcc')) {
+                        const cashBasicIncomeAcc = value.cashBasicIncomeAcc || []
+                        cashBasicIncomeAcc.forEach((k, index) => {
+                            const account = k.account || {}
+                            const accountId = k.accountId || ''
+                            const amount = arAmount * (k.amountPercentage || 0)
+                            if (accountId) {
+                                cashBasicEntries.push({
+                                    id: accountId + '-' + nature + '-' + currencyCode + '-' + invRate + '-' + locationId + '-' + projectId + '-' + segmentId + '-' + txnId,
+                                    txnId: txnId,
+                                    projectId: projectId,
+                                    locationId: locationId,
+                                    segmentId: segmentId,
+                                    currencyCode: currencyCode,
+                                    currency: currency,
+                                    lastXRate: lastXRate,
+                                    referenceNo: refNo,
+                                    transactionDate: value.transactionDate || '',
+                                    paymentOption: value.paymentOption || '',
+                                    bankReferenceNo: value.bankReferenceNo || '',
+                                    // line: new ItemLineModel(value),
+                                    receiptRate: invRate,
+                                    description: this.cashReceipt.journalNote || refNo,
+                                    account: account,
+                                    accountId: accountId,
+                                    amount: amount * -1,
+                                    exchangeAmount: amount * -1 * invRate,
+                                    type: nature,
+                                    typeAs: 'Income'
+                                })
+                                const receivableAcc = value.receivableAcc
+                                if (receivableAcc) {
+                                    if (receivableAcc.hasOwnProperty('id')) {
+                                        this.jRaw.push({
+                                            id: receivableAcc.id + '-' + nature + '-' + currencyCode + '-' + invRate + '-' + locationId + '-' + projectId + '-' + segmentId + '-' + txnId + '-' + index,
+                                            txnId: txnId,
+                                            projectId: projectId,
+                                            locationId: locationId,
+                                            segmentId: segmentId,
+                                            currencyCode: currencyCode,
+                                            currency: currency,
+                                            lastXRate: lastXRate,
+                                            referenceNo: refNo,
+                                            transactionDate: value.transactionDate || '',
+                                            paymentOption: value.paymentOption || '',
+                                            bankReferenceNo: value.bankReferenceNo || '',
+                                            // line: new ItemLineModel(value),
+                                            receiptRate: invRate,
+                                            description: this.cashReceipt.journalNote || refNo,
+                                            account: receivableAcc,
+                                            cashBasicEntries: cashBasicEntries[index],
+                                            accountId: receivableAcc.id,
+                                            amount: index === 0 ? (arAmount * -1) : 0,
+                                            exchangeAmount: index === 0 ? (arAmount * -1 * invRate) : 0,
+                                            type: nature,
+                                            typeAs: 'AR'
+                                        })
+                                    }
+                                }
+                            }
+                        })
                     }
-
                 }
-                //Todo: Cash Account  CR
+
+                //Todo: Cash Account  Dr
                 if (value.paymentOption) {
                     payOption = value.paymentOption
-                    const cashAmount = (rawPaidAmount) * -1 //+ ((purchaseRate - paymentRate) * (rawPaidAmount + rawDiscountAmount))
+                    const cashAmount = (rawPaidAmount) //+ ((invRate - receiptRate) * (rawPaidAmount + rawDiscountAmount))
                     // const cashAmount = rawPaidAmount + (gainLoss ) + rawPaidAmount
                     if (cashAmount > 0) {
                         nature = 'dr'
@@ -869,68 +1161,123 @@ export default {
                         nature = 'cr'
                     }
                     if (payOption.hasOwnProperty('account')) {
-                        const payOptionAcc = payOption.account
+                        const payOptionAcc = payOption.account || {}
                         if (payOptionAcc.hasOwnProperty('id')) {
-                            this.jRaw.push({
-                                id: payOptionAcc.id + '-' + nature + '-' + currencyCode + '-' + purchaseRate + '-' + locationId + '-' + projectId + '-' + segmentId + '-' + txnId,
+                            const obj = {
+                                id: payOptionAcc.id + '-' + nature + '-' + currencyCode + '-' + invRate + '-' + locationId + '-' + projectId + '-' + segmentId + '-' + txnId,
                                 txnId: txnId,
-                                project: project,
-                                location: location,
-                                segment: segment,
                                 projectId: projectId,
                                 locationId: locationId,
                                 segmentId: segmentId,
                                 currencyCode: currencyCode,
                                 currency: currency,
                                 lastXRate: lastXRate,
-                                line: new ItemLineModel(value),
-                                receiptRate: purchaseRate,
-                                description: refNo,
+                                referenceNo: refNo,
+                                transactionDate: value.transactionDate || '',
+                                paymentOption: value.paymentOption || '',
+                                bankReferenceNo: value.bankReferenceNo || '',
+                                receiptRate: invRate,
+                                description: this.cashReceipt.journalNote || refNo,
                                 account: payOptionAcc,
                                 accountId: payOptionAcc.id,
                                 amount: cashAmount,
-                                exchangeAmount: cashAmount * paymentRate,
+                                cashBasicEntries: {},
+                                exchangeAmount: cashAmount * receiptRate,
                                 type: nature,
                                 typeAs: 'CashAccount'
-                            })
+                            }
+                            const objCashBasicEntry = {
+                                id: payOptionAcc.id + '-' + nature + '-' + currencyCode + '-' + invRate + '-' + locationId + '-' + projectId + '-' + segmentId + '-' + txnId,
+                                txnId: txnId,
+                                projectId: projectId,
+                                locationId: locationId,
+                                segmentId: segmentId,
+                                currencyCode: currencyCode,
+                                currency: currency,
+                                lastXRate: lastXRate,
+                                referenceNo: refNo,
+                                transactionDate: value.transactionDate || '',
+                                paymentOption: value.paymentOption || '',
+                                bankReferenceNo: value.bankReferenceNo || '',
+                                receiptRate: invRate,
+                                description: this.cashReceipt.journalNote || refNo,
+                                account: payOptionAcc,
+                                accountId: payOptionAcc.id,
+                                amount: cashAmount,
+                                exchangeAmount: cashAmount * receiptRate,
+                                type: nature,
+                                typeAs: 'CashAccount'
+                            }
+                            obj.cashBasicEntries = objCashBasicEntry
+                            // obj.cashBasicEntries = objCashBasicEntry
+                            // let obj1 = obj
+                            // obj1['cashBasicEntries'] = obj
+                            // window.console.log('cashBasicEntries', obj1)
+                            this.jRaw.push(obj)
                         }
                     }
                 }
-                //Todo: Settlement Discount  Cr
+                //Todo: Settlement Discount  Dr
                 if (value.paymentTerm) {
-                    const settlementDisc = value.paymentTerm
                     if (discountAmount > 0) {
-                        if (discountAmount * -1 > 0) {
+                        const settlementDisc = value.paymentTerm
+                        if (discountAmount > 0) {
                             nature = 'dr'
                         } else {
                             nature = 'cr'
                         }
-                        window.console.log(settlementDisc, 'settlementDisc')
                         if (settlementDisc.hasOwnProperty('account')) {
                             const settlementDiscAcc = settlementDisc.account
                             if (settlementDiscAcc.hasOwnProperty('id')) {
-                                this.jRaw.push({
-                                    id: settlementDiscAcc.id + '-' + nature + '-' + currencyCode + '-' + purchaseRate + '-' + locationId + '-' + projectId + '-' + segmentId + '-' + txnId,
+                                const obj = {
+                                    id: settlementDiscAcc.id + '-' + nature + '-' + currencyCode + '-' + invRate + '-' + locationId + '-' + projectId + '-' + segmentId + '-' + txnId,
                                     txnId: txnId,
-                                    project: project,
-                                    location: location,
-                                    segment: segment,
                                     projectId: projectId,
                                     locationId: locationId,
                                     segmentId: segmentId,
                                     currencyCode: currencyCode,
                                     currency: currency,
                                     lastXRate: lastXRate,
-                                    line: new ItemLineModel(value),
-                                    receiptRate: paymentRate,
-                                    description: 'Purchase Payment Discount',
+                                    referenceNo: refNo,
+                                    transactionDate: value.transactionDate || '',
+                                    paymentOption: value.paymentOption || '',
+                                    bankReferenceNo: value.bankReferenceNo || '',
+                                    // line: new ItemLineModel(value),
+                                    receiptRate: receiptRate,
+                                    description: 'Receipt Settlement Discount',
                                     account: settlementDiscAcc,
+                                    cashBasicEntries: {},
                                     accountId: settlementDiscAcc.id,
-                                    amount: rawDiscountAmount * -1,
-                                    exchangeAmount: discountAmount * -1,
+                                    amount: rawDiscountAmount,
+                                    exchangeAmount: discountAmount,
                                     type: nature,
                                     typeAs: 'Settlement Discount'
-                                })
+                                }
+                                const objCashbasic = {
+                                    id: settlementDiscAcc.id + '-' + nature + '-' + currencyCode + '-' + invRate + '-' + locationId + '-' + projectId + '-' + segmentId + '-' + txnId,
+                                    txnId: txnId,
+                                    projectId: projectId,
+                                    locationId: locationId,
+                                    segmentId: segmentId,
+                                    currencyCode: currencyCode,
+                                    currency: currency,
+                                    lastXRate: lastXRate,
+                                    referenceNo: refNo,
+                                    transactionDate: value.transactionDate || '',
+                                    paymentOption: value.paymentOption || '',
+                                    bankReferenceNo: value.bankReferenceNo || '',
+                                    // line: new ItemLineModel(value),
+                                    receiptRate: receiptRate,
+                                    description: 'Receipt Settlement Discount',
+                                    account: settlementDiscAcc,
+                                    accountId: settlementDiscAcc.id,
+                                    amount: rawDiscountAmount,
+                                    exchangeAmount: discountAmount,
+                                    type: nature,
+                                    typeAs: 'Settlement Discount'
+                                }
+                                obj.cashBasicEntries = objCashbasic
+                                this.jRaw.push(obj)
                             }
                         }
                     }
@@ -938,27 +1285,32 @@ export default {
             })
             // this.invoiceTxn(txnIds)
 
-            this.cashPayment.total = receiptAmount
-            this.cashPayment.exchangeAmount = convertedAmount
-            this.cashPayment.discount = discount
-            this.cashPayment.exchangeDiscount = exchangeDiscount
-            this.cashPayment.paidAmountTxn = paidAmountTxn
-            this.cashPayment.exchangeDiscountTxn = exchangeDiscountTxn
+            this.cashReceipt.total = receiptAmount
+            this.cashReceipt.exchangeAmount = convertedAmount
+            this.cashReceipt.discount = discount
+            this.cashReceipt.exchangeDiscount = exchangeDiscount
+
+            this.cashReceipt.penalty = penalty
+
+            this.cashReceipt.exchangePenaltyTxn = exchangePenaltyTxn
+            this.cashReceipt.paidAmountTxn = paidAmountTxn
+            this.cashReceipt.exchangeDiscountTxn = exchangeDiscountTxn
+            this.cashReceipt.exchangePenalty = exchangePenalty
+
             this.shrinkData(this.jRaw)
-        },
-        removeDuplicate(array) {
-            const result = [];
-            const map = new Map();
-            for (const item of array) {
-                if (!map.has(item.id)) {
-                    map.set(item.id, true);    // set any value to Map
-                    result.push(item)
-                }
-            }
-            return result
+            // let itemLineDS = this.$refs.itemLineDS.kendoWidget()
+            // const dataRow = itemLineDS.data().filter(n => n.paidAmount > 0)
+            //
+            // window.console.log(this.jRaw, 'cash jRaw')
         },
         shrinkData(obj) {
-            const uniques = this.removeDuplicate(obj)
+            const uniques = this.removeDuplicate(obj) /*[...new Set(accountId.map(i => {
+                return {
+                    id_: i.id_,
+                    id: i.id,
+                    type: i.type
+                }
+            }))]*/
             uniques.forEach(n => {
                 const found = obj.filter(m => m.id === n.id)
                 let amount = 0, exchangeAmount = 0
@@ -983,36 +1335,34 @@ export default {
                         break
                 }
             })
-            // window.console.log(JSON.stringify(this.jRaw), 'uniques')
             const txnId = this.jRaw.map(o => o.txnId)
             var uSet = new Set(txnId);
             const uniqueSet = [...uSet]
             let jRaws = []
-            // window.console.log(JSON.stringify(uniqueSet), 'uniques')
             uniqueSet.forEach(n => {
                 const found = this.jRaw.filter(m => m.txnId === n)
-                const line = found[0].line
-                const refNo = line.referenceNo
                 jRaws.push({
                     id: n,
                     currencyCode: found[0].currencyCode,
                     projectId: found[0].projectId,
                     segmentId: found[0].segmentId,
                     locationId: found[0].locationId,
-                    referenceNo: refNo || '',
-                    entries: found
+                    referenceNo: found[0].referenceNo,
+                    entries: JSON.parse(JSON.stringify(found))
                 })
             })
             this.jRaw = jRaws
             this.dr = dr
             this.cr = cr
             window.console.log('dr=', dr, 'cr=', cr, 'dr+cr = ', dr + cr)
-            window.console.log(JSON.stringify(jRaws), 'uniques')
+            window.console.log(JSON.stringify(this.jRaw), 'uniques')
 
         },
-        purchaseTxn() {
+        invoiceTxn() {
             let txnIds = [], ids = []
-            this.itemLines.forEach(value => {
+            const ds = this.$refs.cashReceiptItemLineDS.kendoWidget()
+            const data = ds.data()
+            data.forEach(value => {
                 if (value.id) {
                     txnIds.push({
                         id: value.id,
@@ -1022,7 +1372,7 @@ export default {
             })
             ids = Object.values(txnIds.reduce((r, o) => (r[o.id] = o, r), {}))
             ids.forEach(m => {
-                const lines = this.itemLines.filter(n => n.id === m.id)
+                const lines = data.filter(n => n.id === m.id)
                 let paidAmt = 0
                 let amountTobePaid = 0
                 lines.forEach(x => {
@@ -1044,19 +1394,19 @@ export default {
             this.txnList = ids
         },
         initRow() {
-            let ds = this.$refs.itemLineDS.kendoWidget()
+            let ds = this.$refs.cashReceiptItemLineDS.kendoWidget()
             ds.insert([this.itemLine])
 
         },
         async initGrid(that) {
-            let grid = kendo.jQuery('#grid').data('kendoGrid')
+            let grid = $('#gridCashReceipt').data('kendoGrid')
             new Promise(resolve => {
                 setTimeout(() => {
                     resolve('resolved')
                     $('#header-chb').change(function (ev) {
                         let checked = ev.target.checked
                         data = []
-                        kendo.jQuery('.row-checkbox').each(function (idx, item) {
+                        $('.row-checkbox').each(function (idx, item) {
                             if (checked) {
                                 if (!($(item).closest('tr').is('.k-state-selected'))) {
                                     $(item).click()
@@ -1103,7 +1453,6 @@ export default {
 
         },
         checkedChanged(data) {
-
             data.forEach(m => {
                 if (parseFloat(m.paidAmount) === 0) {
                     m.paidAmount = m.amountTobePaid
@@ -1114,7 +1463,6 @@ export default {
                 this.itemLines.splice(index, 1, m)
             })
             this.autoCalculate()
-
         },
         headerTemplate() {
             return `<input type='checkbox' id='header-chb' class='k-checkbox header-checkbox'>`
@@ -1130,7 +1478,7 @@ export default {
         },
         settlementDiscount(dataItem) {
             if (dataItem.hasOwnProperty('paymentTerm')) {
-                return dataItem.paymentTerm.name
+                return dataItem.paymentTerm.name || ''
             }
             return ''
         },
@@ -1163,12 +1511,12 @@ export default {
             if (value && value[textField] === emptyItem[textField]) {
                 return;
             }
-            this.mSupplier = value
-            this.cashPayment.supplier = value
+            this.mCustomer = value
+            this.cashReceipt.customer = value
         },
         onCustomerFilterChanged(event) {
             const filter = event.filter.value
-            this.loadData(0, filter, this.supBaseUrl)
+            this.loadData(0, filter, this.cusBaseUrl)
             this.filter = filter
         },
         loadData(skip, filter, baseUrl) {
@@ -1182,41 +1530,55 @@ export default {
                 .then(this.afterFetch)
         },
         afterFetch(json) {
-            this.suppliers = json.data
+            this.customers = json.data
         },
         numberFormat(value) {
-            return kendo.toString(value, `n${this.purchaseFormContent.decimal}`)
+            return kendo.toString(value, `n${this.saleFormContent.decimal}`)
         },
         rowNumberTmpl(dataItem) {
-            let ds = this.$refs.itemLineDS.kendoWidget(),
+            let ds = this.$refs.cashReceiptItemLineDS.kendoWidget(),
                 index = ds.indexOf(dataItem);
             return index + 1;
         },
         dataSourceChanged(e) {
-            let amtTobePaid = 0, paidAmount = 0
+            let dataRow = e.items[0] || {}
+            if (Object.keys(dataRow).length > 0) {
+                dataRow.set('optionType', OPTION_TYPE)
+            }
+
             if (e.field) {
-                let dataRow = e.items[0]
+                let amountTobePaid = 0, paidAmount = 0, variance = 0
                 switch (e.field) {
                     case "discount":
-                        dataRow.set('amountTobePaid', (parseFloat(dataRow.amount)) - parseFloat(dataRow.discount))
+                        dataRow.set('amountTobePaid', (parseFloat(dataRow.amount) + parseFloat(dataRow.penalty)) - parseFloat(dataRow.discount))
                         dataRow.set('exchangeDiscount', (parseFloat(dataRow.discount) * parseFloat(dataRow.rateTobase)))
                         dataRow.set('exchangeDiscountTxn', parseFloat(dataRow.discount) * parseFloat(dataRow.txnRate))
+                        window.console.log((parseFloat(dataRow.discount) * parseFloat(dataRow.rateTobase)), '----')
+                        break
+                    case "penalty":
+                        dataRow.set('amountTobePaid', (parseFloat(dataRow.amount) + parseFloat(dataRow.penalty)) - parseFloat(dataRow.discount))
+                        dataRow.set('exchangePenalty', parseFloat(dataRow.penalty) * parseFloat(dataRow.rateTobase))
+                        dataRow.set('exchangePenaltyTxn', parseFloat(dataRow.penalty) * parseFloat(dataRow.txnRate))
+
                         break
                     case "paidAmount":
-                        amtTobePaid = parseFloat(dataRow.amountTobePaid)
+                        amountTobePaid = parseFloat(dataRow.amountTobePaid)
                         paidAmount = parseFloat(dataRow.paidAmount)
-                        if (paidAmount > amtTobePaid) {
-                            paidAmount = amtTobePaid
+                        variance = parseFloat(dataRow.penalty) - parseFloat(dataRow.discount)
+                        if (paidAmount > amountTobePaid) {
+                            paidAmount = amountTobePaid
+                        } else if (paidAmount < variance) {
+                            paidAmount = variance
                         }
-                        dataRow.set('paidAmount', parseFloat(paidAmount))
-                        dataRow.set('paidAmountTobase', (parseFloat(paidAmount) * parseFloat(dataRow.rateTobase)))
+                        dataRow.set('paidAmount', paidAmount)
+                        dataRow.set('paidAmountTobase', (paidAmount * parseFloat(dataRow.rateTobase)))
                         dataRow.set('paidAmountTxn', (paidAmount * parseFloat(dataRow.txnRate)))
                         break
                     default:
                         break
                 }
 
-                this.purchaseTxn()
+                this.invoiceTxn()
                 this.autoCalculate()
 
             }
@@ -1233,17 +1595,17 @@ export default {
                 confirmButtonColor: "#4d4848",
                 cancelButtonColor: "#ED1A3A",
                 confirmButtonText: i18n.t('discard'),
-            }).then((resultCen) => {
-                window.console.log(resultCen)
-                if (resultCen.value) {
+            }).then((result) => {
+                if (result.value) {
+                    this.clear();
                     this.$router.go(-1);
                 }
             });
         },
         PMTTemplate(dataItem) {
-            const pmt = dataItem.paymentOption
+            const pmt = dataItem.paymentOption || {}
             if (pmt) {
-                return `<span>${pmt.name ? pmt.name : ``}</span>`
+                return `<span>${pmt.bankAccountName || ``}</span>`
             } else {
                 return ``
             }
@@ -1257,6 +1619,32 @@ export default {
                         if (res.data.statusCode === 200) {
                             this.showLoading = false
                             this.paymentMethod = res.data.data
+                        }
+                    }).catch()
+                    {
+                        this.showLoading = false
+                    }
+                }, 10)
+            })
+        },
+        async loadOtherAccount() {
+            new Promise(resolve => {
+                setTimeout(() => {
+                    resolve('resolved')
+                    settingHandler.getOtherAccount().then(res => {
+                        if (res.data.statusCode === 200) {
+                            this.showLoading = false
+                            const response = res.data.data
+                            const data = response.filter(o => o.banhjiAccCode === '740010')
+                            // window.console.log(data, ' this.gainLossAc')
+                            if (data.length > 0) {
+                                this.gainLossAcc = data[0].account
+                                window.console.log(this.gainLossAcc, 'data[0].account')
+                            }
+                            const data_ = response.filter(o => o.banhjiAccCode === '740040')
+                            if (data_.length > 0) {
+                                this.otherRevenueAcc = data_[0].account
+                            }
                         }
                     }).catch()
                     {
@@ -1288,12 +1676,12 @@ export default {
             new Promise(resolve => {
                 setTimeout(() => {
                     resolve('resolved');
-                    prefixHandler.get(TXN_TYPE).then(res => {
+                    prefixHandler.get('cash receipt').then(res => {
                         if (res.data.statusCode === 200) {
                             this.showLoading = false
                             this.transactionTypes = res.data.data
                             if (this.transactionTypes.length > 0) {
-                                this.cashPayment.transactionType = this.transactionTypes[0]
+                                this.cashReceipt.transactionType = this.transactionTypes[0]
                                 if (!this.$route.params.id) {
                                     this.generateNumber()
                                 }
@@ -1307,28 +1695,47 @@ export default {
             new Promise(resolve => {
                 setTimeout(() => {
                     resolve('resolved');
-                    purchaseFormContentHandler.list().then(res => {
+                    saleFormContentHandler.list().then(res => {
                         if (res.data.statusCode === 200) {
                             const data = res.data.data
                             if (data.length > 0) {
-                                this.purchaseFormContent = data[0]
+                                this.saleFormContent = data[0]
                             }
                         }
                     })
                 }, 10)
             })
         },
-        async searchPurchaseOrderExpense() {
+        async searchInvoice() {
             new Promise(resolve => {
                 setTimeout(() => {
                     resolve('resolved');
                     let data = {}
                     this.showLoading = true
-                    if (this.mPaymentOption === 'Vendor') {
+                    window.console.log(this.mPaymentOption, 'payment ')
+                    if (this.mPaymentOption === 'Invoice') {
                         data = {
-                            search: this.mSupplier.id,
-                            type: 'Vendor',
-                            transactionDate: this.transactionDate,
+                            search: this.search,
+                            type: 'invoice',
+                            transactionDate: this.cashReceipt.transactionDate,
+                        }
+                    } else if (this.mPaymentOption === 'CRN') {
+                        data = {
+                            search: this.search,
+                            type: 'crn',
+                            transactionDate: this.cashReceipt.transactionDate,
+                        }
+                    } else if (this.mPaymentOption === 'Payment Code') {
+                        data = {
+                            search: this.search,
+                            type: 'payment code',
+                            transactionDate: this.cashReceipt.transactionDate,
+                        }
+                    } else if (this.mPaymentOption === 'Customer') {
+                        data = {
+                            search: this.mCustomer.id,
+                            type: 'customer',
+                            transactionDate: this.cashReceipt.transactionDate,
                         }
                     }
                     this.itemLines = []
@@ -1336,26 +1743,25 @@ export default {
                         if (data.search.length > 4) {
                             this.showLoading = true
                             try {
-                                billingHandler.searchCashPayment(data).then(res => {
-                                    this.showLoading = false
+                                billingHandler.search(data).then(res => {
                                     if (res.data.statusCode === 200) {
-                                        const response = res.data.data.filter((obj) => {return obj.segment.id == this.segment.id})
+                                        const response = res.data.data
                                         const result = res.data.result
                                         this.showLoading = false
                                         if (response.length > 0) {
                                             this.itemLines = response
                                             const obj = response[0]
                                             this.autoCalculate()
-                                            if (obj.hasOwnProperty('supplier')) {
-                                                this.cashPayment.supplier = obj.supplier
-                                                if (obj.supplier.hasOwnProperty('name')) {
-                                                    this.name = obj.supplier.name
+                                            if (obj.hasOwnProperty('customer')) {
+                                                this.cashReceipt.customer = obj.customer
+                                                if (obj.customer.hasOwnProperty('name')) {
+                                                    this.name = obj.customer.name
                                                 }
                                             }
                                         }
                                         const baseCurrency = result
                                         this.baseCurrency = baseCurrency
-                                        this.cashPayment.currency = baseCurrency
+                                        this.cashReceipt.currency = baseCurrency
                                         if (baseCurrency) {
                                             if (baseCurrency.hasOwnProperty('code')) {
                                                 this.baseCurrencyCode = baseCurrency.code
@@ -1379,232 +1785,139 @@ export default {
                 }, 10)
             })
         },
-        async onSaveClose(isPrint) {
+        async onSaveClose(save) {
             if (!this.$refs.form.validate()) {
                 this.$refs.form.validate()
                 return
             }
-            new Promise(resolve => {
-                setTimeout(() => {
-                    resolve('resolved')
-                    let itemLineDS = this.$refs.itemLineDS.kendoWidget()
-                    let dataValidate = 0
-                    const dataRow = itemLineDS.data().filter(n => n.paidAmount > 0).map(n => {
-                        return new ItemLineModel(n)
-                    })
-                    if (dataRow.length > 0) {
-                        /*todo: check payment option */
-                        // dataRow.forEach((value, index) => {
-                        //     const paymentOption = value.paymentOption || {}
-                        //     const paymentOptionId = paymentOption.id || ''
-                        //     if (paymentOptionId === '' || paymentOptionId === undefined) {
-                        //         this.$snotify.error('Please select payment option at row ' + (index + 1))
-                        //     } else {
-                        //         dataValidate += 1
-                        //     }
-                        // })
-                        let self = this;
-                        dataRow.forEach((value) => {
-                            if (value.paymentOption.id == undefined || value.paymentOption.id == '') {
-                                value.paymentOption = self.paymentMethod
-                            }
-                            dataValidate += 1
-                        });
-                        /*****************************/
-                        if (dataRow.length === dataValidate) {
-                            let isAutoGenerate = 1
-                            this.autoCalculate()
-                            if (this.$route.params.id) {
-                                const tranDate = new Date(this.transactionDate)
-                                const tranDateReceipt = new Date(this.cashPayment.transactionDate)
-                                const tranDateM = tranDate.getFullYear() + tranDate.getMonth()
-                                const tranDateReceiptM = tranDateReceipt.getFullYear() + tranDateReceipt.getMonth()
-                                if (tranDateM === tranDateReceiptM) {
-                                    isAutoGenerate = 0
-                                }
-                            }
-                            // let data = {
-                            //   "id": this.cashPayment.id ? this.cashPayment.id : '',
-                            //   "type": TRANSACTION_TYPE,
-                            //   "number": this.cashPayment.number,
-                            //   "abbr": this.cashPayment.transactionType.abbr,
-                            //   "transactionDate": this.transactionDate,
-                            //   "supplier": this.cashPayment.supplier,
-                            //   "transactionType": this.cashPayment.transactionType,
-                            //   "itemLine": dataRow,
-                            //   "transactionNote": this.cashPayment.transactionNote,
-                            //   "journalNote": this.cashPayment.journalNote,
-                            //   "referenceNo": this.cashPayment.referenceNo,
-                            //   "total": this.cashPayment.total, // not used
-                            //   "currency": this.cashPayment.currency,
-                            //   "exchangeAmount": this.cashPayment.exchangeAmount,// amount to base currency
-                            //   "paidOption": this.mPaymentOption,
-                            //   "paidOptionText": this.mSupplier,
-                            //   "discount": this.cashPayment.discount,
-                            //   "status": 1,
-                            //   "approvedBy": this.cashPayment.approvedBy,
-                            //   "formTemplate": {},
-                            //   "createdAt": this.cashPayment.createdAt,
-                            //   "loggedUser": this.loggedUser,
-                            //   "txnList": this.txnList,
-                            //   "isAutoGenerate": isAutoGenerate,
-                            //   "oldTotal": this.oldTotal,
-                            //   "jRaw": this.jRaw,
-                            //   "actionType": this.$route.params.id ? this.$route.query.type : 'new'
-                            // }
-                            //todo: match Cash Payment model
-                            this.cashPayment.paidOption = this.mPaymentOption
-                            this.cashPayment.paidOptionText = this.mSupplier
-                            this.cashPayment.itemLine = dataRow
-                            this.cashPayment['jRaw'] = this.jRaw
-                            this.cashPayment['type'] = TRANSACTION_TYPE
-                            this.cashPayment.loggedUser = this.loggedUser
-                            this.cashPayment['oldTotal'] = this.oldTotal
-                            this.cashPayment['isAutoGenerate'] = isAutoGenerate
-                            this.cashPayment['txnList'] = this.txnList
-                            this.cashPayment['transactionDate'] = this.transactionDate
-                            this.cashPayment['actionType'] = this.$route.params.id ? this.$route.query.type : 'new'
+            let itemLineDS = this.$refs.cashReceiptItemLineDS.kendoWidget()
+            let dataValidate = 0
+            const dataRow = itemLineDS.data().filter(n => n.paidAmount > 0).map(o => {
+                return new ItemLineModel(o)
+            })
 
-                            this.showLoading = true
-                            billingHandler.createCashPayment(this.cashPayment).then(response => {
-                                if (response.data.statusCode === 201) {
-                                    // this.close(response.data.data)
-                                    this.showLoading = false
-                                    this.$snotify.success('Successfully')
-                                    if (isPrint) {
-                                        getPrint(response.data.data);
-                                        this.clear()
-
-                                    } else {
-                                        this.clear()
-                                        window.history.go(-1)
-                                    }
-                                }
-                            }).catch(e => {
-                                this.showLoading = false
-                                this.$snotify.error('Something went wrong')
-                                this.errors.push(e)
-                            })
+            if (dataRow.length > 0) {
+                dataRow.forEach((value, index) => {
+                    if (value.paymentOption.id == undefined || value.paymentOption.id == '') {
+                        this.$snotify.error('Please check payment option again' + (index + 1))
+                    } else {
+                        dataValidate += 1
+                    }
+                });
+                if (dataRow.length === dataValidate) {
+                    let isAutoGenerate = 1
+                    // this.autoCalculate()
+                    if (this.$route.params.id) {
+                        const tranDate = new Date(this.cashReceipt.transactionDate)
+                        const tranDateReceipt = new Date(this.cashReceipt.transactionDate)
+                        const tranDateM = tranDate.getFullYear() + tranDate.getMonth()
+                        const tranDateReceiptM = tranDateReceipt.getFullYear() + tranDateReceipt.getMonth()
+                        if (tranDateM === tranDateReceiptM) {
+                            isAutoGenerate = 0
                         }
                     }
+                    //todo: match Cash receipt model
+                    this.cashReceipt.paidOption = this.mPaymentOption
+                    this.cashReceipt.transactionDateTZ = Helper.toISODate(this.cashReceipt.transactionDate)
+                    this.cashReceipt.paidOptionText = this.search ? this.search : this.mCustomer
+                    this.cashReceipt.itemLine = dataRow
+                    this.cashReceipt['jRaw'] = this.jRaw
+                    this.cashReceipt.loggedUser = this.loggedUser
+                    this.cashReceipt['oldTotal'] = this.oldTotal
+                    this.cashReceipt['isAutoGenerate'] = isAutoGenerate
+                    this.cashReceipt['txnList'] = this.txnList
+                    this.cashReceipt['transactionDate'] = this.cashReceipt.transactionDate
+                    this.cashReceipt['actionType'] = this.$route.params.id ? this.$route.query.type : 'new'
 
-                }, 20);
-            })
+                    this.showLoading = true
+                    // let data = this.cashReceipt
+                    // window.console.log(JSON.stringify(data), '----', isAutoGenerate)
+                    billingHandler.createReceipt(this.cashReceipt).then(response => {
+                        if (response.data.statusCode === 201) {
+                            this.showLoading = false
+                            // this.close(response.data.data)
+                            this.$snotify.success('Successfully')
+                            if (save == 'new') {
+                                this.clear()
+                            } else {
+                                this.clear()
+                                this.close()
+                            }
+                        }
+                    }).catch(e => {
+                        this.$snotify.error('Something went wrong')
+                        this.errors.push(e)
+                    })
+                }
+            }
         },
-        async loadCashPaymentView() {
+        async loadCashReceiptView() {
             new Promise(resolve => {
                 setTimeout(() => {
                     resolve('resolved')
                     this.itemLines = []
-                    if (this.$route.params.id) {
-                        const strFilter = '?id=' + this.$route.params.id
-                        billingHandler.txnCashPayment(strFilter).then(res => {
-                            if (res.data.statusCode === 200) {
-                                this.showLoading = false
-                                const response = res.data.data
-                                if (response.length > 0) {
-                                    this.cashPayment = response[0]
-                                    this.referenceNo = this.cashPayment.referenceNo
-                                    this.mSupplier = this.cashPayment.supplier
-                                    this.oldTotal = this.cashPayment.total
-                                    this.itemLines = response[0].itemLine
-                                    if (this.cashPayment.hasOwnProperty('supplier')) {
-                                        if (this.cashPayment.supplier.hasOwnProperty('name')) {
-                                            this.name = this.cashPayment.supplier.name
-                                        }
+                    billingHandler.txnView(this.$route.params.id).then(res => {
+                        if (res.data.statusCode === 200) {
+                            this.showLoading = false
+                            const response = res.data.data
+                            if (response.length > 0) {
+                                this.cashReceipt = response[0]
+                                this.referenceNo = this.cashReceipt.referenceNo
+                                this.oldTotal = this.cashReceipt.total
+                                this.itemLines = response[0].itemLine
+                                if (this.cashReceipt.hasOwnProperty('customer')) {
+                                    if (this.cashReceipt.customer.hasOwnProperty('name')) {
+                                        this.name = this.cashReceipt.customer.name
                                     }
                                 }
                             }
-                        }).catch()
-                        {
-                            this.showLoading = false
                         }
+                    }).catch()
+                    {
+                        this.showLoading = false
                     }
                 }, 10)
             })
         },
         clear() {
+            let ds = this.$refs.cashReceiptItemLineDS.kendoWidget();
+            ds.data([]);
             this.id = undefined
-            this.cashPayment = new CashPaymentModel({})
-            this.itemLines = []
-            this.cashPayment.transactionType = this.transactionTypes[0]
+            this.mCustomer = {}
+            this.name = ''
+            this.mPaymentOption = 'Invoice'
+            this.cashReceipt = new CashReceiptModel()
+            this.cashReceipt.transactionType = this.transactionTypes[0]
             this.generateNumber()
         },
-        async loadOtherAccount() {
-            new Promise(resolve => {
-                setTimeout(() => {
-                    resolve('resolved')
-                    settingHandler.getOtherAccount().then(res => {
-                        if (res.data.statusCode === 200) {
-                            this.showLoading = false
-                            const response = res.data.data
-                            const data = response.filter(o => o.banhjiAccCode === '740010')
-                            window.console.log(data, ' this.gainLossAc')
-                            if (data.length > 0) {
-                                this.gainLossAcc = data[0].account
-                            }
-                            const data_ = response.filter(o => o.banhjiAccCode === '740040')
-                            if (data_.length > 0) {
-                                this.otherRevenueAcc = data_[0].account
-                            }
-                        }
-                    }).catch()
-                    {
-                        this.showLoading = false
-                    }
-                }, 10)
-            })
-        },
-        async loadSegment() {
-            new Promise(resolve => {
-                setTimeout(() => {
-                    resolve('resolved')
-                    this.segment = {}
-                    loanHandler.businessSettingGet().then(res => {
-                        this.showLoading = true
-                        if (res.data.statusCode === 200) {
-                            this.showLoading = false
-                            let s = res.data.data.filter((obj) => {
-                                return obj.type == dataStore.businessType
-                            })
-                            if (s.length > 0) {
-                                this.paymentMethod = s[0].paymentOption
-                                this.segment = s[0].segment
-                            } else {
-                                this.$snotify.error('Please select segment on setting page')
-                                this.cancel()
-                            }
-                        }
-                    }).catch()
-                    {
-                        this.showLoading = false
-                    }
-                }, 300)
-            })
-        },
+        close() {
+            this.$router.go(-1);
+        }
     },
     watch: {
         id() {
             if (this.$route.params.id === undefined) {
                 this.clear()
+                this.check_id_edit = false
+
             } else {
                 this.showLoading = true
+                this.loadOtherAccount()
                 this.initData()
             }
         }
     },
-    created: async function() {
+    created() {
         // fetch the data when the view is created and the data is
         // already being observed
         // this.loadObj()
-        this.loadPaymentOption()
-        this.loadOtherAccount()
-        await this.loadSegment()
+        // this.loadPaymentOption()
     },
     mounted: async function () {
+        await this.loadOtherAccount()
         await this.loadPrefix()
         await this.loadSaleFormContent()
-        this.loadData(0, this.filter, this.supBaseUrl)
+        this.loadData(0, this.filter, this.cusBaseUrl)
         await this.initGrid(this)
         await this.initData()
 
@@ -1614,11 +1927,8 @@ export default {
             return !!this.$route.params.id;
         },
         showMe() {
-            return this.mPaymentOption === 'Vendor' // or some other more complicated logic
-        },
-        enabled() {
-            return this.$route.params.id !== undefined;
-        },
+            return this.mPaymentOption === 'Customer' // or some other more complicated logic
+        }
     }
 };
 </script>
@@ -1708,10 +2018,13 @@ export default {
     text-align: right !important;
 }
 
+.primary--text {
+    color: #03b154;
+}
 
 @media (min-width: 1264px) {
     .container {
-        max-width: 1080px !important;
+        max-width: 1250px;
     }
 }
 
@@ -1848,10 +2161,6 @@ export default {
 
 .theme--light.v-data-table > .v-data-table__wrapper > table > tbody > tr:hover:not(.v-data-table__expanded__content):not(.v-data-table__empty-wrapper) {
     background-color: transparent !important;
-}
-
-.b-search:before {
-    color: #fff !important;
 }
 
 </style>

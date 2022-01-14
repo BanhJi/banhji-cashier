@@ -6,10 +6,9 @@
  * Instagram Profile : https://www.instagram.com/chandarith_chea
  */
 
-const cookier = require("@/cookier.js").cookie
-cookier.init()
-const store = require("@/institute.js")
-const { instituteId } = store.default.state.cookies
+/* Cookie */
+const cookieJS = require("@/cookie.js");
+const { instituteId } = cookieJS.getCookie();
 
 const myUrl = require("@/url")
 const baseUrl = myUrl.url
@@ -85,6 +84,7 @@ module.exports = {
     receiptOrder_post                   : warehouseUrl + 'receipt-order/institute/' + instituteId + '/add',
     receiptOrder_get                    : warehouseUrl + 'receipt-order/institute/' + instituteId + '/list',
     receiptOrder_getById                : warehouseUrl + 'receipt-order/institute/' + instituteId + '/',
+    receiptOrder_batch                  : warehouseUrl + 'receiptorder/batch',
 
     //shelving order
     shelvingOrder_post                   : warehouseUrl + 'shelving-order/institute/' + instituteId + '/add',
@@ -119,5 +119,8 @@ module.exports = {
 
     balance_get                          : warehouseUrl + 'warehouse-balance/institute/' + instituteId + '/item/',
     balance_getAll                       : warehouseUrl + 'warehouse-balance-all/institute/' + instituteId + '/list',
-    txn_get                              : warehouseUrl + 'warehouse-txn/institute/' + instituteId + '/list'
+    txn_get                              : warehouseUrl + 'warehouse-txn/institute/' + instituteId + '/list',
+
+    //PO ItemLine
+    itemline_add                         : warehouseUrl + 'receiptorder/txn/'
 }

@@ -1,11 +1,12 @@
-const cookier = require("@/cookier.js").cookie
-cookier.init()
-const store = require("@/institute.js")
-const { instituteId } = store.default.state.cookies
+/* Cookie */
+const cookieJS = require("@/cookie.js");
+const { instituteId } = cookieJS.getCookie();
+
 const myUrl = require("@/url")
 const baseUrl = myUrl.url
 const url          = baseUrl + '/transaction-billing/'
-window.console.log('base url' + baseUrl , 'url'+ url)
+const url_setting  = baseUrl + '/entity-setting/'
+// window.console.log('base url' + baseUrl , 'url'+ url)
 module.exports = {
     invoice_post                               : url + 'invoice/institute/' + instituteId + '/add',
     receipt_post                               : url + 'receipt/institute/' + instituteId + '/add',
@@ -57,8 +58,10 @@ module.exports = {
     wcp_payable_overview_get                   : url + 'wcp-payable-overview/institute/' + instituteId + '/list',
     balance_summary_get                        : url + 'balance/institute/' + instituteId + '/list',
     customer_txn                               : url + 'customer-txn/institute/' + instituteId + '/list',
+
     attachment_post                            : url + 'attachment/institute/' + instituteId + '/add',
     attachment_gets                            : url + 'attachment/institute/' + instituteId + '/list',
+    attachment_delete                          : url_setting + 'attachment/institute/' + instituteId + '/delete',
 
     deposit_balance_summary                    : url + 'deposit-balance-summary/institute/' + instituteId + '/list',
     vendor_txn                                 : url + 'vendor-txn/institute/' + instituteId + '/list',
@@ -68,4 +71,6 @@ module.exports = {
 
     payment_option_report                      : url + 'payment-option/institute/' + instituteId + '/list',
     payment_term_report                        : url + 'payment-term-report/institute/' + instituteId + '/list',
+
+    expense_view                                : url + 'expense/institute/' + instituteId + '/list',
 }

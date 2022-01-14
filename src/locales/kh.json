@@ -3449,7 +3449,22 @@
   "vendor_name": "ឈ្មោះអ្នកផ្គត់ផ្គង់",
   "payment_request": "សំណើបង់ប្រាក់",
   "transaction_num": "លេខប្រតិបត្តិការ",
-  "credits": "ជំពាក់"
+  "credits": "ជំពាក់",
+  "session": "គ្រប់គ្រងវេន",
+  "add_session": "បន្ថែមវេន",
+  "start": "ចាប់ផ្តើម",
+  "end": "បញ្ចប់",
+  "cashier": "Cashier",
+  "session_reconciliation_report": "Session reconciliation report",
+  "customer_receipt_report": "បញ្ជីប្រមូលសាច់ប្រាក់",
+  "default_search_option": "Default search option",
+  "default_message_on_receipt_journal": "Default message on receipt & journal",
+  "default_receipt_form": "Default Receipt Form",
+  "default_reconciliation_report_rorm": "Default Reconciliation Report Form",
+  "select": "ជ្រើសរើស"
+
+
+
 
 
 

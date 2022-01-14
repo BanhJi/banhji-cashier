@@ -1,7 +1,6 @@
-const cookier = require("@/cookier.js").cookie
-cookier.init()
-const store = require("@/institute.js")
-const { instituteId } = store.default.state.cookies
+/* Cookie */
+const cookieJS = require("@/cookie.js");
+const { instituteId } = cookieJS.getCookie();
 
 const myUrl = require("@/url")
 const baseUrl = myUrl.url
@@ -28,4 +27,8 @@ module.exports = {
 
     supplier_directory                          : url + 'supplier/institute/' + instituteId + '/directory',
     importCreate                                : url + 'import/institute/' + instituteId + '/add',
+
+    customer_lastNumber                         : url + 'last-number/institute/' + instituteId + '/last',
+    has_txn                                     : url + 'has-txn/institute/' + instituteId + '/check',
+    supplier_put                                : url + 'supplier/institute/' + instituteId + '/update',
 }

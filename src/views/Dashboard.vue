@@ -151,9 +151,18 @@
                                 
                             </v-row>
                             <v-row>
+                                <v-col sm="8" cols="8" class="py-0 px-md-2">
+                                    <h3 class="font_20 pb-1">{{ $t("session") }}</h3>
+                                </v-col>
+                                <v-col sm="4" cols="4" class="py-0 px-md-2">
+                                    <v-btn
+                                        color="primary"
+                                        class="float-right white--text capitalize ml-2"
+                                        to=""
+                                    >{{ $t("add_session") }}
+                                    </v-btn>
+                                </v-col>
                                 <v-col sm="12" cols="12" class="py-0 px-md-2">
-                                    <h3 class="font_20 pb-1">{{ $t("share") }}</h3>
-                                    <p class="mb-0">{{ $t("capital_credit_business_description") }}</p>
                                     <template>
                                         <kendo-datasource
                                             ref="gridCollectionDS"

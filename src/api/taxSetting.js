@@ -1,7 +1,7 @@
-const cookier = require("@/cookier.js").cookie
-cookier.init()
-const store = require("@/institute.js")
-const { instituteId } = store.default.state.cookies
+/* Cookie */
+const cookieJS = require("@/cookie.js");
+const { instituteId } = cookieJS.getCookie();
+
 // const instituteId  = 'institute-0ab24220-808d-11ea-9131-1d2fe2a803b1'
 const myUrl = require("@/url")
 const baseUrl = myUrl.url

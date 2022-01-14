@@ -6,10 +6,9 @@
  * Instagram Profile : https://www.instagram.com/chandarith_chea
  */
 
-const cookier = require("@/cookier.js").cookie
-cookier.init()
-const store = require("@/institute.js")
-const { instituteId } = store.default.state.cookies
+/* Cookie */
+const cookieJS = require("@/cookie.js");
+const { instituteId } = cookieJS.getCookie();
 
 const url          = ' https://sqm7qrp4c7.execute-api.ap-southeast-1.amazonaws.com/dev/'
 

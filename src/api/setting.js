@@ -1,7 +1,6 @@
-const cookier = require("@/cookier.js").cookie
-cookier.init()
-const store = require("@/institute.js")
-const { instituteId } = store.default.state.cookies
+/* Cookie */
+const cookieJS = require("@/cookie.js");
+const { instituteId } = cookieJS.getCookie();
 
 const myUrl = require("@/url")
 const baseUrl = myUrl.url
@@ -17,11 +16,17 @@ module.exports = {
     segment_get                      : url + 'institute/' + instituteId + '/segment/list',
     segment_post                     : url + 'institute/' + instituteId + '/segment/add',
 
+    segment_type_get                 : url + 'institute/' + instituteId + '/segment-type/list',
+    segment_type_post                : url + 'institute/' + instituteId + '/segment-type/add',
+
     subclass_get                     : url + 'institute/' + instituteId + '/subclass/list',
     subclass_post                    : url + 'institute/' + instituteId + '/sub-class/add',
 
     location_get                     : url + 'institute/' + instituteId + '/location/list',
     location_post                    : url + 'institute/' + instituteId + '/location/add',
+    
+    location_type_get                : url + 'institute/' + instituteId + '/location-type/list',
+    location_type_post               : url + 'institute/' + instituteId + '/location-type/add',
 
     closing_date_get                 : url + 'institute/' + instituteId + '/closing-date/list',
     closing_date_last                : url + 'institute/' + instituteId + '/closing-date/last',
@@ -39,4 +44,9 @@ module.exports = {
     form_get                         : url + 'form/institute/' + instituteId + '/list',
     form_delete                      : url + 'form/institute/' + instituteId + '/delete',
     payment_option_detail            : url + 'institute/' + instituteId + '/payment-option/detail',
+
+
+    // form contant
+    accounting_form_content_post     : url + 'accounting-form-content/institute/' + instituteId + '/add',
+    accounting_form_content_get      : url + 'accounting-form-content/institute/' + instituteId + '/get',
 }

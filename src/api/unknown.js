@@ -27,7 +27,7 @@ module.exports = {
         },
         {
             id: '98c3d49e-3b85-11eb-adc1-0242ac120002',
-            name: 'monthly'
+            name: 'Monthly'
         }
     ],
     nationality: 'https://gist.githubusercontent.com/Darith-Mokpost/87e77be63691b0019125f16d2d9cfb74/raw/b9234a4360a573a44eed36c24466932cd50eec3e/nationality_khmer.json',

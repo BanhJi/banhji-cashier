@@ -1,7 +1,6 @@
-const cookier = require("@/cookier.js").cookie
-cookier.init()
-const store = require("@/institute.js")
-const { instituteId } = store.default.state.cookies
+/* Cookie */
+const cookieJS = require("@/cookie.js");
+const { instituteId } = cookieJS.getCookie();
 
 const myUrl = require("@/url")
 const baseUrl = myUrl.url
@@ -28,4 +27,6 @@ module.exports = {
     leave_summary                               : url + 'leave-summary/institute/' + instituteId + '/get',
     employee_benefit                            : url + 'fringe-benefit/institute/' + instituteId + '/add',
     employee_benefit_get                        : url + 'fringe-benefit/institute/' + instituteId + '/get',
+    employee_update                             : url + 'employee/institute/' + instituteId + '/update/',
+    last_number_get                             : url + 'employee-lastnumber/institute/' + instituteId + '/get'
 }

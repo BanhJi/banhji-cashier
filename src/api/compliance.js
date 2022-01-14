@@ -6,10 +6,9 @@
  * Instagram Profile : https://www.instagram.com/chandarith_chea
  */
 
-const cookier = require("@/cookier.js").cookie
-cookier.init()
-const store = require("@/institute.js")
-const { instituteId } = store.default.state.cookies
+/* Cookie */
+const cookieJS = require("@/cookie.js");
+const { instituteId } = cookieJS.getCookie();
 
 const myUrl = require("@/url")
 const baseUrl = myUrl.url
@@ -22,6 +21,7 @@ module.exports = {
   monthly_return_post           : url + 'monthly-return/institute/' + instituteId + '/add',
   monthly_return_delete         : url + 'monthly-return/institute/' + instituteId + '/delete/',
   monthly_return_get            : url + 'monthly-return/institute/' + instituteId + '/list',
+  monthly_return_check          : url + 'monthly-return/institute/' + instituteId + '/check',
   sale_post                     : url + 'sale/institute/' + instituteId + '/add',
   sale_get                      : url + 'sale/institute/' + instituteId + '/list',
   sale_getByMrId                : url + 'sale/institute/' + instituteId + '/',

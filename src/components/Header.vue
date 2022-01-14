@@ -28,9 +28,7 @@
                     height="42"
                     alt="BanhJi Logo"
                 />
-                <p class="sub_type mb-3">{{
-                        businessType == 'Supply' ? $t('supply_business') : businessType == 'Marketing' ? $t('marketing_business') : $t('service_business')
-                    }}</p>
+                <p class="sub_type mb-3">{{ $t("cashier") }}</p>
               </div>
                 <!-- <span class="mt-5 ml-1 font_16 text-uppercase secondary--text text-bold ">Beta</span> -->
             </a>
@@ -75,7 +73,7 @@
                                 style="margin:auto; display:block;"
                                 alt="BanhJi Logo"
                             />
-                            <p class="sub_type mb-3">{{ businessType }}</p>
+                            <p class="sub_type mb-3">{{ $t("cashier") }}</p>
                         </div>
                         <!-- <v-text-field
                           style="margin-right: 10%; background-color: #fff;	"
@@ -355,25 +353,26 @@ export default {
                 id: 2,
                 class: "",
                 activeClass: "",
-                name: "Receipt",
-                menuTex: "receipt",
-                path: "/receipt",
+                name: "Report",
+                menuTex: "report",
+                path: "/report",
             },
             {
                 id: 3,
                 class: "",
                 activeClass: "",
-                name: "Reconcile",
-                menuTex: "reconcile",
-                path: "/reconcile",
+                name: "Receipt",
+                menuTex: "receipt",
+                path: "/receipt",
             },
+            
             {
                 id: 4,
                 class: "",
                 activeClass: "",
-                name: "Report",
-                menuTex: "report",
-                path: "/report",
+                name: "Setting",
+                menuTex: "setting",
+                path: "/setting",
             },
             {class: "mx-3 my-1 v-divider"},
             {

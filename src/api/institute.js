@@ -16,6 +16,7 @@ module.exports = {
   company_get                 : url + 'institutes/',
   company_getOne              : url,
   company_add                 : url + 'institutes/',
+  role_get                    : url + 'user-role/institute/',
   save_image                  : url + 'saveimage',
   bt                          : businessData,
   sector_get                  : url + 'sector/sector',

@@ -1,7 +1,7 @@
-const cookier = require("@/cookier.js").cookie
-cookier.init()
-const store = require("@/institute.js")
-const { instituteId } = store.default.state.cookies
+/* Cookie */
+const cookieJS = require("@/cookie.js");
+const { instituteId } = cookieJS.getCookie();
+
 const myUrl = require("@/url")
 const baseUrl = myUrl.url
 const url          = baseUrl + '/entity-payroll-settings/'
@@ -33,22 +33,30 @@ module.exports = {
     specific_by_type_get                        : url +'specific-by-type/institute/' + instituteId + '/list',
     leave_get                                   : url +'leave/institute/' + instituteId + '/list',
     leave_post                                  : url +'leave/institute/' + instituteId + '/add',
+    prefix_post                                 : url +'payroll-prefix/institute/' + instituteId + '/add',
+    prefix_get                                  : url +'payroll-prefix/institute/' + instituteId + '/list',
+    group_employee_get                          : url +'group-employee/institute/' + instituteId + '/get',
+    group_employee_post                         : url +'group-employee/institute/' + instituteId + '/add',
 
     // Run payroll
     time_card_post                               : url_run + 'timecard/institute/' + instituteId + '/add',
     time_card_get                                : url_run + 'timecard/institute/' + instituteId + '/list',
     payroll_post                                 : url_run + 'payroll/institute/' + instituteId + '/add',
     payroll_get                                  : url_run + 'payroll/institute/' + instituteId + '/list',
+    payroll_by_month_get                         : url_run + 'payroll-by-month/institute/' + instituteId + '/get',
+    payroll_item_get                             : url_run + 'payroll-item/institute/' + instituteId + '/list',
     payroll_list_get                             : url_run + 'payroll-list/institute/' + instituteId + '/list',
     prefix_number                                : url_run + 'prefix-number/institute/' + instituteId + '/number',
-    transaction_get                              : url_run + 'transactions/employeeId',
-    transactions_list                            : url_run + 'transactions-list',
+    transaction_get                              : url_run + 'transactions/institute/'+instituteId+'/get',
+    transactions_list                            : url_run + 'transactions-list/institute/'+ instituteId + '/list',
     payroll_detail_get                           : url_run + 'payroll-detail/institute/' + instituteId + '/list',
+    tax_pay_get                                  : url_run + 'tax-pay/institute/' + instituteId + '/get',
     payroll_summary_get                          : url_run + 'payroll-summary/institute/' + instituteId + '/list',
     payroll_liabilites_get                       : url_run + 'payroll-liabilites/institute/' + instituteId + '/list',
     payroll_tax_list_get                         : url_run + 'payroll-tax/institute/' + instituteId + '/list',
     payroll_employee_get                         : url_run + 'payroll-employee/institute/' + instituteId + '/list',
     payroll_timesheet_get                        : url_run + 'payroll-timesheet/institute/' + instituteId + '/list',
+    payroll_previous_get                         : url_run + 'payroll-previous/institute/' + instituteId + '/get',
 
     // payroll payment 
     payment_post                                 : url_run + 'payment/institute/' + instituteId + '/add',
@@ -56,6 +64,7 @@ module.exports = {
     payment_single_get                           : url_run + 'payment/institute/' + instituteId + '/get',
     payment_batch_post                           : url_run + 'payment-batch/institute/' + instituteId + '/add',
     payment_batch_list                           : url_run + 'payment-batch/institute/' + instituteId + '/list',
+    payment_item_get                             : url_run + 'payment-item/institute/' + instituteId + '/list',
     batch_single_get                             : url_run + 'payment-batch/institute/' + instituteId + '/get',
     employee_to_pay                              : url_run + 'employee-to-pay/institute/' + instituteId + '/get',
     total_payment                                : url_run + 'payment-dashboard/institute/' + instituteId + '/get',
