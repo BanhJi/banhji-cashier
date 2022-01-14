@@ -354,20 +354,13 @@ export default {
             {
                 id: 2,
                 class: "",
-                name: "Sessions",
-                menuTex: "sessions",
-                path: "/session",
-            },
-            {
-                id: 3,
-                class: "",
                 activeClass: "",
                 name: "Receipt",
                 menuTex: "receipt",
                 path: "/receipt",
             },
             {
-                id: 4,
+                id: 3,
                 class: "",
                 activeClass: "",
                 name: "Reconcile",
@@ -375,7 +368,7 @@ export default {
                 path: "/reconcile",
             },
             {
-                id: 5,
+                id: 4,
                 class: "",
                 activeClass: "",
                 name: "Report",
