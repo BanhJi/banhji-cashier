@@ -4,164 +4,228 @@
             <v-row>
                 <v-col sm="12" cols="12" class="pb-0">
                     <v-row>
+                        <LoadingMe
+                            :isLoading="showLoading"
+                            :fullPage="true"
+                            :myLoading="true"/>
                         <v-col class="py-0 px-md-2" sm="12" cols="12">
-<!--                            <v-row>-->
-<!--                                <v-col class="py-0 px-md-2" sm="4" cols="4">-->
-<!--                                    <v-card-->
-<!--                                        color="white"-->
-<!--                                        outlined-->
-<!--                                        dense-->
-<!--                                        class="pa-4 mt-4 no_border"-->
-<!--                                        min-height="338"-->
-<!--                                        style="margin-top: 0!important;text-align: center;"-->
-<!--                                    >-->
-<!--                                        <img-->
-<!--                                            :src="logoUrl"-->
-<!--                                            width="55%"-->
-<!--                                            :alt="$t('please_upload_your_logo')"-->
-<!--                                            class="mt-4"-->
-<!--                                        />-->
-<!--                                        <h3 class="font_20 pb-1 mt-4">{{ institute.name }}</h3>-->
-<!--                                    </v-card>-->
-<!--                                </v-col>-->
-<!--                                <v-col class="py-0 px-md-2" sm="4" cols="4">-->
-<!--                                    <v-card-->
-<!--                                        color="white"-->
-<!--                                        outlined-->
-<!--                                        dense-->
-<!--                                        class="pa-4 no_border"-->
-<!--                                        min-height="338"-->
-<!--                                        >-->
-<!--                                        <h3 class="font_20 pb-1">{{ $t("share") }}</h3>-->
-<!--                                        <p class="mb-0">{{ $t("capital_credit_business_description") }}</p>-->
-<!--                                        <h2 class="primary&#45;&#45;text mb-0 niradei_black pa-0 col-sm-12 text-right">{{totalSharePrice}}</h2>-->
-<!--                                        <v-row>-->
-<!--                                            <v-col sm="12" cols="12" class="pr-0 pb-0">-->
-<!--                                                <template>-->
-<!--                                                    <v-simple-table>-->
-<!--                                                        <template>-->
-<!--                                                            <tbody>-->
-<!--                                                                <tr>-->
-<!--                                                                    <td class="text-left tdbig">-->
-<!--                                                                        <span class="niradei_medium font_14 grey&#45;&#45;text">-->
-<!--                                                                            {{ $t("total_share") }}-->
-<!--                                                                        </span>-->
-<!--                                                                    </td>-->
-<!--                                                                    <td class="text-right">-->
-<!--                                                                        <span class="niradei_heavy font_18 dark_grey">-->
-<!--                                                                            {{totalShare}}-->
-<!--                                                                        </span>-->
-<!--                                                                    </td>-->
-<!--                                                                </tr>-->
-<!--                                                                <tr>-->
-<!--                                                                    <td class="text-left tdbig">-->
-<!--                                                                        <span class="niradei_medium font_14 grey&#45;&#45;text">-->
-<!--                                                                            {{ $t("number_of_women") }}-->
-<!--                                                                        </span>-->
-<!--                                                                    </td>-->
-<!--                                                                    <td class="text-right">-->
-<!--                                                                        <span class="niradei_heavy font_18 dark_grey">-->
-<!--                                                                        {{totalFemaleShare}}-->
-<!--                                                                        </span>-->
-<!--                                                                    </td>-->
-<!--                                                                </tr>-->
-<!--                                                                <tr>-->
-<!--                                                                    <td class="text-left tdbig">-->
-<!--                                                                        <span class="niradei_medium font_14 grey&#45;&#45;text">-->
-<!--                                                                        {{ $t("_women") }}-->
-<!--                                                                        </span>-->
-<!--                                                                    </td>-->
-<!--                                                                    <td class="text-right">-->
-<!--                                                                        <span class="niradei_heavy font_18 dark_grey">-->
-<!--                                                                        {{totalFemaleP}}-->
-<!--                                                                        </span>-->
-<!--                                                                    </td>-->
-<!--                                                                </tr>-->
-<!--                                                                -->
-<!--                                                            </tbody>-->
-<!--                                                        </template>-->
-<!--                                                    </v-simple-table>-->
-<!--                                                </template>-->
-<!--                                            </v-col>-->
-<!--                                        </v-row>-->
-<!--                                    </v-card>-->
-<!--                                </v-col>-->
-<!--                                <v-col class="py-0 px-md-2" sm="4" cols="4">-->
-<!--                                    <v-card-->
-<!--                                        color="white"-->
-<!--                                        outlined-->
-<!--                                        dense-->
-<!--                                        class="pa-4 no_border"-->
-<!--                                        min-height="338"-->
-<!--                                        >-->
-<!--                                        <h3 class="font_20 pb-1">{{ $t("member") }}</h3>-->
-<!--                                        <p class="mb-0">{{ $t("as_of_today") }}</p>-->
-<!--                                        <h2 class="primary&#45;&#45;text mb-0 niradei_black pa-0 col-sm-12 text-right">{{totalMember}}</h2>-->
-<!--                                        <v-row>-->
-<!--                                            <v-col sm="12" cols="12" class="pr-0 pb-0">-->
-<!--                                                <template>-->
-<!--                                                    <v-simple-table>-->
-<!--                                                        <template>-->
-<!--                                                            <tbody>-->
-<!--                                                                <tr>-->
-<!--                                                                    <td class="text-left tdbig">-->
-<!--                                                                        <span class="niradei_medium font_14 grey&#45;&#45;text">-->
-<!--                                                                            {{ $t("total_members") }}-->
-<!--                                                                        </span>-->
-<!--                                                                    </td>-->
-<!--                                                                    <td class="text-right">-->
-<!--                                                                        <span class="niradei_heavy font_18 dark_grey">-->
-<!--                                                                            {{totalMember}}-->
-<!--                                                                        </span>-->
-<!--                                                                    </td>-->
-<!--                                                                </tr>-->
-<!--                                                                <tr>-->
-<!--                                                                    <td class="text-left tdbig">-->
-<!--                                                                        <span class="niradei_medium font_14 grey&#45;&#45;text">-->
-<!--                                                                            {{ $t("number_of_women") }}-->
-<!--                                                                        </span>-->
-<!--                                                                    </td>-->
-<!--                                                                    <td class="text-right">-->
-<!--                                                                        <span class="niradei_heavy font_18 dark_grey">-->
-<!--                                                                        {{totalFemaleMember}}-->
-<!--                                                                        </span>-->
-<!--                                                                    </td>-->
-<!--                                                                </tr>-->
-<!--                                                                <tr>-->
-<!--                                                                    <td class="text-left tdbig">-->
-<!--                                                                        <span class="niradei_medium font_14 grey&#45;&#45;text">-->
-<!--                                                                        {{ $t("man") }}-->
-<!--                                                                        </span>-->
-<!--                                                                    </td>-->
-<!--                                                                    <td class="text-right">-->
-<!--                                                                        <span class="niradei_heavy font_18 dark_grey">-->
-<!--                                                                        {{totalMaleMember}}-->
-<!--                                                                        </span>-->
-<!--                                                                    </td>-->
-<!--                                                                </tr>-->
-<!--                                                                -->
-<!--                                                            </tbody>-->
-<!--                                                        </template>-->
-<!--                                                    </v-simple-table>-->
-<!--                                                </template>-->
-<!--                                            </v-col>-->
-<!--                                        </v-row>-->
-<!--                                    </v-card>-->
-<!--                                </v-col>-->
-<!--                                -->
-<!--                            </v-row>-->
+                            <!--                            <v-row>-->
+                            <!--                                <v-col class="py-0 px-md-2" sm="4" cols="4">-->
+                            <!--                                    <v-card-->
+                            <!--                                        color="white"-->
+                            <!--                                        outlined-->
+                            <!--                                        dense-->
+                            <!--                                        class="pa-4 mt-4 no_border"-->
+                            <!--                                        min-height="338"-->
+                            <!--                                        style="margin-top: 0!important;text-align: center;"-->
+                            <!--                                    >-->
+                            <!--                                        <img-->
+                            <!--                                            :src="logoUrl"-->
+                            <!--                                            width="55%"-->
+                            <!--                                            :alt="$t('please_upload_your_logo')"-->
+                            <!--                                            class="mt-4"-->
+                            <!--                                        />-->
+                            <!--                                        <h3 class="font_20 pb-1 mt-4">{{ institute.name }}</h3>-->
+                            <!--                                    </v-card>-->
+                            <!--                                </v-col>-->
+                            <!--                                <v-col class="py-0 px-md-2" sm="4" cols="4">-->
+                            <!--                                    <v-card-->
+                            <!--                                        color="white"-->
+                            <!--                                        outlined-->
+                            <!--                                        dense-->
+                            <!--                                        class="pa-4 no_border"-->
+                            <!--                                        min-height="338"-->
+                            <!--                                        >-->
+                            <!--                                        <h3 class="font_20 pb-1">{{ $t("share") }}</h3>-->
+                            <!--                                        <p class="mb-0">{{ $t("capital_credit_business_description") }}</p>-->
+                            <!--                                        <h2 class="primary&#45;&#45;text mb-0 niradei_black pa-0 col-sm-12 text-right">{{totalSharePrice}}</h2>-->
+                            <!--                                        <v-row>-->
+                            <!--                                            <v-col sm="12" cols="12" class="pr-0 pb-0">-->
+                            <!--                                                <template>-->
+                            <!--                                                    <v-simple-table>-->
+                            <!--                                                        <template>-->
+                            <!--                                                            <tbody>-->
+                            <!--                                                                <tr>-->
+                            <!--                                                                    <td class="text-left tdbig">-->
+                            <!--                                                                        <span class="niradei_medium font_14 grey&#45;&#45;text">-->
+                            <!--                                                                            {{ $t("total_share") }}-->
+                            <!--                                                                        </span>-->
+                            <!--                                                                    </td>-->
+                            <!--                                                                    <td class="text-right">-->
+                            <!--                                                                        <span class="niradei_heavy font_18 dark_grey">-->
+                            <!--                                                                            {{totalShare}}-->
+                            <!--                                                                        </span>-->
+                            <!--                                                                    </td>-->
+                            <!--                                                                </tr>-->
+                            <!--                                                                <tr>-->
+                            <!--                                                                    <td class="text-left tdbig">-->
+                            <!--                                                                        <span class="niradei_medium font_14 grey&#45;&#45;text">-->
+                            <!--                                                                            {{ $t("number_of_women") }}-->
+                            <!--                                                                        </span>-->
+                            <!--                                                                    </td>-->
+                            <!--                                                                    <td class="text-right">-->
+                            <!--                                                                        <span class="niradei_heavy font_18 dark_grey">-->
+                            <!--                                                                        {{totalFemaleShare}}-->
+                            <!--                                                                        </span>-->
+                            <!--                                                                    </td>-->
+                            <!--                                                                </tr>-->
+                            <!--                                                                <tr>-->
+                            <!--                                                                    <td class="text-left tdbig">-->
+                            <!--                                                                        <span class="niradei_medium font_14 grey&#45;&#45;text">-->
+                            <!--                                                                        {{ $t("_women") }}-->
+                            <!--                                                                        </span>-->
+                            <!--                                                                    </td>-->
+                            <!--                                                                    <td class="text-right">-->
+                            <!--                                                                        <span class="niradei_heavy font_18 dark_grey">-->
+                            <!--                                                                        {{totalFemaleP}}-->
+                            <!--                                                                        </span>-->
+                            <!--                                                                    </td>-->
+                            <!--                                                                </tr>-->
+                            <!--                                                                -->
+                            <!--                                                            </tbody>-->
+                            <!--                                                        </template>-->
+                            <!--                                                    </v-simple-table>-->
+                            <!--                                                </template>-->
+                            <!--                                            </v-col>-->
+                            <!--                                        </v-row>-->
+                            <!--                                    </v-card>-->
+                            <!--                                </v-col>-->
+                            <!--                                <v-col class="py-0 px-md-2" sm="4" cols="4">-->
+                            <!--                                    <v-card-->
+                            <!--                                        color="white"-->
+                            <!--                                        outlined-->
+                            <!--                                        dense-->
+                            <!--                                        class="pa-4 no_border"-->
+                            <!--                                        min-height="338"-->
+                            <!--                                        >-->
+                            <!--                                        <h3 class="font_20 pb-1">{{ $t("member") }}</h3>-->
+                            <!--                                        <p class="mb-0">{{ $t("as_of_today") }}</p>-->
+                            <!--                                        <h2 class="primary&#45;&#45;text mb-0 niradei_black pa-0 col-sm-12 text-right">{{totalMember}}</h2>-->
+                            <!--                                        <v-row>-->
+                            <!--                                            <v-col sm="12" cols="12" class="pr-0 pb-0">-->
+                            <!--                                                <template>-->
+                            <!--                                                    <v-simple-table>-->
+                            <!--                                                        <template>-->
+                            <!--                                                            <tbody>-->
+                            <!--                                                                <tr>-->
+                            <!--                                                                    <td class="text-left tdbig">-->
+                            <!--                                                                        <span class="niradei_medium font_14 grey&#45;&#45;text">-->
+                            <!--                                                                            {{ $t("total_members") }}-->
+                            <!--                                                                        </span>-->
+                            <!--                                                                    </td>-->
+                            <!--                                                                    <td class="text-right">-->
+                            <!--                                                                        <span class="niradei_heavy font_18 dark_grey">-->
+                            <!--                                                                            {{totalMember}}-->
+                            <!--                                                                        </span>-->
+                            <!--                                                                    </td>-->
+                            <!--                                                                </tr>-->
+                            <!--                                                                <tr>-->
+                            <!--                                                                    <td class="text-left tdbig">-->
+                            <!--                                                                        <span class="niradei_medium font_14 grey&#45;&#45;text">-->
+                            <!--                                                                            {{ $t("number_of_women") }}-->
+                            <!--                                                                        </span>-->
+                            <!--                                                                    </td>-->
+                            <!--                                                                    <td class="text-right">-->
+                            <!--                                                                        <span class="niradei_heavy font_18 dark_grey">-->
+                            <!--                                                                        {{totalFemaleMember}}-->
+                            <!--                                                                        </span>-->
+                            <!--                                                                    </td>-->
+                            <!--                                                                </tr>-->
+                            <!--                                                                <tr>-->
+                            <!--                                                                    <td class="text-left tdbig">-->
+                            <!--                                                                        <span class="niradei_medium font_14 grey&#45;&#45;text">-->
+                            <!--                                                                        {{ $t("man") }}-->
+                            <!--                                                                        </span>-->
+                            <!--                                                                    </td>-->
+                            <!--                                                                    <td class="text-right">-->
+                            <!--                                                                        <span class="niradei_heavy font_18 dark_grey">-->
+                            <!--                                                                        {{totalMaleMember}}-->
+                            <!--                                                                        </span>-->
+                            <!--                                                                    </td>-->
+                            <!--                                                                </tr>-->
+                            <!--                                                                -->
+                            <!--                                                            </tbody>-->
+                            <!--                                                        </template>-->
+                            <!--                                                    </v-simple-table>-->
+                            <!--                                                </template>-->
+                            <!--                                            </v-col>-->
+                            <!--                                        </v-row>-->
+                            <!--                                    </v-card>-->
+                            <!--                                </v-col>-->
+                            <!--                                -->
+                            <!--                            </v-row>-->
                             <v-row>
                                 <v-col sm="8" cols="8" class=" px-md-2">
                                     <h3 class="font_20 pb-1">{{ $t("session") }}</h3>
                                 </v-col>
                                 <v-col sm="4" cols="4" class=" px-md-2">
-                                    <v-btn
-                                        color="primary"
-                                        class="float-right white--text capitalize ml-2"
-                                        v-show="isUser"
-                                        @click="showAddSession"
-                                    >{{ $t("add_session") }}
+                                    <v-btn class="white--text float-right text-capitalize" color="primary"
+                                           v-show="hasSession"
+                                           @click="goReconcile">
+                                        {{ $t('close_session') }}
                                     </v-btn>
+                                    <v-dialog v-model="showSession" max-width="400px">
+                                        <template v-slot:activator="{ on }">
+                                            <v-btn class="white--text float-right text-capitalize" color="primary"
+                                                   v-on="on"
+                                                   v-show="!hasSession"
+                                                   @click="showAddSession">
+                                                {{ $t('add_session') }}
+                                            </v-btn>
+                                        </template>
+                                        <v-form ref="form" v-model="valid" lazy-validation>
+                                            <v-card>
+                                                <v-card-title>{{ $t('add_session') }}</v-card-title>
+                                                <v-icon class="btn_close" @click="showSession = false">close</v-icon>
+                                                <v-divider/>
+                                                <v-card-text
+                                                    style="height: 310px; background-color: #EDF1F5; color: #333333;">
+                                                    <v-row>
+                                                        <v-col sm="12" cols="12" class="pb-0">
+                                                            <label class="label">{{ $t('number') }}</label>
+                                                            <v-text-field
+                                                                class="mt-1"
+                                                                v-model="s.number"
+                                                                disabled
+                                                                outlined
+                                                                placeholder=""
+                                                                :rules="[v => !!v || 'Number is required']"
+                                                            />
+                                                        </v-col>
+                                                        <v-col v-for="cur in currencyData" v-bind:key="cur.id" sm="12" cols="12" class="pb-0">
+                                                            <label class="label">{{ cur.code }}</label>
+                                                            <v-text-field
+                                                                class="mt-1"
+                                                                v-model="cur.amount"
+                                                                outlined
+                                                                placeholder=""
+                                                            />
+                                                        </v-col>
+                                                    </v-row>
+                                                </v-card-text>
+                                                <v-divider/>
+                                                <v-card-actions class="pa-4">
+                                                    <v-row>
+                                                        <v-col sm="6" cols="6" class="py-0">
+                                                            <v-btn color="black"
+                                                                   outlined
+                                                                   class=" text-capitalize  black--text float-left"
+                                                                   @click="dialogm2 = false">{{ $t('cancel') }}
+                                                            </v-btn>
+                                                        </v-col>
+                                                        <v-col sm="6" cols="6" class="py-0">
+                                                            <v-btn color="secondary"
+                                                                   class="px-3  white--text text-capitalize float-right"
+                                                                   @click="addSession">
+                                                                {{ $t('save_close') }}
+                                                            </v-btn>
+                                                        </v-col>
+                                                    </v-row>
+                                                </v-card-actions>
+
+                                            </v-card>
+                                        </v-form>
+                                    </v-dialog>
                                 </v-col>
                                 <v-col sm="12" cols="12" class="py-0 px-md-2">
                                     <template>
@@ -187,43 +251,42 @@
                                                 :attributes="{ style: 'text-align: products'}"
                                             />
                                             <kendo-grid-column
-                                                :field="'employee'"
+                                                :field="'user'"
                                                 :title="$t('employee')"
                                                 :width="200"
-                                                :template="'<span>#= kendo.toString(loanOutstanding, numberFormat) ##= locale#</span>'"
+                                                :template="'<span>#= user.user_name#</span>'"
                                                 :headerAttributes="{ style: 'background-color: #EDF1F5, color: green !important' }"
                                                 :attributes="{style: 'text-align: right; '}"
                                             />
                                             <kendo-grid-column
-                                                :field="'start'"
+                                                :field="'number'"
+                                                :title="$t('number')"
+                                                :width="200"
+                                                :headerAttributes="{ style: 'background-color: #EDF1F5, color: green !important' }"
+                                                :attributes="{style: 'text-align: right; '}"
+                                            />
+                                            <kendo-grid-column
+                                                :field="'startDate'"
                                                 :title="$t('start')"
-                                                :template="'<span>#= loanOutP.toFixed(2) #%</span>'"
+                                                :template="'<span>#= kendo.toString(new Date(startDate), `yyyy-MM-dd H:m:s`) #</span>'"
                                                 :headerAttributes="{ style: 'background-color: #EDF1F5, color: green !important' }"
                                                 :attributes="{style: 'text-align: right; '}"
                                             />
                                             <kendo-grid-column
                                                 :field="'end'"
                                                 :title="$t('end')"
-                                                :template="'<span>#= loanOutP.toFixed(2) #%</span>'"
+                                                :template="'<span>#= endDate != `` ? kendo.toString(new Date(endDate), `yyyy-MM-dd H:m:s`) : ``#</span>'"
                                                 :headerAttributes="{ style: 'background-color: #EDF1F5, color: green !important' }"
                                                 :attributes="{style: 'text-align: right; '}"
                                             />
                                             <kendo-grid-column
                                                 :field="'status'"
                                                 :title="$t('status')"
-                                                :template="'<span>#= loanOutP.toFixed(2) #%</span>'"
+                                                :template="statusTmpl"
                                                 :headerAttributes="{ style: 'background-color: #EDF1F5, color: green !important' }"
                                                 :attributes="{style: 'text-align: right; '}"
                                             />
                                         </kendo-grid>
-                                        <LoadingMe
-                                            :isLoading="showLoading"
-                                            :fullPage="false"
-                                            type="loading"
-                                            :myLoading="true"
-                                            :alertMessage="loadingAlert"
-                                            :color="loadingColorAlert"
-                                            :alertText="loadingTextAlert"/>
                                     </template>
                                 </v-col>
                             </v-row>
@@ -237,23 +300,18 @@
 
 <script>
 import {i18n} from "@/i18n";
-// import {Chart} from "@progress/kendo-charts-vue-wrapper";
-import kendo from "@progress/kendo-ui"
-const memberHandler = require("@/scripts/memberHandler")
-const loanHandler = require("@/scripts/loanHandler")
-const instituteHandler = require("@/scripts/instituteHandler");
-const otherHandler = require("@/scripts/otherHandler");
-const store = require("@/institute");
-import { setTabActiveBudget } from '@/observable/store';
-const $ = kendo.jQuery
-const cookieJS = require("@/cookie.js");
-const { instituteId } = cookieJS.getCookie();
+const sessionHandler = require("@/scripts/session/handler/sessionHandler")
+const currencyHandler = require("@/scripts/currency/handler/currencyHandler")
 import SessionModel from '@/scripts/session/model/Session'
+const store = require("@/institute.js")
+const {cookies} = store.default.state
+import {UserModel} from "@/scripts/model/AppModels"
 export default {
     components: {
-        // chart: Chart,
+        LoadingMe: () => import(`@/components/Loading`),
     },
     data: () => ({
+        valid: true,
         institutes: [],
         mInstitute: {},
         check: ["1"],
@@ -468,454 +526,177 @@ export default {
         sessionData: [],
         isUser: true,
         s: new SessionModel({}),
-        showSession: false
+        showSession: false,
+        currencyData: [],
+        showLoading: false,
+        hasSession: false,
+        activeSession: {}
     }),
     mounted: async function () {
-        await this.loadInstLogo()
-        await this.loadDecimal()
-        await this.loadInstitute();
-        await this.loadInstitutes();
-        await this.getCookieData();
-        await this.loadMember()
-        await this.loadShare()
-        await this.loadLoan()
-        await this.loadPar()
-        await this.loadSaving()
+        // await this.loadInstLogo()
+        // await this.loadDecimal()
+        // await this.loadInstitute();
+        // await this.loadInstitutes();
+        // await this.getCookieData();
+        // await this.loadMember()
+        // await this.loadShare()
+        // await this.loadLoan()
+        // await this.loadPar()
+        // await this.loadSaving()
     },
     methods: {
-        ReporttAmontBudget(){
-            setTabActiveBudget(1,2)
-            this.$router.push({name: "WorkingCapital"});
-        },
-        getCookie(cname) {
-            var name = cname + "=";
-            var ca = document.cookie.split(";");
-            for (var i = 0; i < ca.length; i++) {
-                var c = ca[i];
-                while (c.charAt(0) === " ") c = c.substring(1);
-                if (c.indexOf(name) === 0) return c.substring(name.length, c.length);
-            }
-            return "";
-        },
-        async getCookieData() {
-            var cookie = this.getCookie("banhji-token");
-            if (cookie !== "") {
-                let data = store.default.state.cookies
-                this.mInstitute = {
-                    id: data.instituteId,
-                    name: data.email,
-                    email: data.email,
-                    user: data.user,
-                    creator: data.creator,
-                    accessToken: data.accessToken,
-                    refreshToken: data.refreshToken,
-                };
-                // if (
-                //     data.user.hasOwnProperty("custom:firstName") ||
-                //     data.user.hasOwnProperty("custom:lastName")
-                // ) {
-                //     if (
-                //         data.user["custom:firstName"] !== "" ||
-                //         data.user["custom:lastName"] !== ""
-                //     ) {
-                //         let avatar =
-                //             data.user["custom:firstName"].charAt(0).toUpperCase() +
-                //             data.user["custom:lastName"].charAt(0).toUpperCase();
-                //         store.default.commit("setAvatarLetter", avatar);
-                //     }
-                // }
-            }
-            // window.console.log(this.mInstitute, "avatar");
-        },
-        writeToCookie() {
-            window.console.log(this.mInstitute);
-            const cookie = {
-                accessToken:
-                    this.mInstitute.accessToken ||
-                    "eyJraWQiOiIzT3hCSStYOWZCYzFOYTc3YW9qVnFIdlwvSWxXREV6NFJMYUluUmE5anNyQT0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiI1OWNkMTY4ZS1mNzBmLTQ4ODctYWE5Ny1kMWMwYWZiNDE0ZDkiLCJldmVudF9pZCI6IjA3ZmZiOTEyLWJiZTgtNDg3ZS1hODk5LWQ5MDM4NjcyNjBkYSIsInRva2VuX3VzZSI6ImFjY2VzcyIsInNjb3BlIjoiYXdzLmNvZ25pdG8uc2lnbmluLnVzZXIuYWRtaW4iLCJhdXRoX3RpbWUiOjE2MDc5MzU0NDMsImlzcyI6Imh0dHBzOlwvXC9jb2duaXRvLWlkcC5hcC1zb3V0aGVhc3QtMS5hbWF6b25hd3MuY29tXC9hcC1zb3V0aGVhc3QtMV9nc2F0MmxiakwiLCJleHAiOjE2MDc5MzkwNDMsImlhdCI6MTYwNzkzNTQ0MywianRpIjoiNTc5NzE4ZDQtYmM0Zi00YzNhLThmMTItNmRjZGQyZmYxNDczIiwiY2xpZW50X2lkIjoiM3ZhOTNkMjVxbzZrcHYzNHJmMWwwNDNqZ3IiLCJ1c2VybmFtZSI6ImJhbmhqaTU1NUBnbWFpbC5jb20ifQ.Z-g9DNbRn5AX32xFWHmkt8iXe7FNly1azaOXTpORL4i7X_EDLybiYtbYsR3MWXbTNcFfKABPwOXYk541SJZPgnck8PWvHanyKIVvrlzaVy9JEo_E35jOO72Rjt0MgB2eG1u2k70R2cywQmKfsffp_5yk1RKaesZq0yLucUJDrSHnRv8Jm-U-S-buHs_fAxL_Vt6l3o2DcKtKRb-eUOHjTLs8WnHvtPvraXC7dY6PmJuA4K4v2RMfrSuv5wx2EvomqlOEtCgvbK8jDtu4zvHRTY-2TcnfK2dXwxZRkduF26YbezejBZpejsoVFBOi617NGH8b_2DikvSyCBBCjmh3qg",
-                refreshToken:
-                    this.mInstitute.refreshToken ||
-                    "eyJjdHkiOiJKV1QiLCJlbmMiOiJBMjU2R0NNIiwiYWxnIjoiUlNBLU9BRVAifQ.dsantoqyFlkftIr9z_7P5uc2fjlc0w_R4wt1My1fT70grVmvW0crc_aqHcm-Vc3gpjgndX2Xxn3lTx7nqpVp59Lzeab2JIKE520LBhePWuz5y3LW5WMQhAcZteXNf6JATvDHrmRXs3R0e4m-vSZhlvLCMH5EIYB0bwsFMBdSVNrNNLLVzMuuzDCXywWlrLU1MIHJuEG9Z5c-fca1xB-1fwyI8wpGV6OVnfNSo4OfOeQ-O9ufKmKjym24yxE40i_8UrOEca_12Y5XrQGov30wkou6stixLDFWu05BncG2nfgCEjNERlJC97LPtyI__tLGL2kYuWgJKghebKkuq9ds_A.wvSOFOu7pMLZFghf.4DLhcyHLwJqf3fcyq8A3KmSQL8UAd_ADPZxBuPnnSDaRVEWqDTRq_bJDPFjWBf4uJkI6ye45XJ8AkdZQFutP-x_nUT2Qw0NbLjGFW3nUh2GVd8yP2JIyQJ2h2_onLvUPpLp-E0crIEdbVXZRpQM7y7aOP4rOVPPVBCiAxapMNX9_5utgzKpfWGrS8D6t7dvq4pHieXeZbomkoY7h_eLflehQ_RLcaK3i7Dnvxjn6_UiHmXx0X9gplFJx_rrIlveIrha94E6fBQ9eCwT0WHROrAQIbyW24D_6ytSAuKVq-383svntFUeBuggDRujVdR8uQ9HIbsftDvDvnKZchQ1yFiToTC-NPCfizaw6nuJ5LQAw0TVtY3RSeYfm6jAX77ymsuYi557UZNWCJs_0WRKBaqKnvKx6m-YwFtft5dPmW1rPi6ARJ20z6JocYLWjfKYBL3AITgzt2gY8POsgzBOhWZ9c2UcM7X8eY5EMtAQyhZ3iLHQ_21cnNAH_PNBmn4mZGuT0VePpeopmX3e4J1-BmAFq5LvqJW4KTIiFRdrcTbnLWT8JrR-SGiOMOLS_WUivc3wQZn20xm2JlrJZDemT4IGdHLmrxARsvlSwKaQ94Rywly8WjIaj-wzqA5_MURryW1xHUpwwO-lvZ1dTK9Wh80AY_LSL19fcPi1pXz_NCSKOniSgoT3qvaL1zLcxFKr5D_lI8LkI4wyC7tzRbvbkY6t8-L269Y7BVO7SXMIDu6nT1XyuUElFMnnfuDr_iCWPjDjbEA2f5hl6V1m3BFEkroHQp97RnJUnualVpnQ1QsuBvRFZnvEI0OuPUpMNMic6gnuxNV_ILlxhH7JspafqbeAN5PYauLsI6A70b4mZWf0XGZu0UeV93QZZn_9156yytgU3-3-mcDR4dV2L0bnICz1lCVsqw9EE6MUJhHneNNqDn9pWykD3kSxbtS-0jTTyOVJaGjmwP6K80hH3S6C6cEnkPr83Or-FBkmB61_2RHjyB6o5QkebyPv2L5z8eF14r15UZiFEI6HyyEeZBWpEgYREvkVmjsLg2koHcieQ_AmUmwy9rF8oW5qM1LO-NPHIqnR1uwSvu2ZPBDBxigjgZ3m8q8lirVwSgHmY4OVEb1MWBa5uHCFKYKlEZCdeU_DKl3eb52Nnou7nKyBphgarI7LZ5-ufQPCxzeablED4rAnzTEoov3HQ1vHjS_nF71aZ4tNAR98vFpbhH1sBJolvf65omWa15ezCEsbyhCrvKmcZuGJHXMSXkxcbZOJWivV6sLLNQDZq6FF8AOKMDXTHFVJDYO94eB_F9GAEW4q9evuZaQ.fN1JXyIfuzoK0yAG4om3LQ",
-                expiresIn: 1607939043,
-                email: this.mInstitute.email,
-                instituteId: this.mInstitute.id,
-                creator: this.mInstitute.creator,
-                user: this.mInstitute.user,
-            };
-            // document.cookie =
-            //     "banhji-token=" +
-            //     JSON.stringify(cookie) +
-            //     ";domain=.localhost;path=/;expires=Fri, 31 Dec 9999 12:00:00 GMT;";
-            let value = JSON.stringify(cookie);
-            let expires = "";
-            let name = "banhji-token";
-            document.cookie = name + "=" + value + expires + "; path=/";
-        },
-        onChanged() {
-            this.writeToCookie();
-            //reload
-            this.$router.go(this.$router.currentRoute);
-            // this.$router.push({
-            //     name: 'Suppliers', params: {
-            //         data: data
-            //     }
-            // })
-            // window.console.log(this.mInstitute)
-        },
-        async loadInstitutes() {
-            window.console.log(this.mInstitute.creator);
-            new Promise((resolve) => {
-                setTimeout(() => {
-                    resolve("resolved");
-                    instituteHandler.getCompany(this.mInstitute.creator).then((res) => {
-                        window.console.log(res);
-                        res.forEach((i) => {
-                            this.institutes.push({
-                                id: i.id,
-                                banhjiId: i.banhjiId,
-                                name: i.name,
-                                email: this.mInstitute.email,
-                                user: this.mInstitute.user,
-                                creator: this.mInstitute.creator,
-                            });
-                        });
-                    });
-                }, 300);
-            });
-        },
-        async loadInstitute() {
-            new Promise((resolve) => {
-                setTimeout(() => {
-                    resolve("resolved");
-                    otherHandler.institute().then((res) => {
-                        window.console.log(res, "--");
-                        this.institutes = res;
-                    });
-                }, 300);
-            });
-        },
-        async loadDecimal() {
-            new Promise(resolve => {
-                setTimeout(() => {
-                    resolve('resolved');
-                    loanHandler.decimalGet().then(res => {
-                        this.decimals = res.data.data
-                    })
-                }, 300);
-            })
-        },
-        async loadMember() {
-            // this.memberList = []
-            // memberHandler.center().then(res => {
-            //     this.showLoading = false
-            //     this.l = res.data.data
-            //     this.memberList = res.data.data
-            //     this.totalMember = this.l.length
-            //     if(this.l.length > 0){
-            //         let femal = 0
-            //         let mal = 0
-            //         $.each(this.l, function (i,v){
-            //             if(v.gender == 1){
-            //                 mal += 1
-            //             }else{
-            //                 femal += 1
-            //             }
-            //         })
-            //         this.totalFemaleMember = femal
-            //         this.totalMaleMember = mal
-            //     }
-            // })
-            memberHandler.memberCountGet().then(res => {
-                let d = res.data.data[0]
-                this.totalMember = d.totalCount
-                this.totalFemaleMember = d.totalFemale
-                this.totalMaleMember = parseInt(d.totalCount) - parseInt(d.totalFemale)
-            })
-        },
-        async loadShare() {
-            if(this.asOf){
-                new Promise(resolve => {
-                    setTimeout(() => {
-                        resolve('resolved');
-                        let data = {
-                            asOf: this.asOf
-                        }
-                        memberHandler.listShareReport(data).then(res => {
-                            this.shareList = res.data.data
-                            if(this.shareList.length > 0){
-                                let totalShare = 0, mal = 0, femal = 0, fo = 0, locale = '', self = this, totalSharePr = 0, sharePrice = 0
-                                $.each(this.shareList, function (i,v){
-                                    totalShare += parseInt(v.shareAmount) - parseInt(v.withdrawShare)
-                                    let gmem = self.memberList.filter((obj) => {return obj.id == v.member.id})
-                                    let g = v.member
-                                    window.console.log(gmem, 'fileter')
-                                    if(gmem.length > 0){
-                                        g = gmem[0]
-                                    }
-                                    window.console.log(g, 'member')
-                                    if(g.gender == 1){
-                                        mal += parseInt(v.shareAmount) - parseInt(v.withdrawShare)
-                                    }else if(g.gender == 2){
-                                        femal += parseInt(v.shareAmount) - parseInt(v.withdrawShare)
-                                    }
-                                    // if(v.member.gender == 1){
-                                    //     mal += parseInt(v.shareAmount) - parseInt(v.withdrawShare)
-                                    // }else{
-                                    //     femal += parseInt(v.shareAmount) - parseInt(v.withdrawShare)
-                                    // }
-                                    locale = v.pricePerShare.currency.code
-                                    let dec = self.decimals.filter((obj) => {
-                                        return obj.currency.code == locale
-                                    })
-                                    if (dec.length > 0) {
-                                        fo = dec[0].decimal
-                                    }
-                                    sharePrice =  v.sharePrice * v.rate
-                                    window.console.log(v, 'shre price')
-                                })
-                                let fp = (femal / totalShare) * 100
-                                this.totalFemaleP = fp.toFixed(2)+'%'
-                                this.totalMaleShare = kendo.toString(mal, 'n'+fo)
-                                this.totalFemaleShare = kendo.toString(femal, 'n'+fo)
-                                this.totalShare = kendo.toString(totalShare, 'n'+fo)
-                                totalSharePr = totalShare * sharePrice
-                                window.console.log(mal, femal, totalShare)
-                                this.totalSharePrice = kendo.toString(totalSharePr, 'n'+fo)
-                            }
-                        })
-                    }, 300);
-                })
-            }
-        },
-        async loadLoan() {
-            if(this.asOf){
-                new Promise(resolve => {
-                    setTimeout(() => {
-                        resolve('resolved');
-                        let data = {
-                            asOf: this.asOf
-                        }
-                        memberHandler.getLoanDisburseReport(data).then(res => {
-                            this.showLoading = false
-                            this.loanList = res.data.data
-                            if(this.loanList.length > 0){
-                                let self = this, totalM = 0, totalMA = 0, totalCA = 0, total = 0, fo = 0, locale = ''
-                                $.each(this.loanList, function (i,v){
-                                    locale = v.loan.loanProduct.currency.code
-                                    let dec = self.decimals.filter((obj) => {return obj.currency.code == locale})
-                                    fo = 0
-                                    if(dec.length > 0){
-                                        fo = dec[0].decimal
-                                    }
-                                    total += (parseFloat(v.totalPayment) - parseFloat(v.totalInterest)) * parseFloat(v.exchangeRate.rate)
-                                    let a = v.member.id.substr(0, 4)
-                                    if(a == 'ac-m'){
-                                        totalM += 1
-                                        totalMA += (parseFloat(v.totalPayment) - parseFloat(v.totalInterest)) * parseFloat(v.exchangeRate.rate)
-                                    }else{
-                                        totalCA += (parseFloat(v.totalPayment) - parseFloat(v.totalInterest)) * parseFloat(v.exchangeRate.rate)
-                                    }
-                                    // window.console.log(v, 'loan list')
-                                })
-                                this.totalLoan = kendo.toString(total, 'n'+fo)
-                                this.totalLMember = totalM
-                                this.totalLoanMember = kendo.toString(totalMA, 'n'+fo)
-                                this.totalLoanCustomer = kendo.toString(totalCA, 'n'+fo)
-                            }
-                        })
-                    }, 300);
-                })
-            }
-        },
-        async loadPar() {
-            if (this.asOf) {
-                new Promise(resolve => {
-                    setTimeout(() => {
-                        resolve('resolved');
-                        let data = {
-                            asOf: this.asOf
-                        }
-                        memberHandler.loanPortfolioReport(data).then(res => {
-                            this.showLoading = false
-                            this.loanList = res.data.data
-                            window.console.log(this.loanList, 'loan po')
-                            let self = this, lines = [], pAr = [], locale = '', fo = 0
-                            $.each(this.loanList, function (i, v) {
-                                locale = v.loanProduct.currency.code
-                                let dec = self.decimals.filter((obj) => {
-                                    return obj.currency.code == locale
-                                })
-                                if (dec.length > 0) {
-                                    fo = dec[0].decimal
-                                }
-                                if ($.inArray(v.loanProduct.id, pAr) == -1) {
-                                    pAr.push(v.loanProduct.id)
-                                    lines.push({
-                                        productId: v.loanProduct.id,
-                                        memberId: v.memberId,
-                                        disburseId: v.disbursementId,
-                                        loanProduct: v.loanProduct.name,
-                                        outstanding: 0,
-                                        late30: 0,
-                                        late60: 0,
-                                        late90: 0,
-                                        over90: 0,
-                                        provision: 0,
-                                        provisionP: 0,
-                                        locale: locale,
-                                        numberFormat: 'n' + fo
-                                    })
-                                }
-                            })
-                            if (lines.length > 0) {
-                                let loan = this.loanList
-                                let dAr = []
-                                $.each(lines, function (i, v) {
-                                    let d = loan.filter((obj) => {
-                                        return obj.loanProduct.id === v.productId
-                                    })
-                                    if(d.length > 0){
-                                        let letb = 0
-                                        $.each(d, function (j,k){
-                                            if ($.inArray(k.disburseId, dAr) == -1) {
-                                                window.console.log(v.receiptDate)
-                                                v.outstanding += parseFloat(k.outStanding)
-                                                letb = parseFloat(k.data.total)
-                                                // not in array
-                                                dAr.push(k.disburseId)
-                                            }
-                                            // letb += parseFloat(k.data.total)
-                                        })
-                                        if(d.length == 1){
-                                            v.late30 += letb
-                                        }else if(d.length == 2){
-                                            v.late60 += letb
-                                        }else if(d.length == 3){
-                                            v.late90 += letb
-                                        }else{
-                                            v.over90 += letb
-                                        }
-                                    }
-                                })
-                                $.each(lines, function (i, v) {
-                                    let l = 0
-                                    if(v.over90 > 0){
-                                        v.provision = v.over90
-                                        v.provisionP = (v.over90 / v.outstanding) * 100
-                                    }else if(v.late90 > 0){
-                                        l = v.late90 * 0.3
-                                        v.provision = l
-                                        v.provisionP = (l / v.outstanding) * 100
-                                    }else if(v.late60){
-                                        l = v.late60 * 0.1
-                                        v.provision = l
-                                        v.provisionP = (l / v.outstanding) * 100
-                                    }
-                                })
-                            }
-                            if(lines.length > 0){
-                                let l30 = 0, l60 = 0, l90 = 0, o90 = 0, p = 0
-                                $.each(lines, function (i, v) {
-                                    if(v.over90 > 0){
-                                        o90 += v.over90
-                                    }else if(v.late90 > 0){
-                                        l90 += v.late90
-                                    }else if(v.late60 > 0){
-                                        l60 += v.late60
-                                    }else if(v.late30 > 0){
-                                        l30 += v.late30
-                                    }else if(v.provision > 0){
-                                        p += v.provision
-                                    }
-                                })
-                                this.late30 = kendo.toString(l30, 'n'+fo)
-                                this.late60 = kendo.toString(l60, 'n'+fo)
-                                this.late90 = kendo.toString(l90, 'n'+fo)
-                                this.over90 = kendo.toString(o90, 'n'+fo)
-                                this.provision = kendo.toString(p, 'n'+fo)
-                                this.totalProvision = kendo.toString(l30 + l60 + l90 + o90 + p, 'n'+fo)
-                            }
-                        })
-                    }, 300);
-                })
-            }
-        },
-        async loadSaving() {
-            if(this.asOf){
-                new Promise(resolve => {
-                    setTimeout(() => {
-                        resolve('resolved');
-                        let data = {
-                            asOf: this.asOf
-                        }
-                        memberHandler.getSavingListReport(data).then(res => {
-                            this.showLoading = false
-                            this.l = res.data.data
-                            // window.console.log(this.l)
-                            if(this.l.length > 0){
-                                this.totalSaving = this.l.length
-                                let self = this, locale = '', fo = 0, total = 0, mal = 0, femal = 0
-                                this.listsaving = []
-                                $.each(this.l, function (i,v){
-                                    locale = v.product.currency.code
-                                    let dec = self.decimals.filter((obj) => {return obj.currency.code == locale})
-                                    if(dec.length > 0){
-                                        fo = dec[0].decimal
-                                    }
-                                    if(v.member.gender == 'male'){
-                                        mal += (parseFloat(v.deposit) + parseFloat(v.interest)) - parseFloat(v.withdraw)
-                                    }else if(v.member.gender == 'female'){
-                                        femal += (parseFloat(v.deposit) + parseFloat(v.interest)) - parseFloat(v.withdraw)
-                                    }
-                                    total += (parseFloat(v.deposit) + parseFloat(v.interest)) - parseFloat(v.withdraw)
-                                })
-                                this.totalSavingMale = kendo.toString(mal, 'n'+fo)
-                                this.totalSavingAmount = kendo.toString(total, 'n'+fo)
-                                this.totalSavingFemaleA = kendo.toString(femal, 'n'+fo)
-                                let p = (femal / total) * 100
-                                this.totalSavingFemalP = p.toFixed(2)+'%'
-                            }
-                        })
-                    }, 300);
-                })
-            }
-        },
-        loadInstLogo(){
-            new Promise(resolve => {
-                setTimeout(() => {
-                    resolve('resolved');
-                    window.console.log(store.default.state.institute, 'insti')
-                    this.institute = store.default.state.institute
-                    window.console.log(store.default, 'logo')
-                    if(store.default.state.institute.imgProfile){
-                        this.logoUrl = store.default.state.institute.imgProfile.bigThumb
-                    }
-                }, 500);
-            })
-        },
-        async loadInstituteInfo() {
-            new Promise(resolve => {
-                setTimeout(() => {
-                    instituteHandler.getOneCompany(instituteId).then(res => {
-                        if(res.hasOwnProperty('imgProfile')){
-                            if(res.imgProfile.url != '' ){
-                                this.logoUrl = res.imgProfile.url
-                            }
-                        }
-                    })
-                    resolve('resolved');
-                }, 200);
-            });
-        },
         rowNumberTmpl(dataItem) {
             var ds = this.$refs.sessionDS.kendoWidget(),
                 index = ds.indexOf(dataItem);
             return index + 1;
         },
-        showAddSession(){
+        statusTmpl(dataItem) {
+            let st = i18n.t('open')
+            if(parseInt(dataItem.status) == 2){
+                st = i18n.t('reconciled')
+            }
+            return st
+        },
+        async showAddSession() {
             this.s = new SessionModel({})
             this.showSession = true
+            await this.getLastNumber()
+            await this.loadCurrencyData()
+        },
+        async loadSession() {
+            this.showLoading = true
+            this.sessionData = []
+            sessionHandler.list().then(response => {
+                this.showLoading = false
+                if (response.data.statusCode === 200) {
+                    let data = response.data.data
+                    window.console.log(data, 'session data')
+                    if(data.length > 0){
+                        this.sessionData = data
+                    }
+                }
+            }).catch()
+            {
+                this.showLoading = false
+            }
+        },
+        async loadSessionByUser() {
+            this.showLoading = true
+            this.sessionData = []
+            sessionHandler.byuser(new UserModel(cookies.user).user_name).then(response => {
+                this.showLoading = false
+                if (response.data.statusCode === 200) {
+                    let data = response.data.data
+                    window.console.log(data, 'session data')
+                    if(data.length > 0){
+                        this.sessionData = data
+                    }
+                }
+            }).catch()
+            {
+                this.showLoading = false
+            }
+        },
+        async loadCurrencyData() {
+            new Promise(resolve => {
+                setTimeout(() => {
+                    resolve('resolved')
+                    this.showLoading = true
+                    this.currencyData = []
+                    currencyHandler.list('fun-c').then(response => {
+                        this.showLoading = false
+                        if (response.data.statusCode === 200) {
+                            let data = response.data.data
+                            window.console.log(data, 'currency')
+                            data.forEach(element => {
+                                this.currencyData.push({
+                                    code: element.code,
+                                    amount: 0,
+                                    id: element.id
+                                })
+                            });
+                        }
+                    }).catch()
+                    {
+                        this.showLoading = false
+                    }
+                }, 300)
+            })
+        },
+        addSession(){
+            this.s.openBalance = this.currencyData
+            this.s.startDate = Date.parse(new Date())
+            this.s.user = new UserModel(cookies.user)
             window.console.log(this.s)
+            this.showLoading = true
+            sessionHandler.create(new SessionModel(this.s)).then(res => {
+                this.showLoading = false
+                this.showSession = false
+                window.console.log(res, 'response')
+                if (res.data.statusCode === 201) {
+                    this.$snotify.success('Successfully')
+                }
+            }).catch(e => {
+                this.$snotify.error('Something went wrong')
+                this.errors.push(e)
+                window.console.log(e)
+            })
+        },
+        async getLastNumber() {
+            if (this.$route.params.id == undefined) {
+                new Promise(resolve => {
+                    setTimeout(() => {
+                        resolve('resolved');
+                        let data = {
+                        }
+                        sessionHandler.getLastNumber(data).then(res => {
+                            window.console.log(res.data.data, 'last number')
+                            this.s.lastNumber = res.data.data.lastNumber
+                            this.generateNumber()
+                        }).catch(e => {
+                            this.$snotify.error('Something went wrong')
+                            this.errors.push(e)
+                            // window.console.log(e)
+                        })
+                    }, 300);
+                })
+            }
+        },
+        generateNumber() {
+            if (this.$route.params.id == undefined) {
+                let newNum = ''
+                let lnum = this.zeroPad(this.s.lastNumber, 6)
+                let year = new Date().getFullYear().toString().substr(-2)
+                let mo = this.zeroPad(new Date().getMonth() + 1, 2)
+                newNum = 'SES-' +year + mo + '-' + lnum
+                this.s.number = newNum
+            }
+        },
+        zeroPad(num, places) {
+            return String(num).padStart(places, '0')
+        },
+        checkSession(){
+            this.showLoading = true
+            let data = {
+                user_name : new UserModel(cookies.user).user_name
+            }
+            sessionHandler.checkSession(data).then(res => {
+                this.showLoading = false
+                if(res.data.data.length > 0){
+                    this.hasSession = true
+                    this.activeSession = res.data.data[0]
+                }else{
+                    this.activeSession = {}
+                }
+            }).catch(e => {
+                this.showLoading = false
+                this.$snotify.error('Something went wrong')
+                this.errors.push(e)
+                window.console.log(e)
+            })
+        },
+        goReconcile(){
+            window.console.log(this.activeSession, 'aactive session')
         }
     },
     computed: {
@@ -924,7 +705,9 @@ export default {
         },
     },
     created: async function () {
-        await this.loadInstituteInfo()
+        await this.loadSession()
+        await this.loadSessionByUser()
+        this.checkSession()
     }
 };
 </script>
@@ -946,7 +729,8 @@ export default {
     height: 32px;
     border-bottom: thin solid rgba(0, 0, 0, 0.12) !important;
 }
-.tdbig{
+
+.tdbig {
     height: 50px !important;
 }
 
@@ -999,7 +783,8 @@ export default {
 .dark_grey {
     color: #7e7a7a;
 }
-.path{
+
+.path {
     stroke: gainsboro !important;
 }
 

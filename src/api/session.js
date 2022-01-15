@@ -7,7 +7,10 @@ const baseUrl = myUrl.url
 const url          = baseUrl + '/session/'
 
 module.exports = {
-    sessionCreate                               : url + 'session/institute/' + instituteId + '/add',
+    sessionCreate                               : url + 'session/institute/' + instituteId + '/create',
     sessionGets                                 : url + 'session/institute/' + instituteId + '/list',
     sessionGet                                  : url + 'session/institute/' + instituteId + '/list/',
+    lastNumber                                  : url + 'lastnumber/institute/' + instituteId + '/lastnumber',
+    checkSession                                : url + 'session/institute/' + instituteId + '/check',
+    byUser                                      : url + 'session/institute/' + instituteId + '/user',
 }
