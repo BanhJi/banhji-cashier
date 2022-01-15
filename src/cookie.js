@@ -17,7 +17,7 @@ let getCookie = (cname) => {
 
 module.exports.getCookie = () => {
     try {
-        let banhjiCookie = getCookie('banhji-tokendev');
+        let banhjiCookie = getCookie('banhji-token-cashier' + process.env.VUE_APP_MODE);
         if (banhjiCookie !== '') {
             const cookie = jwt.verify(banhjiCookie, process.env.VUE_APP_JWT_SESCRET);
 

@@ -14,7 +14,6 @@ module.exports.init = async () => {
         window.console.error(error);
     }
 }
-
 // SAVE
 module.exports.saveIntitute = async (data) => {
     try {
@@ -24,7 +23,6 @@ module.exports.saveIntitute = async (data) => {
         window.console.error(error);
     }
 }
-
 module.exports.getCompany = async function (id) {
     try {
         const result = await axios.get(apiUrl.institute.company_get + id)
@@ -41,8 +39,6 @@ module.exports.getImage = async function (useId) {
         window.console.error(error)
     }
 }
-
-
 module.exports.getOneCompany = async function (id) {
     try {
         const result = await axios.get(apiUrl.institute.company_getOne + id)
@@ -52,7 +48,6 @@ module.exports.getOneCompany = async function (id) {
         window.console.error(error)
     }
 }
-
 module.exports.addCompany = async function (id) {
     try {
         const result = await axios.get(apiUrl.institute.company_add + id)
@@ -61,7 +56,6 @@ module.exports.addCompany = async function (id) {
         window.console.error(error)
     }
 }
-
 module.exports.saveImageProfile = async function (data) {
     try {
         const response = await axios.post(apiUrl.institute.save_image, data)
@@ -70,7 +64,6 @@ module.exports.saveImageProfile = async function (data) {
         window.console.error(err)
     }
 }
-
 module.exports.getBt = async function () {
     try {
         const response = await instance.get(apiUrl.institute.bt)
@@ -79,7 +72,6 @@ module.exports.getBt = async function () {
         window.console.error(error)
     }
 }
-
 module.exports.getSector = async function () {
     try {
         const response = await axios.get(apiUrl.institute.sector_get)
@@ -88,7 +80,6 @@ module.exports.getSector = async function () {
         window.console.log(err)
     }
 }
-
 module.exports.getBo = async function () {
     try {
         const response = await axios.get(apiUrl.institute.bo)
@@ -97,7 +88,6 @@ module.exports.getBo = async function () {
         window.console.error(error)
     }
 }
-
 module.exports.getTaxRegime = async function () {
     try {
         const response = await instance.get(apiUrl.institute.taxRegime)
@@ -107,7 +97,6 @@ module.exports.getTaxRegime = async function () {
         window.console.error(error)
     }
 }
-
 module.exports.getRoles = async function () {
     try {
         const response = await instance.get(apiUrl.institute.role_get + instituteId + '/user/' + `usr-${creator}` + '/list')
