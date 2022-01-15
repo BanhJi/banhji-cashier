@@ -323,7 +323,6 @@ const jwt = require("jsonwebtoken");
 import {Trans} from "@/plugins/Translation";
 import {i18n} from "../i18n";
 import VOffline from "@/components/VOffline";
-// import { data } from "@/observable/store"
 
 export default {
     data: () => ({
