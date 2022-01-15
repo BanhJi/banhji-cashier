@@ -363,7 +363,7 @@ export default {
                 activeClass: "",
                 name: "Receipt",
                 menuTex: "receipt",
-                path: "/receipt",
+                path: "/receipts",
             },
             
             {

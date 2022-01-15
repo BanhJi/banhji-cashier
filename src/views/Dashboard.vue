@@ -151,10 +151,10 @@
 <!--                                -->
 <!--                            </v-row>-->
                             <v-row>
-                                <v-col sm="8" cols="8" class="py-0 px-md-2">
+                                <v-col sm="8" cols="8" class=" px-md-2">
                                     <h3 class="font_20 pb-1">{{ $t("session") }}</h3>
                                 </v-col>
-                                <v-col sm="4" cols="4" class="py-0 px-md-2">
+                                <v-col sm="4" cols="4" class=" px-md-2">
                                     <v-btn
                                         color="primary"
                                         class="float-right white--text capitalize ml-2"

@@ -43,7 +43,7 @@ const routes = [{
             }
         },
         {
-            path: 'receipt',
+            path: 'receipts',
             name: 'Receipt',
             component: () => import('../views/receipt/CashReceipt'),
             meta: {
@@ -53,7 +53,7 @@ const routes = [{
         {
             path: 'reconcile',
             name: 'Reconcile',
-            component: () => import('../views/reconcile/Reconcile'),
+            component: () => import('../views/reconcile/CashReconciliation'),
             meta: {
                 title: 'Reconcile'
             }
