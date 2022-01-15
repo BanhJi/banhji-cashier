@@ -44,6 +44,7 @@ const price_promotion   = require("./api/price-promotion")
 const item              = require("./api/item")
 const financing         = require("./api/financing")
 const session           = require("./api/session")
+const cashiersetting           = require("./api/setting")
 
 module.exports = {
     // INSTITUTE
@@ -188,5 +189,6 @@ module.exports = {
 
     //Item
     item                                : item,
-    session                             : session
+    session                             : session,
+    cashiersetting                      : cashiersetting,
 }

@@ -8,14 +8,25 @@
                 <v-simple-table class="attachment_table">
                     <template>
                         <tbody>
-                        
+                        <tr>
+                            <td class="text-bold">{{ $t('default_last_reference_no') }}</td>
+                            <td style=""  class="primary--text align-center justify-center d-flex text-bold">
+                                <v-text-field
+                                    label="message"
+                                    v-model="s.lastRefNum"
+                                    hide-details="auto"
+                                ></v-text-field>
+                            </td>
+                        </tr>
                         <tr>
                             <td class="text-bold">{{ $t('default_search_option') }}</td>
                             <td style=""  class="primary--text align-center justify-center d-flex text-bold">
-                                <v-select class="w_100"
-                                    :label="$t('select')"
-                                    color="primary"
-                                />
+                                <v-select class="mt-1"
+                                          v-model="s.searchOption"
+                                          :items="searchOptions"
+                                          :placeholder="$t('search')"
+                                          outlined>
+                                </v-select>
                             </td>
                         </tr>
                         <tr>
@@ -23,29 +34,29 @@
                             <td style=""  class="primary--text align-center justify-center d-flex text-bold">
                                 <v-text-field
                                     label="message"
-                                    :rules="rules"
+                                    v-model="s.msgJournal"
                                     hide-details="auto"
                                     ></v-text-field>
                             </td>
                         </tr>
-                        <tr>
-                            <td class="text-bold">{{ $t('default_receipt_form') }}</td>
-                            <td style=""  class="primary--text align-center justify-center d-flex text-bold">
-                                <v-select class="w_100"
-                                    :label="$t('select')"
-                                    color="primary"
-                                />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="text-bold">{{ $t('default_reconciliation_report_rorm') }}</td>
-                            <td style=""  class="primary--text align-center justify-center d-flex text-bold">
-                                <v-select class="w_100"
-                                    :label="$t('select')"
-                                    color="primary"
-                                />
-                            </td>
-                        </tr>
+<!--                        <tr>-->
+<!--                            <td class="text-bold">{{ $t('default_receipt_form') }}</td>-->
+<!--                            <td style=""  class="primary&#45;&#45;text align-center justify-center d-flex text-bold">-->
+<!--                                <v-select class="w_100"-->
+<!--                                    :label="$t('select')"-->
+<!--                                    color="primary"-->
+<!--                                />-->
+<!--                            </td>-->
+<!--                        </tr>-->
+<!--                        <tr>-->
+<!--                            <td class="text-bold">{{ $t('default_reconciliation_report_rorm') }}</td>-->
+<!--                            <td style=""  class="primary&#45;&#45;text align-center justify-center d-flex text-bold">-->
+<!--                                <v-select class="w_100"-->
+<!--                                    :label="$t('select')"-->
+<!--                                    color="primary"-->
+<!--                                />-->
+<!--                            </td>-->
+<!--                        </tr>-->
                         </tbody>
                     </template>
                 </v-simple-table>
@@ -67,7 +78,7 @@ import SaleFormContentModel from "@/scripts/model/SaleFormContent";
 
 const saleFormContentModel = new SaleFormContentModel({})
 const saleFormContentHandler = require("@/scripts/saleFormContentHandler")
-
+import SettingModel from "@/scripts/cashier/model/Setting";
 export default {
 
     components: {},
@@ -75,7 +86,9 @@ export default {
             saleFormContent: saleFormContentModel,
             quotes: ['Quote', 'Proposal', 'Estimate'],
             saleOrders: ['Sale Order', 'Engagement', 'Contract'],
-            decimalStyle: [2, 3, 4, 5]
+            decimalStyle: [2, 3, 4, 5],
+            searchOptions: ['Invoice', 'CRN', 'Payment Code', 'Customer'],
+            s: new SettingModel({})
         }
     ),
     props: {}
