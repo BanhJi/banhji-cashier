@@ -486,11 +486,11 @@
                                         <!--                        </v-list-item-group>-->
                                         <!--                      </v-list>-->
                                         <!--                    </v-menu>-->
-                                        <v-btn color="primary"
-                                               class="float-right white--text text-capitalize "
-                                               @click="onSaveClose('close')">
-                                            {{ $t('save_close') }}
-                                        </v-btn>
+<!--                                        <v-btn color="primary"-->
+<!--                                               class="float-right white&#45;&#45;text text-capitalize "-->
+<!--                                               @click="onSaveClose('close')">-->
+<!--                                            {{ $t('save_close') }}-->
+<!--                                        </v-btn>-->
                                         <v-btn v-if="!check_id_edit" color="secondary"
                                                style="margin-right: 10px !important"
                                                class="white--text float-right text-capitalize"
@@ -549,6 +549,7 @@ const cookie = cookieJS.getCookie();
 // from
 const {getFormSetting} = require("@/scripts/settingsHandler.js")
 import {print} from "@/form/Sale.js";
+const sessionHandler = require("@/scripts/session/handler/sessionHandler")
 
 export default {
     name: "CashReceipt",
@@ -632,7 +633,9 @@ export default {
         penaltyDescription: 'penalty',
         cr: 0,
         dr: 0,
-
+        activeSession: {},
+        paymentOption: {},
+        txnPrint: {}
     }),
     methods: {
         _print(id) {
@@ -749,6 +752,48 @@ export default {
             }
             return 0
         },
+        checkSession(){
+            this.showLoading = true
+            let data = {
+                user_name : cookie.email
+            }
+            sessionHandler.checkSession(data).then(res => {
+                this.showLoading = false
+                if(res.data.data.length > 0){
+                    this.hasSession = true
+                    this.activeSession = res.data.data[0]
+                }else{
+                    this.$snotify.error('Please start session!')
+                    this.$router.go(-1);
+                }
+            }).catch(e => {
+                this.showLoading = false
+                this.$snotify.error('Something went wrong')
+                this.errors.push(e)
+                window.console.log(e)
+            })
+        },
+        // loadPaymentOption(){
+        //     this.showLoading = true
+        //     let data = {
+        //         user_name : cookie.email
+        //     }
+        //     sessionHandler.checkSession(data).then(res => {
+        //         this.showLoading = false
+        //         if(res.data.data.length > 0){
+        //             this.hasSession = true
+        //             this.activeSession = res.data.data[0]
+        //         }else{
+        //             this.$snotify.error('Please start session!')
+        //             this.$router.go(-1);
+        //         }
+        //     }).catch(e => {
+        //         this.showLoading = false
+        //         this.$snotify.error('Something went wrong')
+        //         this.errors.push(e)
+        //         window.console.log(e)
+        //     })
+        // },
         // async loadTransactionRate(code) {
         //     new Promise(resolve => {
         //         setTimeout(() => {
@@ -774,6 +819,7 @@ export default {
         //     })
         // },
         async initData() {
+            this.checkSession()
             if (this.$route.params.id !== undefined) {
                 this.check_id_edit = true
                 const queryString = this.$route.query
@@ -1545,7 +1591,7 @@ export default {
             if (Object.keys(dataRow).length > 0) {
                 dataRow.set('optionType', OPTION_TYPE)
             }
-
+            window.console.log(dataRow, 'data change')
             if (e.field) {
                 let amountTobePaid = 0, paidAmount = 0, variance = 0
                 switch (e.field) {
@@ -1605,7 +1651,7 @@ export default {
         PMTTemplate(dataItem) {
             const pmt = dataItem.paymentOption || {}
             if (pmt) {
-                return `<span>${pmt.bankAccountName || ``}</span>`
+                return `<span>${pmt.name || ``}</span>`
             } else {
                 return ``
             }
@@ -1619,6 +1665,7 @@ export default {
                         if (res.data.statusCode === 200) {
                             this.showLoading = false
                             this.paymentMethod = res.data.data
+                            window.console.log(this.paymentMethod, 'payment option')
                         }
                     }).catch()
                     {
@@ -1712,7 +1759,6 @@ export default {
                     resolve('resolved');
                     let data = {}
                     this.showLoading = true
-                    window.console.log(this.mPaymentOption, 'payment ')
                     if (this.mPaymentOption === 'Invoice') {
                         data = {
                             search: this.search,
@@ -1749,13 +1795,24 @@ export default {
                                         const result = res.data.result
                                         this.showLoading = false
                                         if (response.length > 0) {
+                                            response.forEach(ele => {
+                                                ele.paymentOption = this.paymentMethod[0]
+                                                ele.paidAmount = ele.amountTobePaid
+                                                this.txnPrint.amountTobePaid = ele.amountTobePaid
+                                                this.txnPrint.transactionNote = ele.txnNote
+                                                this.txnPrint.invoiceNumber = ele.referenceNo
+                                            })
                                             this.itemLines = response
+                                            window.console.log(this.itemLines, 'after search')
                                             const obj = response[0]
                                             this.autoCalculate()
                                             if (obj.hasOwnProperty('customer')) {
                                                 this.cashReceipt.customer = obj.customer
                                                 if (obj.customer.hasOwnProperty('name')) {
                                                     this.name = obj.customer.name
+                                                    this.txnPrint.name = obj.customer.name
+                                                    window.console.log(obj.customer, 'customer')
+                                                    this.txnPrint.otherName = obj.customer.alternativeName
                                                 }
                                             }
                                         }
@@ -1828,13 +1885,17 @@ export default {
                     this.cashReceipt['txnList'] = this.txnList
                     this.cashReceipt['transactionDate'] = this.cashReceipt.transactionDate
                     this.cashReceipt['actionType'] = this.$route.params.id ? this.$route.query.type : 'new'
-
+                    this.txnPrint.number = this.cashReceipt.transactionType.abbr + '-' + this.cashReceipt.number
                     this.showLoading = true
                     // let data = this.cashReceipt
                     // window.console.log(JSON.stringify(data), '----', isAutoGenerate)
+                    window.console.log(this.cashReceipt, 'cash receipt')
+                    this.txnPrint.paidAmount = this.cashReceipt.total
+                    this.txnPrint.paymentMethod = this.cashReceipt.itemLine[0].paymentOption.name
                     billingHandler.createReceipt(this.cashReceipt).then(response => {
                         if (response.data.statusCode === 201) {
                             this.showLoading = false
+                            this.printForm()
                             // this.close(response.data.data)
                             this.$snotify.success('Successfully')
                             if (save == 'new') {
@@ -1892,6 +1953,20 @@ export default {
         },
         close() {
             this.$router.go(-1);
+        },
+        printForm(){
+            window.console.log(this.txnPrint, 'print obj')
+            // this.showLoading = true
+            // window.console.log(id)
+            // billingHandler.txnView('txn-876857a0-75dc-11ec-b28b-e37839735269').then(res => {
+            //     this.showLoading = false
+            //     window.console.log(res, 'for print')
+            // }).catch(e => {
+            //     this.showLoading = false
+            //     this.$snotify.error('Something went wrong')
+            //     this.errors.push(e)
+            //     window.console.log(e)
+            // })
         }
     },
     watch: {
@@ -1911,7 +1986,7 @@ export default {
         // fetch the data when the view is created and the data is
         // already being observed
         // this.loadObj()
-        // this.loadPaymentOption()
+        this.loadPaymentOption()
     },
     mounted: async function () {
         await this.loadOtherAccount()
@@ -1920,7 +1995,6 @@ export default {
         this.loadData(0, this.filter, this.cusBaseUrl)
         await this.initGrid(this)
         await this.initData()
-
     },
     computed: {
         disabledMe() {

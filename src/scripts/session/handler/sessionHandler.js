@@ -56,3 +56,13 @@ module.exports.byuser = async (data) => {
         window.console.error(error)
     }
 }
+const apiUrlP = require('@/api/setting');
+module.exports.paymentoption = async function () {
+    try {
+        const response = await axios.get(apiUrlP.payment_option_detail + '?optionType=Customer')
+
+        return response
+    } catch (error) {
+        window.console.error(error)
+    }
+}
