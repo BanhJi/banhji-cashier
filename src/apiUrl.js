@@ -47,6 +47,7 @@ const session           = require("./api/session")
 const cashiersetting           = require("./api/setting")
 
 module.exports = {
+    save_image                          : baseUrl + '/users/saveimage/user/',
     // INSTITUTE
     institute_get                       : banhjiUrl + 'institutes/' + instituteId,
     institutes_get                      : banhjiUrl + 'users/' + creator + '/institutes',

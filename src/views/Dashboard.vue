@@ -634,6 +634,7 @@ export default {
                 this.showSession = false
                 window.console.log(res, 'response')
                 if (res.data.statusCode === 201) {
+                    this.loadSession()()
                     this.$snotify.success('Successfully')
                 }
             }).catch(e => {

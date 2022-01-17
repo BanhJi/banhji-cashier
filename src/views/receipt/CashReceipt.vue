@@ -505,7 +505,140 @@
                                 </v-form>
                             </v-col>
                         </v-row>
+                        <v-dialog v-model="showPrint" max-width="1000px">
+                            <template v-slot:activator="{ on }">
+                            </template>
+                            <v-form ref="form" lazy-validation>
+                                <v-card>
+                                    <v-card-title>{{ $t('print_receipt') }}</v-card-title>
+                                    <v-icon class="btn_close" @click="showPrint = false">close</v-icon>
+                                    <v-divider/>
+                                    <v-card-text
+                                        style="background-color: #EDF1F5; color: #333333;">
+                                        <div id="invoiceContent" style="margin-bottom: 15px;page-break-after: always;">
+                                            <div class="invoice-pcg" >
+                                            <div class="invoicepcg-header" style="border-bottom: 2px solid #333; padding-bottom: 10px; margin-bottom: 10px;position: relative;overflow: hidden;">
+                                                <div style="overflow: hidden; width: 15%; float: left;">
+                                                    <img style="text-align: center; width: 80%; margin-bottom: 10px;" v-bind:src="company.logoUrl" />
+                                                </div>
+                                                <div style="width: 75%; float: left; text-align: center;">
+                                                    <h1 style="margin: 0px;font-family: 'Moul', Arial!important;font-size: 35px;line-height: 60px;">{{company.name}}</h1>
+                                                    <h2 style="text-transform: uppercase; margin: 0;float: none;width: 100%; font-size:28px; font-weight: bold;text-align: center;">{{company.name}}</h2>
+                                                    <div style="width: 100%; float: left; margin-top: 15px;">
+                                                        <p style="margin-bottom: 8px;font-size: 14px; font-weight: bold;">{{company.companyAddress}}</p>
+                                                        <p style="font-size: 14px; font-weight: bold;">Tel: {{company.companyPhone}}</p>
+                                                    </div>
+                                                    <div style="width: auto;position: absolute;right: 0;border: 1px solid #333; padding: 4px;">
+                                                        <p style="margin: 0;">បង់ប្រាក់រួចមិនអាចដកវិញបាន</p>
+                                                        <p style="margin: 0;font-style: italic">Nonerefundable</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="invoicepcg-content" style="margin-bottom: 20px;">
+                                                <div style="position: relative;overflow: hidden;min-height: 75px;">
+                                                    <div style="position: absolute; overflow: hidden; left: 0;top: 0;">
+                                                        <img src="${barcode}" style="height:75px;margin-top:3px;" />
+                                                        {{txnPrint.connectId}}
+                                                    </div>
+                                                    <div style="width: 100%; float: left; text-align: center;">
+                                                        <h2 style="width: 100%;"><span style="font-size: 20px;font-family: 'Moul', Arial!important;color: #000;font-style: normal;">បង្កាន់ដៃបង់ប្រាក់</span> / <span style="text-transform: uppercase;color: #000;font-style: normal;font-weight: bold; font-size: 18px;">receipt</span></h2>
+                                                    </div>
+                                                    <div style="position: absolute; right: 0; top: 0;">
+                                                        <table style="width: 100%; border: none; margin-bottom: 0">
+                                                            <tr>
+                                                                <td style="border: none;line-height: 17px;">លេខបង្កាន់ដៃ : </td>
+                                                                <td style="border: none;">{{txnPrint.number}}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style="border: none;line-height: 17px;">កាលបរិច្ឆេទ : </td>
+                                                                <td style="border: none;">{{kendo.toString(new Date(txnPrint.issuedDate), "dd, M, yyyy h:mm:ss tt")}}</td>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                                <div >
+                                                    <table style="width:100%; border: none;">
+                                                        <tr style="line-height: 50px;">
+                                                            <td style="border: none; vertical-align: top;width: 25%">ឈ្មោះ : {{txnPrint.name}}</td>
+                                                            <td style="border: none; vertical-align: top;width: 25%">ឈ្មោះឡាតាំង : <span style="text-transform: uppercase;">{{txnPrint.otherName}}</span></td>
+                                                            <td style="border: none; vertical-align: top;width: 25%">ភេទ : {{txnPrint.gender}}</td>
+                                                            <td style="border: none; vertical-align: top;width: 25%">វិធីសាស្រ្តទូទាត់ : {{txnPrint.paymentMethod}}</td>
 
+                                                        </tr>
+                                                        <!-- <tr>
+                                                          <td style="border: none; vertical-align: top;width: 25%">ក្រុម : <span style="text-transform: uppercase;">#: contact.session#</span></td>
+                                                          <td style="border: none; vertical-align: top;width: 25%">ឆ្នាំទី : #: contact.academic_standing#</td>
+                                                          <td style="border: none; vertical-align: top;width: 25%">ឆមាសទី : #: contact.section#</td>
+                                                          <td style="border: none; vertical-align: top;width: 25%">ឆ្នាំសិក្សា : #:contact.academic_year#</td>
+                                                        </tr> -->
+
+                                                    </table>
+                                                </div>
+                                                <div >
+                                                    <table style="width:100%; border: none;">
+                                                        <thead>
+                                                        <tr style="padding: 10px; line-height: 50px; background: #ccc; background-color: #ccc!important;">
+                                                            <th style="width: 15%; line-height: 50px;">លេខវិក្កយបត្រ</th>
+                                                            <th style="width: 45%; line-height: 50px;">ពិពណ៍នា</th>
+                                                            <th style="width: 15%; line-height: 50px;">ចំនួនត្រូវទូទាត់</th>
+                                                            <th style="width: 15%; line-height: 50px;">ចំនួនទទួល</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        <tr>
+                                                            <td style="padding: 5px;text-align: left;">{{txnPrint.invoiceNumber}}</td>
+                                                            <td style="padding: 5px;text-align: left;">{{txnPrint.transactionNote}}</td>
+                                                            <td style="padding: 5px;text-align: right;">{{ kendo.toString(txnPrint.amountTobePaid, txnPrint.currencyCode == 'en-US' ? 'n2' : 'n0', txnPrint.currencyCode)}}</td>
+                                                            <td style="padding: 5px;text-align: right;">{{ kendo.toString(txnPrint.paidAmount, txnPrint.currencyCode == 'en-US' ? 'n2' : 'n0', txnPrint.currencyCode)}}</td>
+                                                        </tr>
+                                                        </tbody>
+                                                        <tfoot>
+                                                        <tr>
+                                                            <td colspan="2" style="padding: 5px;text-align: right;"><b>សរុប : </b></td>
+                                                            <td style="padding: 5px;text-align: right;"><b>{{ kendo.toString(txnPrint.amountTobePaid, txnPrint.currencyCode == 'en-US' ? 'n2' : 'n0', txnPrint.currencyCode)}}</b></td>
+                                                            <td style="padding: 5px;text-align: right;"><b>{{ kendo.toString(txnPrint.paidAmount, txnPrint.currencyCode == 'en-US' ? 'n2' : 'n0', txnPrint.currencyCode)}}</b></td>
+                                                        </tr>
+                                                        </tfoot>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <div class="invoicepcg-footer" style="overflow: hidden;margin-top: 40px;">
+                                                <div style="float: right; width: 100%; ">
+                                                    <p style="float: left;">
+                                                        <span >អ្នករៀបចំបង្កាន់ដៃ : </span>
+                                                        <span style="margin-left: 10px;">{{loggedUser.name}}</span>
+                                                    </p>
+                                                    <p style="float: right;">
+                                                        <span >ហត្ថលេខា</span>
+                                                        <span style="margin-left: 10px;">..............................................</span>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        </div>
+                                    </v-card-text>
+                                    <v-divider/>
+                                    <v-card-actions class="pa-4">
+                                        <v-row>
+                                            <v-col sm="6" cols="6" class="py-0">
+                                                <v-btn color="black"
+                                                       outlined
+                                                       class=" text-capitalize  black--text float-left"
+                                                       @click="showPrint = false">{{ $t('cancel') }}
+                                                </v-btn>
+                                            </v-col>
+                                            <v-col sm="6" cols="6" class="py-0">
+                                                <v-btn color="secondary"
+                                                       class="px-3  white--text text-capitalize float-right"
+                                                       @click="printHtml">
+                                                    {{ $t('print') }}
+                                                </v-btn>
+                                            </v-col>
+                                        </v-row>
+                                    </v-card-actions>
+                                </v-card>
+                            </v-form>
+                        </v-dialog>
                     </v-card>
                 </v-col>
             </v-row>
@@ -550,6 +683,17 @@ const cookie = cookieJS.getCookie();
 const {getFormSetting} = require("@/scripts/settingsHandler.js")
 import {print} from "@/form/Sale.js";
 const sessionHandler = require("@/scripts/session/handler/sessionHandler")
+const instituteHandler = require("@/scripts/instituteHandler")
+const store = require("@/institute.js");
+const { instituteId } = store.default.state.cookies;
+
+var JsBarcode = require('jsbarcode');
+function textToBase64Barcode(text){
+    var canvas = document.createElement("canvas");
+    JsBarcode(canvas, text, {format: "CODE39"});
+    return canvas.toDataURL("image/png");
+}
+import TransactionSessionModel from "@/scripts/session/model/TransactionSession";
 
 export default {
     name: "CashReceipt",
@@ -571,8 +715,10 @@ export default {
         valid: true,
         loggedUser: {
             id: cookie.creator,
-            name: cookie.email
+            name: cookie.user['custom:firstName'] + ' ' + cookie.user['custom:lastName'],
+            username: cookie.email
         },
+        kendo: kendo,
         itemLines: [],
         templates: [
             {title: 'Draft'},
@@ -635,24 +781,12 @@ export default {
         dr: 0,
         activeSession: {},
         paymentOption: {},
-        txnPrint: {}
+        txnPrint: {},
+        showPrint: false,
+        company: {},
+        barcode: ''
     }),
     methods: {
-        _print(id) {
-            let print_data = this.cashReceipt;
-            print_data['baseCurrencyCode'] = this.baseCurrencyCode
-            let params = "?formType=CashReceipt"
-            getFormSetting(params).then(res => {
-                if (res.data.statusCode === 200) {
-                    if (res.data.data.length > 0) {
-                        window.console.log(res.data.data["0"].settings);
-                        print(print_data, id, res.data.data["0"].settings);
-                    } else {
-                        this.$snotify.error(i18n.t('please_save_form_in_setting'))
-                    }
-                }
-            });
-        },
         removeDuplicate(array) {
             const result = [];
             const map = new Map();
@@ -1785,11 +1919,13 @@ export default {
                         }
                     }
                     this.itemLines = []
+                    window.console.log(cookie, 'cash receipt')
                     if (data.search) {
                         if (data.search.length > 4) {
                             this.showLoading = true
                             try {
                                 billingHandler.search(data).then(res => {
+                                    this.showLoading = false
                                     if (res.data.statusCode === 200) {
                                         const response = res.data.data
                                         const result = res.data.result
@@ -1805,20 +1941,31 @@ export default {
                                             this.itemLines = response
                                             window.console.log(this.itemLines, 'after search')
                                             const obj = response[0]
-                                            this.autoCalculate()
                                             if (obj.hasOwnProperty('customer')) {
                                                 this.cashReceipt.customer = obj.customer
                                                 if (obj.customer.hasOwnProperty('name')) {
                                                     this.name = obj.customer.name
                                                     this.txnPrint.name = obj.customer.name
-                                                    window.console.log(obj.customer, 'customer')
                                                     this.txnPrint.otherName = obj.customer.alternativeName
+                                                    this.txnPrint.connectId = obj.customer.connectId != '' ? obj.customer : obj.customer.number
+                                                    this.barcode = textToBase64Barcode(this.txnPrint.connectId)
+                                                    this.txnPrint.gender = obj.customer.gender
                                                 }
                                             }
+                                            setTimeout(()=>{
+                                                this.invoiceTxn()
+                                                this.autoCalculate()
+                                            }, 300)
                                         }
                                         const baseCurrency = result
                                         this.baseCurrency = baseCurrency
                                         this.cashReceipt.currency = baseCurrency
+                                        window.console.log(baseCurrency, 'currency')
+                                        if(baseCurrency.code == 'KH'){
+                                            this.txnPrint.currencyCode = 'km-KH'
+                                        }else{
+                                            this.txnPrint.currencyCode = 'en-US'
+                                        }
                                         if (baseCurrency) {
                                             if (baseCurrency.hasOwnProperty('code')) {
                                                 this.baseCurrencyCode = baseCurrency.code
@@ -1889,13 +2036,16 @@ export default {
                     this.showLoading = true
                     // let data = this.cashReceipt
                     // window.console.log(JSON.stringify(data), '----', isAutoGenerate)
-                    window.console.log(this.cashReceipt, 'cash receipt')
+
                     this.txnPrint.paidAmount = this.cashReceipt.total
                     this.txnPrint.paymentMethod = this.cashReceipt.itemLine[0].paymentOption.name
                     billingHandler.createReceipt(this.cashReceipt).then(response => {
                         if (response.data.statusCode === 201) {
                             this.showLoading = false
                             this.printForm()
+                            window.console.log(response, 'response')
+                            this.saveTxnSession(response.data.id)
+                            // this._print(4)
                             // this.close(response.data.data)
                             this.$snotify.success('Successfully')
                             if (save == 'new') {
@@ -1911,6 +2061,19 @@ export default {
                     })
                 }
             }
+        },
+        saveTxnSession(receiptId){
+            window.console.log(this.itemLines, 'inv line')
+            let data = {
+                sessionId: this.activeSession.id,
+                receiptId: receiptId,
+                invoiceId: this.itemLines[0].id,
+                amountTobePaid: this.txnPrint.amountTobePaid,
+                paidAmount: this.txnPrint.paidAmount,
+                user: this.loggedUser,
+                issuedDate: Date.parse(new Date())
+            }
+            sessionHandler.txnSession(new TransactionSessionModel(data))
         },
         async loadCashReceiptView() {
             new Promise(resolve => {
@@ -1950,24 +2113,129 @@ export default {
             this.cashReceipt = new CashReceiptModel()
             this.cashReceipt.transactionType = this.transactionTypes[0]
             this.generateNumber()
+            this.search = ''
         },
         close() {
             this.$router.go(-1);
         },
         printForm(){
+            this.txnPrint.issuedDate = Date.parse(new Date())
             window.console.log(this.txnPrint, 'print obj')
-            // this.showLoading = true
-            // window.console.log(id)
-            // billingHandler.txnView('txn-876857a0-75dc-11ec-b28b-e37839735269').then(res => {
-            //     this.showLoading = false
-            //     window.console.log(res, 'for print')
-            // }).catch(e => {
-            //     this.showLoading = false
-            //     this.$snotify.error('Something went wrong')
-            //     this.errors.push(e)
-            //     window.console.log(e)
-            // })
-        }
+            this.showPrint = true
+        },
+        printHtml(){
+            window.console.log('is print')
+            var  Win;
+            Win = window.open('', '', 'width=1048, height=900');
+            // pHeight = "210mm";
+            // pWidth = "150mm";
+            var printableContent = '',
+                win = Win,
+                doc = win.document.open();
+            var htmlStart =
+                '<!DOCTYPE html>' +
+                '<html>' +
+                '<head>' +
+                '<meta charset="utf-8" />' +
+                '<title></title>' +
+                '<link href="https://raw.githubusercontent.com/choeun88/css/main/kendo.common.min.css" rel="stylesheet" type="text/css">'+
+                '<link href="https://raw.githubusercontent.com/choeun88/css/main/spa.css" rel="stylesheet" type="text/css">'+
+                '<link href="https://fonts.googleapis.com/css?family=Content:400,700" rel="stylesheet" type="text/css">'+
+                '<link href="https://fonts.googleapis.com/css?family=Moul" rel="stylesheet">' +
+                '<link rel="preconnect" href="https://fonts.googleapis.com">\n' +
+                '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n' +
+                '<link href="https://fonts.googleapis.com/css2?family=Hanuman:wght@300&display=swap" rel="stylesheet">'+
+                '<link href="https://fonts.googleapis.com/css?family=Preahvihear" rel="stylesheet">'+
+                '<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Battambang&amp;subset=khmer" media="all">'+
+                '<link href="https://fonts.googleapis.com/css?family=Roboto+Slab:300" rel="stylesheet">' +
+                '<style>' +
+                '*{font-family: \'Hanuman\', Arial;}' +
+                'table, th, td {' +
+                '  border: 1px solid black;' +
+                '  border-collapse: collapse;' +
+                '}</style>'
+                '<style type="text/css" media="print">' +
+                '@page { size: landscape; margin:0.05cm;' +
+                '} '+
+                '@media print {' +
+                'html, body {' +
+                '}' +
+                '.main-color {' +
+                '-webkit-print-color-adjust:exact; ' +
+                '} ' +
+                '}' +
+                '* {' +
+                '-webkit-print-color-adjust:exact; ' +
+                '} ' +
+                '.inv1 .light-blue-td { ' +
+                'background-color: #c6d9f1!important;' +
+                'text-align: left;' +
+                'padding-left: 5px;' +
+                '-webkit-print-color-adjust:exact; ' +
+                '}' +
+                '.logoP{ max-height 50px;max-width100px}' +
+                '.inv1 thead tr {'+
+                'background-color: rgb(242, 242, 242)!important;'+
+                '-webkit-print-color-adjust:exact; ' +
+                '}'+
+                '.pcg .mid-title div {}' +
+                '.pcg .mid-header {' +
+                'background-color: #dce6f2!important; ' +
+                '-webkit-print-color-adjust:exact; ' +
+                '}'+
+                '.winvoice-print table thead .darkbblue, .winvoice-print table tbody td.darkbblue { ' +
+                'background-color: #355176!important;' +
+                'color: #fff!important;' +
+                '-webkit-print-color-adjust:exact; ' +
+                '}' +
+                '.winvoice-print table td.greyy {' +
+                'background-color: #ccc!important;-webkit-print-color-adjust:exact;' +
+                '}' +
+                '.inv1 span.total-amount { ' +
+                'color:#fff!important;' +
+                '}</style>' +
+                '</head>' +
+                '<body><div class="row-fluid" ><div id="invoicecontent" style="background: none!important;color: #000!important;" class="k-content document-body">';
+            var htmlEnd =
+                '</div></div></body>' +
+                '</html>';
+            printableContent = $('#invoiceContent').html();
+            doc.write(htmlStart + printableContent + htmlEnd);
+            doc.close();
+            setTimeout(function(){
+                win.print();
+                win.close();
+            },1000);
+        },
+        async loadInstituteInfo() {
+            instituteHandler.getOneCompany(instituteId).then((res) => {
+                this.company = res;
+                window.console.log(this.company, 'company')
+            });
+            sessionHandler.getImage(instituteId, cookie.creator).then((res) => {
+                window.console.log(res, 'image')
+                let a = res.filter((obj) => {return obj.isPrimary == 1})
+                if(a.length > 0){
+                    this.company.logoUrl = a[0].url
+                }
+            });
+        },
+        //print
+        _print(id) {
+            let print_data = this.cashReceipt;
+            print_data['baseCurrencyCode'] = this.baseCurrencyCode
+            let params = "?formType=CashReceipt"
+            getFormSetting(params).then(res => {
+                if (res.data.statusCode === 200) {
+                    if (res.data.data.length > 0) {
+                        window.console.log(print_data, id, res.data.data["0"].settings, 'setting');
+                        print(print_data, id, res.data.data["0"].settings);
+                    } else {
+                        this.$snotify.error(i18n.t('please_save_form_in_setting'))
+                    }
+                }
+            });
+        },
     },
     watch: {
         id() {
@@ -1987,6 +2255,7 @@ export default {
         // already being observed
         // this.loadObj()
         this.loadPaymentOption()
+        this.loadInstituteInfo()
     },
     mounted: async function () {
         await this.loadOtherAccount()
@@ -2006,7 +2275,64 @@ export default {
     }
 };
 </script>
-
+<style>
+body {
+    color: #333;
+    font-family: "Open Sans", 'Battambang';
+    font-size: 13px;
+    background: #fff;
+}
+*{
+    margin: 0 auto;
+    padding: 0;
+}
+.clear{
+    clear: both;
+}
+.invoice-pcg {
+    width: 90%;
+    margin: 50px auto 0;
+    overflow: hidden;
+}
+.invoice-pcg .invoicepcg-header{
+    width: 100%;
+    float: left;
+    position: relative;
+    margin-bottom: 50px;
+}
+.invoice-pcg .invoicepcg-content{
+    width: 100%;
+    float: left;
+    position: relative;
+    margin-bottom: 70px;
+}
+.invoice-pcg .invoicepcg-content table{
+    width: 100%;
+    float: left;
+    border: 1px solid #333;
+    border-collapse: collapse;
+    margin-bottom: 15px;
+}
+.invoice-pcg .invoicepcg-content table tr td{
+    padding: 5px;
+    border: 1px solid #333;
+    font-size: 13px;
+}
+.invoice-pcg .invoicepcg-content table tr th{
+    padding: 5px;
+    font-size: 13px;
+    font-weight: 700;
+    border: 1px solid #333;
+    background: #ccc;
+}
+.invoice-pcg .invoicepcg-footer p{
+    margin-bottom: 8px;
+}
+.invoice-pcg .invoicepcg-content table tr td {
+    padding: 0;
+    font-size: 15px;
+}
+</style>
 <style scoped>
 .k-dropdown {
     width: 100%;

@@ -66,3 +66,19 @@ module.exports.paymentoption = async function () {
         window.console.error(error)
     }
 }
+module.exports.getImage = async function (instituteId, userId) {
+    try {
+        const result = await axios.get(apiUrl.save_image + userId + '/list', {params: {instituteId: instituteId}})
+        return result.data.data
+    } catch (error) {
+        window.console.error(error)
+    }
+}
+module.exports.txnSession = async (data) => {
+    try {
+        const response = await axios.post(apiUrl.session.txnSession, data)
+        return response
+    } catch (error) {
+        window.console.error(error)
+    }
+}
