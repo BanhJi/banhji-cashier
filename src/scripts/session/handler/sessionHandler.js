@@ -82,3 +82,21 @@ module.exports.txnSession = async (data) => {
         window.console.error(error)
     }
 }
+module.exports.cashierSetting = async function () {
+    try {
+        const response = await axios.get(apiUrl.session.cashierSetting)
+
+        return response
+    } catch (error) {
+        window.console.error(error)
+    }
+}
+module.exports.cashierSettingCreate = async (data) => {
+    try {
+        window.console.log(data, 'handler')
+        const response = await axios.post(apiUrl.session.cashierSetting, data)
+        return response
+    } catch (error) {
+        window.console.error(error)
+    }
+}

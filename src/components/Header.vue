@@ -198,7 +198,7 @@
               class="mb-2"
           >
             {{
-                  businessType == 'Supply' ? $t('supply_business') : businessType == 'Marketing' ? $t('marketing_business') : $t('service_business')
+                  $t('banhji_cashier')
               }}
           </p>
         </a>
@@ -214,7 +214,7 @@
                 class="primary--text ml-2  hidden-sm-and-down"
             >
                 {{
-                    businessType == 'Supply' ? $t('supply_business') : businessType == 'Marketing' ? $t('marketing_business') : $t('service_business')
+                    $t('banhji_cashier')
                 }}
             </h1>
             <h1 v-else class="ml-2 hidden-sm-and-down">
@@ -346,7 +346,7 @@ export default {
                 activeClass: "active",
                 name: "Overview",
                 menuTex: "overview",
-                path: "/",
+                path: "/en",
             },
             {
                 id: 2,
@@ -417,9 +417,6 @@ export default {
         clickMe(data) {
             if (data.id == 1) {
               this.$router.push(`${i18n.locale}`);
-            }
-            if (data.id == 12) {
-                window.location.href = process.env.VUE_APP_ACC_URL
             }
             // eslint-disable-next-line no-console
             this.items.forEach((element) => {

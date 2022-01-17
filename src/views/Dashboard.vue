@@ -254,7 +254,7 @@
                                                 :field="'user'"
                                                 :title="$t('employee')"
                                                 :width="200"
-                                                :template="'<span>#= user.user_name#</span>'"
+                                                :template="'<span>#= user.user[\'custom:lastName\'] + \' \' + user.user[\'custom:firstName\']#</span>'"
                                                 :headerAttributes="{ style: 'background-color: #EDF1F5, color: green !important' }"
                                                 :attributes="{style: 'text-align: right; '}"
                                             />
@@ -303,9 +303,11 @@ import {i18n} from "@/i18n";
 const sessionHandler = require("@/scripts/session/handler/sessionHandler")
 const currencyHandler = require("@/scripts/currency/handler/currencyHandler")
 import SessionModel from '@/scripts/session/model/Session'
-const store = require("@/institute.js")
-const {cookies} = store.default.state
-import {UserModel} from "@/scripts/model/AppModels"
+// const store = require("@/institute.js")
+// const {cookies} = store.default.state
+// import {UserModel} from "@/scripts/model/AppModels"
+const cookieJS = require("@/cookie.js");
+const cookie = cookieJS.getCookie();
 export default {
     components: {
         LoadingMe: () => import(`@/components/Loading`),
@@ -570,7 +572,7 @@ export default {
                 this.showLoading = false
                 if (response.data.statusCode === 200) {
                     let data = response.data.data
-                    window.console.log(data, 'session data')
+                    // window.console.log(data, 'session data')
                     if(data.length > 0){
                         this.sessionData = data
                     }
@@ -583,11 +585,11 @@ export default {
         async loadSessionByUser() {
             this.showLoading = true
             this.sessionData = []
-            sessionHandler.byuser(new UserModel(cookies.user).user_name).then(response => {
+            sessionHandler.byuser(cookie.email).then(response => {
                 this.showLoading = false
                 if (response.data.statusCode === 200) {
                     let data = response.data.data
-                    window.console.log(data, 'session data')
+                    // window.console.log(data, 'session data')
                     if(data.length > 0){
                         this.sessionData = data
                     }
@@ -607,7 +609,7 @@ export default {
                         this.showLoading = false
                         if (response.data.statusCode === 200) {
                             let data = response.data.data
-                            window.console.log(data, 'currency')
+                            // window.console.log(data, 'currency')
                             data.forEach(element => {
                                 this.currencyData.push({
                                     code: element.code,
@@ -626,15 +628,15 @@ export default {
         addSession(){
             this.s.openBalance = this.currencyData
             this.s.startDate = Date.parse(new Date())
-            this.s.user = new UserModel(cookies.user)
-            window.console.log(this.s)
+            this.s.user = cookie
+            // window.console.log(this.s)
             this.showLoading = true
             sessionHandler.create(new SessionModel(this.s)).then(res => {
                 this.showLoading = false
                 this.showSession = false
-                window.console.log(res, 'response')
+                // window.console.log(res, 'response')
                 if (res.data.statusCode === 201) {
-                    this.loadSession()()
+                    this.loadSessionByUser()
                     this.$snotify.success('Successfully')
                 }
             }).catch(e => {
@@ -651,13 +653,13 @@ export default {
                         let data = {
                         }
                         sessionHandler.getLastNumber(data).then(res => {
-                            window.console.log(res.data.data, 'last number')
+                            // window.console.log(res.data.data, 'last number')
                             this.s.lastNumber = res.data.data.lastNumber
                             this.generateNumber()
                         }).catch(e => {
                             this.$snotify.error('Something went wrong')
                             this.errors.push(e)
-                            // window.console.log(e)
+                            window.console.log(e)
                         })
                     }, 300);
                 })
@@ -679,7 +681,7 @@ export default {
         checkSession(){
             this.showLoading = true
             let data = {
-                user_name : new UserModel(cookies.user).user_name
+                user_name : cookie.email
             }
             sessionHandler.checkSession(data).then(res => {
                 this.showLoading = false
@@ -706,7 +708,7 @@ export default {
         },
     },
     created: async function () {
-        await this.loadSession()
+        // await this.loadSession()
         await this.loadSessionByUser()
         this.checkSession()
     }

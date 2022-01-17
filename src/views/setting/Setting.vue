@@ -30,6 +30,19 @@
                             </td>
                         </tr>
                         <tr>
+                            <td class="text-bold">{{ $t('default_search_option') }}</td>
+                            <td style=""  class="primary--text align-center justify-center d-flex text-bold">
+                                <v-select class="mt-1"
+                                          v-model="s.paymentOption"
+                                          :items="paymentOptions"
+                                          item-text="name"
+                                          return-object
+                                          :placeholder="$t('search')"
+                                          outlined>
+                                </v-select>
+                            </td>
+                        </tr>
+                        <tr>
                             <td class="text-bold">{{ $t('default_message_on_receipt_journal') }}</td>
                             <td style=""  class="primary--text align-center justify-center d-flex text-bold">
                                 <v-text-field
@@ -74,102 +87,69 @@
 </template>
 
 <script>
-import SaleFormContentModel from "@/scripts/model/SaleFormContent";
+import SettingModel from "@/scripts/session/model/Setting";
+const sessionHandler = require("@/scripts/session/handler/sessionHandler")
+const paymentOptionHandler = require("@/scripts/paymentOptionHandler")
+const OPTION_TYPE = 'Customer'
+const strFilter = '?optionType=' + OPTION_TYPE
 
-const saleFormContentModel = new SaleFormContentModel({})
-const saleFormContentHandler = require("@/scripts/saleFormContentHandler")
-import SettingModel from "@/scripts/cashier/model/Setting";
 export default {
-
     components: {},
     data: () => ({
-            saleFormContent: saleFormContentModel,
-            quotes: ['Quote', 'Proposal', 'Estimate'],
-            saleOrders: ['Sale Order', 'Engagement', 'Contract'],
-            decimalStyle: [2, 3, 4, 5],
-            searchOptions: ['Invoice', 'CRN', 'Payment Code', 'Customer'],
-            s: new SettingModel({})
-        }
-    ),
-    props: {}
-    ,
-    computed: {}
-    ,
-    watch: {}
-    ,
-    created() {
-    }
-    ,
+        quotes: ['Quote', 'Proposal', 'Estimate'],
+        saleOrders: ['Sale Order', 'Engagement', 'Contract'],
+        decimalStyle: [2, 3, 4, 5],
+        searchOptions: ['Invoice', 'CRN', 'Payment Code', 'Customer'],
+        paymentOptions: [],
+        s: new SettingModel({})
+    }),
     methods: {
         async onSaveClose() {
-            // if (!this.$refs.form.validate()) {
-            //   this.$refs.form.validate()
-            //   return
-            // }
-            new Promise(resolve => {
-                setTimeout(() => {
-                    resolve('resolved');
-                    let data = {
-                        id: this.saleFormContent.id ? this.saleFormContent.id : '',
-                        serviceDate: this.saleFormContent.serviceDate,
-                        serviceDateTo: this.saleFormContent.serviceDateTo,
-                        discountItem: this.saleFormContent.discountItem,
-                        otherCharge: this.saleFormContent.otherCharge,
-                        specificTax: this.saleFormContent.specificTax,
-                        otherTax: this.saleFormContent.otherTax,
-                        publicLightingTax: this.saleFormContent.publicLightingTax,
-                        saleUnit: this.saleFormContent.saleUnit,
-                        modifier: this.saleFormContent.modifier,
-                        employee: this.saleFormContent.employee,
-                        decimal: this.saleFormContent.decimal,
-                        saleQuote: this.saleFormContent.saleQuote,
-                        saleOrder: this.saleFormContent.saleOrder,
-
-                        negativeInventory: this.saleFormContent.negativeInventory,
-                        lateFee: this.saleFormContent.lateFee,
-                        email: this.saleFormContent.email,
-                        pdfAttachment: this.saleFormContent.pdfAttachment,
-                        invoiceReminder: this.saleFormContent.invoiceReminder,
-                        reminder1: this.saleFormContent.reminder1,
-                        reminder2: this.saleFormContent.reminder2,
-                        reminder3: this.saleFormContent.reminder3,
-                        statement: this.saleFormContent.statement
-                    }
-                    saleFormContentHandler.create(data).then(response => {
-                        if (response.data.statusCode === 201) {
-                            const res = response.data.data
-                            this.saleFormContent = res
-                            this.$snotify.success('Update Successfully')
-                            // this.$refs.form.reset()
-                        }
-                    }).catch(e => {
-                        this.$snotify.error('Something went wrong')
-                        this.errors.push(e)
-                    })
-
-                }, 300);
+            window.console.log(this.s, 'setting')
+            sessionHandler.cashierSettingCreate(new SettingModel(this.s)).then(response => {
+                if (response.data.statusCode === 201) {
+                    const res = response.data.data
+                    window.console.log(response,'response')
+                    this.s = res
+                    this.$snotify.success('Update Successfully')
+                    // this.$refs.form.reset()
+                }
+            }).catch(e => {
+                this.$snotify.error('Something went wrong')
+                this.errors.push(e)
             })
         },
-        async loadSaleFormContent() {
+        async loadSetting() {
+            sessionHandler.cashierSetting().then(res => {
+                if (res.data.statusCode === 200) {
+                    const data = res.data.data
+                    if (data.length > 0) {
+                        this.s = data[0]
+                    }
+                }
+            })
+        },
+        async loadPaymentOption() {
             new Promise(resolve => {
                 setTimeout(() => {
-                    resolve('resolved');
-                    saleFormContentHandler.list().then(res => {
+                    resolve('resolved')
+                    this.paymentOptions = []
+                    paymentOptionHandler.list(strFilter).then(res => {
                         if (res.data.statusCode === 200) {
-                            const data = res.data.data
-                            if (data.length > 0) {
-                                this.saleFormContent = data[0]
-                            }
+                            this.showLoading = false
+                            this.paymentOptions = res.data.data
                         }
-
-                    })
+                    }).catch()
+                    {
+                        this.showLoading = false
+                    }
                 }, 10)
             })
         },
-    }
-    ,
+    },
     mounted: async function () {
-        await this.loadSaleFormContent()
+        await this.loadPaymentOption()
+        await this.loadSetting()
     }
 }
 ;

@@ -64,7 +64,7 @@
                                                             @change="onCustomerChanged"
                                                             :value="mCustomer"
                                                             :data-item-key="'id'"
-                                                            :text-field="'name'"
+                                                            :text-field="'numberName'"
                                                             :default-item="defaultItem"
                                                             :filterable="true"
                                                             @filterchange="onCustomerFilterChanged">
@@ -81,7 +81,7 @@
                                             <v-col sm="5" cosl="12">
                                                 <label class="label">{{ $t('date') }}</label>
                                                 <app-datepicker :initialDate="cashReceipt.transactionDate"
-                                                                :disabled="disabledMe"
+                                                                disabled
                                                                 @onChanged="onTransactionDateChanged"
                                                                 @emitDate="cashReceipt.transactionDate = $event"/>
                                                 <label class="label">{{ $t('customer_name') }}</label>
@@ -194,6 +194,7 @@
                                                     :title="$t('due_date')"
                                                     :width="150"
                                                     :lockable="false"
+                                                    :hidden="true"
                                                     :template="formatDate"
                                                     :editable="()=>{ return false}"
                                                     :headerAttributes="{
@@ -204,7 +205,6 @@
                                                     :title="$t('note')"
                                                     :width="200"
                                                     :editable="()=>{ return false}"
-                                                    :hidden="true"
                                                     :lockable="false"
                                                     :headerAttributes="{ style: 'text-align: left; background-color: #EDF1F5',}"
                                                     :attributes="{ style: 'text-align: left; ' }"
@@ -236,6 +236,7 @@
                                                     :title="$t('payment_option')"
                                                     :width="200"
                                                     :lockable="false"
+                                                    :editable="()=>{ return false}"
                                                     :template="PMTTemplate"
                                                     :editor="PaymentOptionEditor"
                                                     :headerAttributes="{style: 'text-align: right; background-color: #EDF1F5'}"
@@ -245,6 +246,7 @@
                                                     :title="$t('bank_reference_no')"
                                                     :width="180"
                                                     :lockable="false"
+                                                    :hidden="true"
                                                     :template="bankReferenceNo"
                                                     :headerAttributes="{style: 'text-align: right; background-color: #EDF1F5'}"
                                                     :attributes="{style: 'text-align: right; '}"/>
@@ -285,6 +287,7 @@
                                                     :title="$t('penalty')"
                                                     :width="150"
                                                     :lockable="false"
+                                                    :hidden="true"
                                                     :editor="penaltyEditor"
                                                     :template="penalty"
                                                     :headerAttributes="{style: 'text-align: right; background-color: #EDF1F5'}"
@@ -294,6 +297,7 @@
                                                     :title="$t('discount')"
                                                     :editor="discountEditor"
                                                     :template="discount"
+                                                    :hidden="true"
                                                     :width="150"
                                                     :lockable="false"
                                                     :headerAttributes="{
@@ -537,7 +541,7 @@
                                             <div class="invoicepcg-content" style="margin-bottom: 20px;">
                                                 <div style="position: relative;overflow: hidden;min-height: 75px;">
                                                     <div style="position: absolute; overflow: hidden; left: 0;top: 0;">
-                                                        <img src="${barcode}" style="height:75px;margin-top:3px;" />
+<!--                                                        <img src="${barcode}" style="height:75px;margin-top:3px;" />-->
                                                         {{txnPrint.connectId}}
                                                     </div>
                                                     <div style="width: 100%; float: left; text-align: center;">
@@ -602,7 +606,7 @@
                                                     </table>
                                                 </div>
                                             </div>
-                                            <div class="invoicepcg-footer" style="overflow: hidden;margin-top: 40px;">
+                                            <div class="invoicepcg-footer" style="overflow: hidden;margin-top: 40px;clear:both;">
                                                 <div style="float: right; width: 100%; ">
                                                     <p style="float: left;">
                                                         <span >អ្នករៀបចំបង្កាន់ដៃ : </span>
@@ -715,7 +719,7 @@ export default {
         valid: true,
         loggedUser: {
             id: cookie.creator,
-            name: cookie.user['custom:firstName'] + ' ' + cookie.user['custom:lastName'],
+            name: cookie.user['custom:lastName'] + ' ' + cookie.user['custom:firstName'],
             username: cookie.email
         },
         kendo: kendo,
@@ -898,7 +902,7 @@ export default {
                     this.activeSession = res.data.data[0]
                 }else{
                     this.$snotify.error('Please start session!')
-                    this.$router.go(-1);
+                    this.$router.push(`${i18n.locale}`);
                 }
             }).catch(e => {
                 this.showLoading = false
@@ -1042,6 +1046,9 @@ export default {
                     this.errors.push(e)
                 })
             }
+            setTimeout(()=>{
+                this.cashReceipt.referenceNo = this.cashReceipt.referenceNo + '-' + this.setting.lastRefNum
+            }, 300)
         },
         zeroPad(num, places) {
             return String(num).padStart(places, '0')
@@ -2044,7 +2051,7 @@ export default {
                             this.showLoading = false
                             this.printForm()
                             window.console.log(response, 'response')
-                            this.saveTxnSession(response.data.id)
+                            this.saveTxnSession(response.data.data.id)
                             // this._print(4)
                             // this.close(response.data.data)
                             this.$snotify.success('Successfully')
@@ -2065,12 +2072,12 @@ export default {
         saveTxnSession(receiptId){
             window.console.log(this.itemLines, 'inv line')
             let data = {
-                sessionId: this.activeSession.id,
+                sessionId: this.activeSession.pk,
                 receiptId: receiptId,
                 invoiceId: this.itemLines[0].id,
                 amountTobePaid: this.txnPrint.amountTobePaid,
                 paidAmount: this.txnPrint.paidAmount,
-                user: this.loggedUser,
+                user: cookie,
                 issuedDate: Date.parse(new Date())
             }
             sessionHandler.txnSession(new TransactionSessionModel(data))
@@ -2109,9 +2116,10 @@ export default {
             this.id = undefined
             this.mCustomer = {}
             this.name = ''
-            this.mPaymentOption = 'Invoice'
+            this.mPaymentOption = this.setting.searchOption // 'Invoice'
             this.cashReceipt = new CashReceiptModel()
             this.cashReceipt.transactionType = this.transactionTypes[0]
+            this.cashReceipt.journalNote = this.setting.msgJournal
             this.generateNumber()
             this.search = ''
         },
@@ -2236,6 +2244,23 @@ export default {
                 }
             });
         },
+        async loadSetting() {
+            sessionHandler.cashierSetting().then(res => {
+                if (res.data.statusCode === 200) {
+                    const data = res.data.data
+                    if (data.length > 0) {
+                        this.setting = data[0]
+                        this.mPaymentOption = this.setting.searchOption
+                        this.paymentMethod = []
+                        this.paymentMethod.push(this.setting.paymentOption)
+                        this.cashReceipt.journalNote = this.setting.msgJournal
+                    }else{
+                        this.$snotify.error('Please setup setting!')
+                        this.$router.push(`${i18n.locale}` + '/setting');
+                    }
+                }
+            })
+        },
     },
     watch: {
         id() {
@@ -2250,12 +2275,13 @@ export default {
             }
         }
     },
-    created() {
+    created: async function () {
         // fetch the data when the view is created and the data is
         // already being observed
         // this.loadObj()
-        this.loadPaymentOption()
+        // this.loadPaymentOption()
         this.loadInstituteInfo()
+        await this.loadSetting()
     },
     mounted: async function () {
         await this.loadOtherAccount()
@@ -2275,64 +2301,6 @@ export default {
     }
 };
 </script>
-<style>
-body {
-    color: #333;
-    font-family: "Open Sans", 'Battambang';
-    font-size: 13px;
-    background: #fff;
-}
-*{
-    margin: 0 auto;
-    padding: 0;
-}
-.clear{
-    clear: both;
-}
-.invoice-pcg {
-    width: 90%;
-    margin: 50px auto 0;
-    overflow: hidden;
-}
-.invoice-pcg .invoicepcg-header{
-    width: 100%;
-    float: left;
-    position: relative;
-    margin-bottom: 50px;
-}
-.invoice-pcg .invoicepcg-content{
-    width: 100%;
-    float: left;
-    position: relative;
-    margin-bottom: 70px;
-}
-.invoice-pcg .invoicepcg-content table{
-    width: 100%;
-    float: left;
-    border: 1px solid #333;
-    border-collapse: collapse;
-    margin-bottom: 15px;
-}
-.invoice-pcg .invoicepcg-content table tr td{
-    padding: 5px;
-    border: 1px solid #333;
-    font-size: 13px;
-}
-.invoice-pcg .invoicepcg-content table tr th{
-    padding: 5px;
-    font-size: 13px;
-    font-weight: 700;
-    border: 1px solid #333;
-    background: #ccc;
-}
-.invoice-pcg .invoicepcg-footer p{
-    margin-bottom: 8px;
-}
-.invoice-pcg .invoicepcg-content table tr td {
-    padding: 0;
-    font-size: 15px;
-}
-</style>
 <style scoped>
 .k-dropdown {
     width: 100%;

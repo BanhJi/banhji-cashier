@@ -14,4 +14,5 @@ module.exports = {
     checkSession                                : url + 'session/institute/' + instituteId + '/check',
     byUser                                      : url + 'session/institute/' + instituteId + '/user',
     txnSession                                  : url + 'session/institute/' + instituteId + '/txn',
+    cashierSetting                              : url + 'cashier/institute/' + instituteId + '/setting',
 }
