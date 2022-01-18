@@ -254,7 +254,7 @@
                                                 :field="'user'"
                                                 :title="$t('employee')"
                                                 :width="200"
-                                                :template="'<span>#= user.user[\'custom:lastName\'] + \' \' + user.user[\'custom:firstName\']#</span>'"
+                                                :template="'<span>#= user.user[\'custom:firstName\'] + \' \' + user.user[\'custom:lastName\']#</span>'"
                                                 :headerAttributes="{ style: 'background-color: #EDF1F5, color: green !important' }"
                                                 :attributes="{style: 'text-align: right; '}"
                                             />
@@ -700,6 +700,7 @@ export default {
         },
         goReconcile(){
             window.console.log(this.activeSession, 'aactive session')
+            this.$router.push(`${i18n.locale}` + '/reconcile');
         }
     },
     computed: {

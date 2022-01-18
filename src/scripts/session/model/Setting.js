@@ -6,6 +6,7 @@ export default class Setting {
         this.searchOption = data.searchOption || ''
         this.paymentOption = data.paymentOption || {}
         this.msgJournal = data.msgJournal || ''
+        this.user = data.user || {}
     }
 
     constuct(data) {

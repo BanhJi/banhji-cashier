@@ -30,7 +30,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td class="text-bold">{{ $t('default_search_option') }}</td>
+                            <td class="text-bold">{{ $t('default_payment_option') }}</td>
                             <td style=""  class="primary--text align-center justify-center d-flex text-bold">
                                 <v-select class="mt-1"
                                           v-model="s.paymentOption"
@@ -92,6 +92,8 @@ const sessionHandler = require("@/scripts/session/handler/sessionHandler")
 const paymentOptionHandler = require("@/scripts/paymentOptionHandler")
 const OPTION_TYPE = 'Customer'
 const strFilter = '?optionType=' + OPTION_TYPE
+const cookieJS = require("@/cookie.js");
+const cookie = cookieJS.getCookie();
 
 export default {
     components: {},
@@ -106,6 +108,7 @@ export default {
     methods: {
         async onSaveClose() {
             window.console.log(this.s, 'setting')
+            this.s.user = cookie
             sessionHandler.cashierSettingCreate(new SettingModel(this.s)).then(response => {
                 if (response.data.statusCode === 201) {
                     const res = response.data.data
@@ -122,7 +125,8 @@ export default {
         async loadSetting() {
             sessionHandler.cashierSetting().then(res => {
                 if (res.data.statusCode === 200) {
-                    const data = res.data.data
+                    const data = res.data.data.filter((obj) => {return obj.user.email == cookie.email})
+                    window.console.log(data, 'data email', res)
                     if (data.length > 0) {
                         this.s = data[0]
                     }

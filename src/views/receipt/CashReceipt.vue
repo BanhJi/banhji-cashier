@@ -527,7 +527,7 @@
                                                 </div>
                                                 <div style="width: 75%; float: left; text-align: center;">
                                                     <h1 style="margin: 0px;font-family: 'Moul', Arial!important;font-size: 35px;line-height: 60px;">{{company.name}}</h1>
-                                                    <h2 style="text-transform: uppercase; margin: 0;float: none;width: 100%; font-size:28px; font-weight: bold;text-align: center;">{{company.name}}</h2>
+                                                    <h2 style="text-transform: uppercase; margin: 0;float: none;width: 100%; font-size:28px; font-weight: bold;text-align: center;">{{company.legalName}}</h2>
                                                     <div style="width: 100%; float: left; margin-top: 15px;">
                                                         <p style="margin-bottom: 8px;font-size: 14px; font-weight: bold;">{{company.companyAddress}}</p>
                                                         <p style="font-size: 14px; font-weight: bold;">Tel: {{company.companyPhone}}</p>
@@ -541,8 +541,7 @@
                                             <div class="invoicepcg-content" style="margin-bottom: 20px;">
                                                 <div style="position: relative;overflow: hidden;min-height: 75px;">
                                                     <div style="position: absolute; overflow: hidden; left: 0;top: 0;">
-<!--                                                        <img src="${barcode}" style="height:75px;margin-top:3px;" />-->
-                                                        {{txnPrint.connectId}}
+                                                        <img :src="barcode" style="height:75px;margin-top:3px;width: 250px;" />
                                                     </div>
                                                     <div style="width: 100%; float: left; text-align: center;">
                                                         <h2 style="width: 100%;"><span style="font-size: 20px;font-family: 'Moul', Arial!important;color: #000;font-style: normal;">បង្កាន់ដៃបង់ប្រាក់</span> / <span style="text-transform: uppercase;color: #000;font-style: normal;font-weight: bold; font-size: 18px;">receipt</span></h2>
@@ -565,17 +564,10 @@
                                                         <tr style="line-height: 50px;">
                                                             <td style="border: none; vertical-align: top;width: 25%">ឈ្មោះ : {{txnPrint.name}}</td>
                                                             <td style="border: none; vertical-align: top;width: 25%">ឈ្មោះឡាតាំង : <span style="text-transform: uppercase;">{{txnPrint.otherName}}</span></td>
-                                                            <td style="border: none; vertical-align: top;width: 25%">ភេទ : {{txnPrint.gender}}</td>
+                                                            <td style="border: none; vertical-align: top;width: 25%">ភេទ : {{ txnPrint.gender == 'Male' ? 'ប្រុស' : 'ស្រី'}}</td>
                                                             <td style="border: none; vertical-align: top;width: 25%">វិធីសាស្រ្តទូទាត់ : {{txnPrint.paymentMethod}}</td>
 
                                                         </tr>
-                                                        <!-- <tr>
-                                                          <td style="border: none; vertical-align: top;width: 25%">ក្រុម : <span style="text-transform: uppercase;">#: contact.session#</span></td>
-                                                          <td style="border: none; vertical-align: top;width: 25%">ឆ្នាំទី : #: contact.academic_standing#</td>
-                                                          <td style="border: none; vertical-align: top;width: 25%">ឆមាសទី : #: contact.section#</td>
-                                                          <td style="border: none; vertical-align: top;width: 25%">ឆ្នាំសិក្សា : #:contact.academic_year#</td>
-                                                        </tr> -->
-
                                                     </table>
                                                 </div>
                                                 <div >
@@ -592,15 +584,15 @@
                                                         <tr>
                                                             <td style="padding: 5px;text-align: left;">{{txnPrint.invoiceNumber}}</td>
                                                             <td style="padding: 5px;text-align: left;">{{txnPrint.transactionNote}}</td>
-                                                            <td style="padding: 5px;text-align: right;">{{ kendo.toString(txnPrint.amountTobePaid, txnPrint.currencyCode == 'en-US' ? 'n2' : 'n0', txnPrint.currencyCode)}}</td>
-                                                            <td style="padding: 5px;text-align: right;">{{ kendo.toString(txnPrint.paidAmount, txnPrint.currencyCode == 'en-US' ? 'n2' : 'n0', txnPrint.currencyCode)}}</td>
+                                                            <td style="padding: 5px;text-align: right;">{{ kendo.toString(txnPrint.amountTobePaid, 'n2')}} {{txnPrint.currencyCode}}</td>
+                                                            <td style="padding: 5px;text-align: right;">{{ kendo.toString(txnPrint.paidAmount, 'n2')}} {{txnPrint.currencyCode}}</td>
                                                         </tr>
                                                         </tbody>
                                                         <tfoot>
                                                         <tr>
                                                             <td colspan="2" style="padding: 5px;text-align: right;"><b>សរុប : </b></td>
-                                                            <td style="padding: 5px;text-align: right;"><b>{{ kendo.toString(txnPrint.amountTobePaid, txnPrint.currencyCode == 'en-US' ? 'n2' : 'n0', txnPrint.currencyCode)}}</b></td>
-                                                            <td style="padding: 5px;text-align: right;"><b>{{ kendo.toString(txnPrint.paidAmount, txnPrint.currencyCode == 'en-US' ? 'n2' : 'n0', txnPrint.currencyCode)}}</b></td>
+                                                            <td style="padding: 5px;text-align: right;"><b>{{ kendo.toString(txnPrint.amountTobePaid, 'n2')}} {{txnPrint.currencyCode}}</b></td>
+                                                            <td style="padding: 5px;text-align: right;"><b>{{ kendo.toString(txnPrint.paidAmount, 'n2')}} {{txnPrint.currencyCode}}</b></td>
                                                         </tr>
                                                         </tfoot>
                                                     </table>
@@ -719,7 +711,7 @@ export default {
         valid: true,
         loggedUser: {
             id: cookie.creator,
-            name: cookie.user['custom:lastName'] + ' ' + cookie.user['custom:firstName'],
+            name: cookie.user['custom:firstName'] + ' ' + cookie.user['custom:lastName'],
             username: cookie.email
         },
         kendo: kendo,
@@ -1008,7 +1000,7 @@ export default {
                 });
         },
         onTransactionDateChanged() {
-            this.generateNumber()
+            this.loadSetting()
             this.searchInvoice()
         },
         generateNumber() {
@@ -1871,7 +1863,7 @@ export default {
                             if (this.transactionTypes.length > 0) {
                                 this.cashReceipt.transactionType = this.transactionTypes[0]
                                 if (!this.$route.params.id) {
-                                    this.generateNumber()
+                                    this.loadSetting()
                                 }
                             }
                         }
@@ -1955,8 +1947,11 @@ export default {
                                                     this.txnPrint.name = obj.customer.name
                                                     this.txnPrint.otherName = obj.customer.alternativeName
                                                     this.txnPrint.connectId = obj.customer.connectId != '' ? obj.customer : obj.customer.number
+                                                    window.console.log(this.txnPrint.connectId, 'connect id')
                                                     this.barcode = textToBase64Barcode(this.txnPrint.connectId)
-                                                    this.txnPrint.gender = obj.customer.gender
+                                                    window.console.log(this.barcode, 'barcode')
+                                                    this.txnPrint.gender = obj.customer.gender ? obj.customer.gender : 'Male'
+                                                    this.txnPrint.customer = obj.customer
                                                 }
                                             }
                                             setTimeout(()=>{
@@ -1967,15 +1962,10 @@ export default {
                                         const baseCurrency = result
                                         this.baseCurrency = baseCurrency
                                         this.cashReceipt.currency = baseCurrency
-                                        window.console.log(baseCurrency, 'currency')
-                                        if(baseCurrency.code == 'KH'){
-                                            this.txnPrint.currencyCode = 'km-KH'
-                                        }else{
-                                            this.txnPrint.currencyCode = 'en-US'
-                                        }
                                         if (baseCurrency) {
                                             if (baseCurrency.hasOwnProperty('code')) {
                                                 this.baseCurrencyCode = baseCurrency.code
+                                                this.txnPrint.currencyCode = baseCurrency.code
                                                 // if (code) {
                                                 //     this.loadTransactionRate(baseCurrency.code)
                                                 // }
@@ -2039,7 +2029,7 @@ export default {
                     this.cashReceipt['txnList'] = this.txnList
                     this.cashReceipt['transactionDate'] = this.cashReceipt.transactionDate
                     this.cashReceipt['actionType'] = this.$route.params.id ? this.$route.query.type : 'new'
-                    this.txnPrint.number = this.cashReceipt.transactionType.abbr + '-' + this.cashReceipt.number
+                    this.txnPrint.number = this.cashReceipt.referenceNo
                     this.showLoading = true
                     // let data = this.cashReceipt
                     // window.console.log(JSON.stringify(data), '----', isAutoGenerate)
@@ -2078,7 +2068,8 @@ export default {
                 amountTobePaid: this.txnPrint.amountTobePaid,
                 paidAmount: this.txnPrint.paidAmount,
                 user: cookie,
-                issuedDate: Date.parse(new Date())
+                issuedDate: Date.parse(new Date()),
+                printObj: this.txnPrint
             }
             sessionHandler.txnSession(new TransactionSessionModel(data))
         },
@@ -2120,7 +2111,7 @@ export default {
             this.cashReceipt = new CashReceiptModel()
             this.cashReceipt.transactionType = this.transactionTypes[0]
             this.cashReceipt.journalNote = this.setting.msgJournal
-            this.generateNumber()
+            this.loadSetting()
             this.search = ''
         },
         close() {
@@ -2247,13 +2238,15 @@ export default {
         async loadSetting() {
             sessionHandler.cashierSetting().then(res => {
                 if (res.data.statusCode === 200) {
-                    const data = res.data.data
+                    const data = res.data.data.filter((obj) => {return obj.user.email == cookie.email})
+                    window.console.log(data, 'setting')
                     if (data.length > 0) {
                         this.setting = data[0]
                         this.mPaymentOption = this.setting.searchOption
                         this.paymentMethod = []
                         this.paymentMethod.push(this.setting.paymentOption)
                         this.cashReceipt.journalNote = this.setting.msgJournal
+                        this.generateNumber()
                     }else{
                         this.$snotify.error('Please setup setting!')
                         this.$router.push(`${i18n.locale}` + '/setting');

@@ -8,6 +8,7 @@ export default class TransactionSession {
         this.paidAmount = data.paidAmount || 0
         this.user = this.user || {}
         this.issuedDate = this.issuedDate || ''
+        this.printObj = this.printObj || {}
     }
 
     constuct(data) {
