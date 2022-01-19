@@ -541,7 +541,15 @@
                                             <div class="invoicepcg-content" style="margin-bottom: 20px;">
                                                 <div style="position: relative;overflow: hidden;min-height: 75px;">
                                                     <div style="position: absolute; overflow: hidden; left: 0;top: 0;">
-                                                        <img :src="barcode" style="height:75px;margin-top:3px;width: 250px;" />
+<!--                                                        <img :src="barcode" style="height:75px;margin-top:3px;width: 250px;" />-->
+                                                        <barcode
+                                                            :value="txnPrint.connectId"
+                                                            type="code128"
+                                                            :width="310"
+                                                            :height="60"
+                                                            renderAs="svg"
+                                                        >
+                                                        </barcode>
                                                     </div>
                                                     <div style="width: 100%; float: left; text-align: center;">
                                                         <h2 style="width: 100%;"><span style="font-size: 20px;font-family: 'Moul', Arial!important;color: #000;font-style: normal;">បង្កាន់ដៃបង់ប្រាក់</span> / <span style="text-transform: uppercase;color: #000;font-style: normal;font-weight: bold; font-size: 18px;">receipt</span></h2>
@@ -574,7 +582,7 @@
                                                     <table style="width:100%; border: none;">
                                                         <thead>
                                                         <tr style="padding: 10px; line-height: 50px; background: #ccc; background-color: #ccc!important;">
-                                                           <th style="width: 15%; line-height: 50px;">លេខវិក្កយបត្រ</th>
+                                                           <th style="width: 15%; line-height: 50px;">លេខកូដទូទាត់</th>
                                                             <th style="width: 45%; line-height: 50px;">ពិពណ៍នា</th>
                                                             <th style="width: 15%; line-height: 50px;">ចំនួនត្រូវទូទាត់</th>
                                                             <th style="width: 15%; line-height: 50px;">ចំនួនទទួល</th>
@@ -582,7 +590,7 @@
                                                         </thead>
                                                         <tbody>
                                                         <tr>
-                                                            <td style="padding: 5px;text-align: left;">{{txnPrint.invoiceNumber}}</td>
+                                                            <td style="padding: 5px;text-align: left;">{{txnPrint.paymentCode}}</td>
                                                             <td style="padding: 5px;text-align: left;">{{txnPrint.transactionNote}}</td>
                                                             <td style="padding: 5px;text-align: right;">{{ kendo.toString(txnPrint.amountTobePaid, 'n2')}} {{txnPrint.currencyCode}}</td>
                                                             <td style="padding: 5px;text-align: right;">{{ kendo.toString(txnPrint.paidAmount, 'n2')}} {{txnPrint.currencyCode}}</td>
@@ -682,13 +690,13 @@ const sessionHandler = require("@/scripts/session/handler/sessionHandler")
 const instituteHandler = require("@/scripts/instituteHandler")
 const store = require("@/institute.js");
 const { instituteId } = store.default.state.cookies;
-
-var JsBarcode = require('jsbarcode');
-function textToBase64Barcode(text){
-    var canvas = document.createElement("canvas");
-    JsBarcode(canvas, text, {format: "CODE39"});
-    return canvas.toDataURL("image/png");
-}
+import { Barcode } from '@progress/kendo-barcodes-vue-wrapper';
+// var JsBarcode = require('jsbarcode');
+// function textToBase64Barcode(text){
+//     var canvas = document.createElement("canvas");
+//     JsBarcode(canvas, text, {format: "CODE39"});
+//     return canvas.toDataURL("image/png");
+// }
 import TransactionSessionModel from "@/scripts/session/model/TransactionSession";
 
 export default {
@@ -697,7 +705,8 @@ export default {
     components: {
         LoadingMe: () => import(`@/components/Loading`),
         'app-datepicker': DatePickerComponent,
-        'dropdownlist': DropDownList
+        'dropdownlist': DropDownList,
+        'barcode': Barcode
     },
     data: () => ({
         check_id_edit: false,
@@ -1040,7 +1049,7 @@ export default {
             }
             setTimeout(()=>{
                 this.cashReceipt.referenceNo = this.cashReceipt.referenceNo + '-' + this.setting.lastRefNum
-            }, 300)
+            }, 1000)
         },
         zeroPad(num, places) {
             return String(num).padStart(places, '0')
@@ -1936,6 +1945,7 @@ export default {
                                                 this.txnPrint.amountTobePaid = ele.amountTobePaid
                                                 this.txnPrint.transactionNote = ele.txnNote
                                                 this.txnPrint.invoiceNumber = ele.referenceNo
+                                                this.txnPrint.paymentCode = ele.paymentCode
                                             })
                                             this.itemLines = response
                                             window.console.log(this.itemLines, 'after search')
@@ -1946,16 +1956,17 @@ export default {
                                                     this.name = obj.customer.name
                                                     this.txnPrint.name = obj.customer.name
                                                     this.txnPrint.otherName = obj.customer.alternativeName
-                                                    this.txnPrint.connectId = obj.customer.connectId != '' ? obj.customer : obj.customer.number
+                                                    this.txnPrint.connectId = obj.customer.connectId != '' ? obj.customer.connectId : obj.customer.number
                                                     window.console.log(this.txnPrint.connectId, 'connect id')
-                                                    this.barcode = textToBase64Barcode(this.txnPrint.connectId)
-                                                    window.console.log(this.barcode, 'barcode')
+                                                    // this.barcode = textToBase64Barcode(this.txnPrint.connectId)
+                                                    window.console.log(this.txnPrint.connectId , 'connect id')
                                                     let gender = obj.customer.gender ? obj.customer.gender : 'Male'
                                                     this.txnPrint.gender = gender.toLowerCase()
                                                     this.txnPrint.customer = obj.customer
                                                 }
                                             }
                                             setTimeout(()=>{
+                                                window.console.log('auto cal')
                                                 this.invoiceTxn()
                                                 this.autoCalculate()
                                             }, 1000)
@@ -2282,7 +2293,7 @@ export default {
         // already being observed
         // this.loadObj()
         // this.loadPaymentOption()
-        this.loadInstituteInfo()
+        await this.loadInstituteInfo()
         await this.loadSetting()
     },
     mounted: async function () {
