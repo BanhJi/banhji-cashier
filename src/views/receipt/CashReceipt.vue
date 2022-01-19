@@ -564,7 +564,7 @@
                                                         <tr style="line-height: 50px;">
                                                             <td style="border: none; vertical-align: top;width: 25%">ឈ្មោះ : {{txnPrint.name}}</td>
                                                             <td style="border: none; vertical-align: top;width: 25%">ឈ្មោះឡាតាំង : <span style="text-transform: uppercase;">{{txnPrint.otherName}}</span></td>
-                                                            <td style="border: none; vertical-align: top;width: 25%">ភេទ : {{ txnPrint.gender == 'Male' ? 'ប្រុស' : 'ស្រី'}}</td>
+                                                            <td style="border: none; vertical-align: top;width: 25%">ភេទ : {{ txnPrint.gender != 'male' ? 'ស្រី' : 'ប្រុស'}}</td>
                                                             <td style="border: none; vertical-align: top;width: 25%">វិធីសាស្រ្តទូទាត់ : {{txnPrint.paymentMethod}}</td>
 
                                                         </tr>
@@ -1950,14 +1950,15 @@ export default {
                                                     window.console.log(this.txnPrint.connectId, 'connect id')
                                                     this.barcode = textToBase64Barcode(this.txnPrint.connectId)
                                                     window.console.log(this.barcode, 'barcode')
-                                                    this.txnPrint.gender = obj.customer.gender ? obj.customer.gender : 'Male'
+                                                    let gender = obj.customer.gender ? obj.customer.gender : 'Male'
+                                                    this.txnPrint.gender = gender.toLowerCase()
                                                     this.txnPrint.customer = obj.customer
                                                 }
                                             }
                                             setTimeout(()=>{
                                                 this.invoiceTxn()
                                                 this.autoCalculate()
-                                            }, 300)
+                                            }, 1000)
                                         }
                                         const baseCurrency = result
                                         this.baseCurrency = baseCurrency
@@ -2030,12 +2031,19 @@ export default {
                     this.cashReceipt['transactionDate'] = this.cashReceipt.transactionDate
                     this.cashReceipt['actionType'] = this.$route.params.id ? this.$route.query.type : 'new'
                     this.txnPrint.number = this.cashReceipt.referenceNo
+                    this.txnPrint.penalty = this.cashReceipt.penalty
+                    this.txnPrint.discount = this.cashReceipt.discount
+                    this.txnPrint.transactionNote = this.cashReceipt.transactionNote
                     this.showLoading = true
                     // let data = this.cashReceipt
                     // window.console.log(JSON.stringify(data), '----', isAutoGenerate)
 
                     this.txnPrint.paidAmount = this.cashReceipt.total
                     this.txnPrint.paymentMethod = this.cashReceipt.itemLine[0].paymentOption.name
+                    if(this.cashReceipt.total <= 0){
+                        this.$snotify.error('Please check your amount')
+                        return
+                    }
                     billingHandler.createReceipt(this.cashReceipt).then(response => {
                         if (response.data.statusCode === 201) {
                             this.showLoading = false
@@ -2067,10 +2075,11 @@ export default {
                 invoiceId: this.itemLines[0].id,
                 amountTobePaid: this.txnPrint.amountTobePaid,
                 paidAmount: this.txnPrint.paidAmount,
-                user: cookie,
+                user: this.loggedUser,
                 issuedDate: Date.parse(new Date()),
                 printObj: this.txnPrint
             }
+            window.console.log(data, 'save txn')
             sessionHandler.txnSession(new TransactionSessionModel(data))
         },
         async loadCashReceiptView() {

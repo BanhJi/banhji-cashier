@@ -15,4 +15,5 @@ module.exports = {
     byUser                                      : url + 'session/institute/' + instituteId + '/user',
     txnSession                                  : url + 'session/institute/' + instituteId + '/txn',
     cashierSetting                              : url + 'cashier/institute/' + instituteId + '/setting',
+    collectionReport                            : url + 'session/institute/' + instituteId + '/collection',
 }

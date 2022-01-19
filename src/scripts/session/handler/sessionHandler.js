@@ -100,3 +100,12 @@ module.exports.cashierSettingCreate = async (data) => {
         window.console.error(error)
     }
 }
+module.exports.collectionReport = async (data) => {
+    try {
+        window.console.log(data, 'handler')
+        const response = await axios.post(apiUrl.session.collectionReport, data)
+        return response
+    } catch (error) {
+        window.console.error(error)
+    }
+}

@@ -141,7 +141,7 @@ exports.generateAccountingNumber = async (prefixType, transactionDate) => {
 
     // Prefix Format "JE-yymm-00000"
     let shortPrefix = pf.abbr + pf.prefixSeparator + pf.structure + pf.numberSeparator,
-        fullPrefix = shortPrefix + '0'.repeat(pf.format);
+        fullPrefix = shortPrefix + '0'.repeat(pf.format) + '@Year';
 
     // Last Number
     const lastNumbers = await prefixHandler.lastNumber(fullPrefix, transactionDate, shortPrefix);

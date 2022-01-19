@@ -6,9 +6,9 @@ export default class TransactionSession {
         this.invoiceId = data.invoiceId || ''
         this.amountTobePaid = data.amountTobePaid || 0
         this.paidAmount = data.paidAmount || 0
-        this.user = this.user || {}
-        this.issuedDate = this.issuedDate || ''
-        this.printObj = this.printObj || {}
+        this.user = data.user || {}
+        this.issuedDate = data.issuedDate || ''
+        this.printObj = data.printObj || {}
     }
 
     constuct(data) {
