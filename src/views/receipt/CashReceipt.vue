@@ -2033,7 +2033,7 @@ export default {
                     this.txnPrint.number = this.cashReceipt.referenceNo
                     this.txnPrint.penalty = this.cashReceipt.penalty
                     this.txnPrint.discount = this.cashReceipt.discount
-                    this.txnPrint.transactionNote = this.cashReceipt.transactionNote
+                    // this.txnPrint.transactionNote = this.cashReceipt.transactionNote
                     this.showLoading = true
                     // let data = this.cashReceipt
                     // window.console.log(JSON.stringify(data), '----', isAutoGenerate)
