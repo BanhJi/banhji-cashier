@@ -130,7 +130,7 @@
                                 <!--                                    :headerAttributes="{ style: 'background-color: #EDF1F5;', class: 'text-center'	}"-->
                                 <!--                                    :attributes="{style: 'text-align: center'}"/>-->
                                 <kendo-grid-column
-                                    :field="'transactionDate'"
+                                    :field="'issuedDate'"
                                     :title="$t('receipt_date')"
                                     :width="180"
                                     :template="transactionDate"
@@ -201,34 +201,33 @@
                   "
                                     :headerAttributes="{ style: 'background-color: #EDF1F5' }"
                                 />
-                                <kendo-grid-column
-                                    :field="'gainOrLoss'"
-                                    :title="$t('gain_or_loss')"
-                                    :width="200"
-                                    :attributes="{ style: 'text-align: right; ' }"
-                                    :template="
-                    '<span>#= kendo.toString(gainOrLoss, decimalFormat)#</span>'
-                  "
-                                    :headerAttributes="{ style: 'background-color: #EDF1F5' }"
-                                />
+<!--                                <kendo-grid-column-->
+<!--                                    :field="'gainOrLoss'"-->
+<!--                                    :title="$t('gain_or_loss')"-->
+<!--                                    :width="200"-->
+<!--                                    :attributes="{ style: 'text-align: right; ' }"-->
+<!--                                    :template="-->
+<!--                    '<span>#= kendo.toString(gainOrLoss, decimalFormat)#</span>'-->
+<!--                  "-->
+<!--                                    :headerAttributes="{ style: 'background-color: #EDF1F5' }"-->
+<!--                                />-->
                                 <kendo-grid-column
                                     :field="'paymentOption'"
                                     :title="$t('source')"
                                     :width="200"
-                                    :template="source"
                                     :headerAttributes="{
                     style: 'background-color: #EDF1F5, color: green !important',
                   }"
                                 />
-                                <kendo-grid-column
-                                    :field="'bankReferenceNo'"
-                                    :title="$t('bank_reference_no')"
-                                    :width="200"
-                                    :template="'<span>#= bankReferenceNo#</span>'"
-                                    :headerAttributes="{
-                    style: 'background-color: #EDF1F5, color: green !important',
-                  }"
-                                />
+<!--                                <kendo-grid-column-->
+<!--                                    :field="'bankReferenceNo'"-->
+<!--                                    :title="$t('bank_reference_no')"-->
+<!--                                    :width="200"-->
+<!--                                    :template="'<span>#= bankReferenceNo#</span>'"-->
+<!--                                    :headerAttributes="{-->
+<!--                    style: 'background-color: #EDF1F5, color: green !important',-->
+<!--                  }"-->
+<!--                                />-->
                                 <kendo-grid-column
                                     :field="'memo'"
                                     :title="$t('memo')"
@@ -283,7 +282,7 @@ export default {
         },
         transactionDate(dataItem) {
             return kendo.toString(
-                new Date(dataItem.transactionDate),
+                new Date(dataItem.issuedDate),
                 `${this.dateFormat}`
             );
         },
@@ -372,16 +371,32 @@ export default {
                 startDate: cookie.email + '#' + Date.parse(startDate),
                 endDate: cookie.email + '#' + Date.parse(endDate),
             }
+            this.transactions = []
             sessionHandler.collectionReport(data).then((res) => {
                 if (res.data.statusCode === 200) {
-                    this.transactions = res.data;
-                    window.console.log(this.transactions, 'txn')
-                    if (this.transactions.length > 0) {
+                    let transactions = [];
+                    window.console.log(transactions, 'txn')
+                    if (res.data.data.length > 0) {
                         this.decimalFormat = "n2";
                         let total = 0
-                        res.data.format(el => {
+                        res.data.data.forEach(el => {
                             total += parseFloat(el.paidAmount)
+                            transactions.push({
+                                issuedDate: el.issuedDate,
+                                name: el.printObj.customer.name,
+                                txnReferenceNo: el.printObj.invoiceNumber,
+                                receiptReferenceNo: el.printObj.number,
+                                txnExchangeAmount: el.amountTobePaid,
+                                exchangePaidAmount: el.paidAmount,
+                                exchangePenalty: el.printObj.penalty,
+                                exchangeDiscount: el.printObj.discount,
+                                paymentOption: el.printObj.paymentMethod,
+                                memo: el.printObj.transactionNote,
+                                decimalFormat: "n2"
+                            })
                         })
+                        this.transactions = transactions
+                        window.console.log(this.transactions, 'after txn')
                         this.collectedAmount = total;
                         this.collectedInvoice = res.data.length || 0;
                     }
