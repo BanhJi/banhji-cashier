@@ -498,7 +498,7 @@
                                         <v-btn v-if="!check_id_edit" color="secondary"
                                                style="margin-right: 10px !important"
                                                class="white--text float-right text-capitalize"
-                                               @click="onSaveClose('new')">{{ $t("save_new") }}
+                                               @click="onSaveClose('new')">{{ $t("save_print") }}
                                         </v-btn>
                                         <v-btn v-if="check_id_edit" color="secondary"
                                                class="white--text mx-2 float-right text-capitalize"
@@ -574,7 +574,7 @@
                                                     <table style="width:100%; border: none;">
                                                         <thead>
                                                         <tr style="padding: 10px; line-height: 50px; background: #ccc; background-color: #ccc!important;">
-                                                            <th style="width: 15%; line-height: 50px;">លេខវិក្កយបត្រ</th>
+                                                           <th style="width: 15%; line-height: 50px;">លេខវិក្កយបត្រ</th>
                                                             <th style="width: 45%; line-height: 50px;">ពិពណ៍នា</th>
                                                             <th style="width: 15%; line-height: 50px;">ចំនួនត្រូវទូទាត់</th>
                                                             <th style="width: 15%; line-height: 50px;">ចំនួនទទួល</th>
@@ -1559,7 +1559,7 @@ export default {
                         paidAmt += x.paidAmount
                     }
                     if (x.amountTobePaid) {
-                        amountTobePaid += x.amountTobePaid
+                        amountTobePaid += x.amountTobePaid+1
                     }
                 })
                 const pAmt = this.numberFormat(paidAmt)

@@ -252,39 +252,39 @@
                                             />
                                             <kendo-grid-column
                                                 :field="'user'"
-                                                :title="$t('employee')"
+                                                :title="$t('cahsier')"
                                                 :width="200"
                                                 :template="'<span>#= user.user[\'custom:firstName\'] + \' \' + user.user[\'custom:lastName\']#</span>'"
                                                 :headerAttributes="{ style: 'background-color: #EDF1F5, color: green !important' }"
-                                                :attributes="{style: 'text-align: right; '}"
+                                                :attributes="{style: 'text-align: left; '}"
                                             />
                                             <kendo-grid-column
                                                 :field="'number'"
                                                 :title="$t('number')"
                                                 :width="200"
                                                 :headerAttributes="{ style: 'background-color: #EDF1F5, color: green !important' }"
-                                                :attributes="{style: 'text-align: right; '}"
+                                                :attributes="{style: 'text-align: left; '}"
                                             />
                                             <kendo-grid-column
                                                 :field="'startDate'"
                                                 :title="$t('start')"
                                                 :template="'<span>#= kendo.toString(new Date(startDate), `yyyy-MM-dd H:m:s`) #</span>'"
                                                 :headerAttributes="{ style: 'background-color: #EDF1F5, color: green !important' }"
-                                                :attributes="{style: 'text-align: right; '}"
+                                                :attributes="{style: 'text-align: left; '}"
                                             />
                                             <kendo-grid-column
                                                 :field="'end'"
                                                 :title="$t('end')"
                                                 :template="'<span>#= endDate != `` ? kendo.toString(new Date(endDate), `yyyy-MM-dd H:m:s`) : ``#</span>'"
                                                 :headerAttributes="{ style: 'background-color: #EDF1F5, color: green !important' }"
-                                                :attributes="{style: 'text-align: right; '}"
+                                                :attributes="{style: 'text-align: left; '}"
                                             />
                                             <kendo-grid-column
                                                 :field="'status'"
                                                 :title="$t('status')"
                                                 :template="statusTmpl"
                                                 :headerAttributes="{ style: 'background-color: #EDF1F5, color: green !important' }"
-                                                :attributes="{style: 'text-align: right; '}"
+                                                :attributes="{style: 'text-align: center; '}"
                                             />
                                         </kendo-grid>
                                     </template>

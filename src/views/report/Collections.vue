@@ -116,6 +116,7 @@
                                 :data-source-ref="'gridCollectionDS'"
                                 :editable="false"
                                 :groupable="true"
+                                :hidden="true"
                                 :column-menu="true"
                                 :resizable="true"
                                 :noRecords="true"
@@ -185,6 +186,7 @@
                                     :field="'exchangePenalty'"
                                     :title="$t('penalty')"
                                     :width="200"
+                                    :hidden="true"
                                     :attributes="{ style: 'text-align: right; ' }"
                                     :template="
                     '<span>#= kendo.toString(exchangePenalty, decimalFormat)#</span>'
@@ -195,6 +197,7 @@
                                     :field="'exchangeDiscount'"
                                     :title="$t('discount')"
                                     :width="200"
+                                    :hidden="true"
                                     :attributes="{ style: 'text-align: right; ' }"
                                     :template="
                     '<span>#= kendo.toString(exchangeDiscount, decimalFormat)#</span>'

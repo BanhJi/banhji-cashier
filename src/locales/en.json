@@ -3481,12 +3481,14 @@
     "start": "Start",
     "end": "End",
     "cashier": "Cashier",
+    "close_session": "Closs session",
     "session_reconciliation_report": "Session reconciliation report",
     "customer_receipt_report": "Customer receipt report",
     "default_search_option": "Default search option",
     "default_message_on_receipt_journal": "Default message on receipt & journal",
     "default_receipt_form": "Default Receipt Form",
     "banhji_cashier": "BanhJi Cashier",
+    "print_receipt": "Print Receipt",
     "default_reconciliation_report_rorm": "Default Reconciliation Report Form",
     "select": "Select"
 
