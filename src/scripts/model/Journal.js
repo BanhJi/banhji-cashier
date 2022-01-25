@@ -2,10 +2,11 @@ import kendo from "@progress/kendo-ui";
 import Helper from "@/helper.js";
 import { UserModel } from "@/scripts/model/AppModels";
 
-const store = require("@/institute")
+// const store = require("@/institute")
 // const { institute } = store.default.state
-const { instituteId } = store.default.state.cookies
-
+// const { instituteId } = store.default.state.cookies
+import store from "@/store"
+const institute = store.state.institute.institute
 export default class Journal {
     constructor(data = {}) {
         this.uuid                       = data.uuid || '';
@@ -26,13 +27,13 @@ export default class Journal {
         this.ref_number                 = data.ref_number || '';
         this.link_transaction           = data.link_transaction || '';
         this.referral_transaction_uuid  = data.referral_transaction_uuid || ''; // Could be InvoiceId, CashAdvanceId...
-        this.institute                  = data.institute || instituteId;
+        this.institute                  = data.institute || institute.id;
         this.fiscal_year                = Helper.getFiscalDateByDate(this.journal_date);
         this.is_draft                   = data.is_draft || 0;
         this.is_reversed                = data.is_reversed || 0;
         this.is_deleted                 = data.is_deleted || 0;
         this.prefix_format              = data.prefix_format || '';
-
+        this.base_currency              = data.base_currency || institute.baseCurrency;
         // Trackable Entity
         this.created_by                 = data.created_by || new UserModel();
         this.modified_by                = data.modified_by || new UserModel();

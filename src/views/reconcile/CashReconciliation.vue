@@ -20,8 +20,8 @@
                                     <v-col sm="3" cols="12" class="pb-0">
                                         <label class="label">{{ $t('journal_date') }}</label>
                                         <app-datepicker
-                                            :initialDate="reconcile.date"
-                                            @emitDate="reconcile.date = $event"
+                                            :initialDate="reconcile.issuedDate"
+                                            @emitDate="reconcile.issuedDate = $event"
                                             @onChanged="loadExchangeRate"/>
                                     </v-col>
                                     <v-col sm="3" cols="12" class="pb-0 pl-0">
@@ -45,17 +45,18 @@
                                     <v-col sm="3" cols="12" class="pb-0">
                                         <label class="label">{{ $t('ending_balance_date') }}</label>
                                         <app-datepicker
-                                            :initialDate="reconcile.ending_balance_date"
-                                            @emitDate="reconcile.ending_balance_date = $event"
+                                            :initialDate="reconcile.endingBalanceDate"
+                                            @emitDate="reconcile.endingBalanceDate = $event"
                                             @onChanged="loadEndingBalance"/>
                                     </v-col>
                                     <v-col sm="3" cols="12" class="pb-0 pl-0">
-                                        <label class="label">{{ $t('reconcile_account') }}</label>
-                                        <app-cash-account-dropdownlist
-                                            :initAccount="reconcile.account"
-                                            @emitAccount="reconcile.account = $event"
-                                            @onChanged="loadEndingBalance"
-                                        />
+                                        <label class="label">{{ $t('cashier') }}</label>
+                                        <h3 style="margin-top: 10px;">{{loggedUser.name}}</h3>
+<!--                                        <app-cash-account-dropdownlist-->
+<!--                                            :initAccount="reconcile.account"-->
+<!--                                            @emitAccount="reconcile.account = $event"-->
+<!--                                            @onChanged="loadEndingBalance"-->
+<!--                                        />-->
                                     </v-col>
                                 </v-row>
                                 <v-row class="mt-0">
@@ -69,7 +70,7 @@
                                                 {{ $t("ending_balance") }}
                                             </h3>
                                             <h3 class="text-right flex-1 font_20">
-                                                {{ Number(reconcile.ending_balance).toLocaleString() }}
+                                                {{ numFormat(reconcile.endingBalance) }}
                                             </h3>
                                         </v-card>
                                     </v-col>
@@ -83,7 +84,7 @@
                                                 {{ $t("actual_amount") }}
                                             </h3>
                                             <h3 class="text-right flex-1 font_20">
-                                                {{ Number(reconcile.actual_amount).toLocaleString() }}
+                                                {{ Number(reconcile.actualAmount).toLocaleString() }}
                                             </h3>
                                         </v-card>
                                     </v-col>
@@ -99,18 +100,27 @@
                                                 {{ $t("variance") }}
                                             </h3>
                                             <h3 class="text-right flex-1 font_20">
-                                                {{ Number(reconcile.variance_amount).toLocaleString() }}
+                                                {{ numFormat(reconcile.varianceAmount) }}
                                             </h3>
                                         </v-card>
                                     </v-col>
                                     <v-col sm="6" cols="12">
                                         <v-card height="60px" color="white" elevation="0"
                                                 style="padding-top: 6.3px !important;" class="pa-3 rounded-4 ">
-                                            <app-account-dropdownlist
-                                                :disabled="reconcile.variance_amount === 0"
-                                                :initAccount="reconcile.adjustment_account"
-                                                @emitAccount="reconcile.adjustment_account = $event"
-                                            />
+<!--                                            <app-account-dropdownlist-->
+<!--                                                :disabled="reconcile.variance_amount === 0"-->
+<!--                                                :initAccount="reconcile.adjustment_account"-->
+<!--                                                @emitAccount="reconcile.adjustment_account = $event"-->
+<!--                                            />-->
+                                            <v-select
+                                                class="mt-1"
+                                                :disabled="reconcile.varianceAmount === 0"
+                                                :items="listAccounts"
+                                                placeholder="select"
+                                                item-text="name"
+                                                v-model="reconcile.adjustmentAccount"
+                                                return-object
+                                                outlined/>
                                         </v-card>
                                     </v-col>
                                 </v-row>
@@ -227,19 +237,19 @@
                                     <span v-html="errorMessage"/>
                                 </v-alert>
 
-                                <v-menu>
-                                    <template v-slot:activator="{ on }">
-                                        <v-btn class="mr-2 text-capitalize  black--text float-left" v-on="on">
-                                            {{ $t('select_template') }}
-                                            <v-icon size="" class="ma-1">expand_more</v-icon>
-                                        </v-btn>
-                                    </template>
-                                    <v-list>
-                                        <v-list-item v-for="(item, index) in templates" :key="index">
-                                            <v-list-item-title>{{ item.title }}</v-list-item-title>
-                                        </v-list-item>
-                                    </v-list>
-                                </v-menu>
+<!--                                <v-menu>-->
+<!--                                    <template v-slot:activator="{ on }">-->
+<!--                                        <v-btn class="mr-2 text-capitalize  black&#45;&#45;text float-left" v-on="on">-->
+<!--                                            {{ $t('select_template') }}-->
+<!--                                            <v-icon size="" class="ma-1">expand_more</v-icon>-->
+<!--                                        </v-btn>-->
+<!--                                    </template>-->
+<!--                                    <v-list>-->
+<!--                                        <v-list-item v-for="(item, index) in templates" :key="index">-->
+<!--                                            <v-list-item-title>{{ item.title }}</v-list-item-title>-->
+<!--                                        </v-list-item>-->
+<!--                                    </v-list>-->
+<!--                                </v-menu>-->
                                 <v-btn color="primary" outlined class="text-capitalize  black--text float-left"
                                        @click="cancel">{{ $t('cancel') }}
                                 </v-btn>
@@ -271,9 +281,8 @@
 import kendo from '@progress/kendo-ui';
 import {i18n} from '@/i18n';
 import Helper from "@/helper.js";
-import JQuery from 'jquery';
+// import JQuery from 'jquery';
 import {
-    ReconcileModel,
     ReconcileDetailModel,
     JournalModel,
     JournalEntryModel,
@@ -281,7 +290,8 @@ import {
     CurrencyModel,
 } from "@/scripts/model/AppModels";
 
-const $ = require("jquery");
+import ReconcileModel from "@/scripts/session/model/Reconcile";
+const $ = kendo.jQuery;
 
 /* Store */
 import store from "@/store"
@@ -290,7 +300,6 @@ const institute = store.state.institute.institute
 const prefixHandler = require("@/scripts/prefixHandler")
 const {
     journalHandler,
-    reconcileHandler,
     currencyHandler,
 } = require("@/scripts/AppHandlers");
 const {CurrencyEditor} = require("@/scripts/kendo_editor/Collections");
@@ -301,13 +310,16 @@ const {
 const sessionHandler = require("@/scripts/session/handler/sessionHandler")
 const cookieJS = require("@/cookie.js");
 const cookie = cookieJS.getCookie();
+const accountHandler = require("@/scripts/accountHandler")
+const saleFormContentHandler = require("@/scripts/saleFormContentHandler")
+import SessionModel from '@/scripts/session/model/Session'
 export default {
     name: "CashReconciliation",
     components: {
         "LoadingMe": () => import('@/components/Loading'),
         "app-datepicker": () => import('@/components/custom_templates/DatePickerComponent'),
-        "app-account-dropdownlist": () => import('@/components/dropdownlist/Account'),
-        "app-cash-account-dropdownlist": () => import('@/components/dropdownlist/CashAccount'),
+        // "app-account-dropdownlist": () => import('@/components/dropdownlist/Account'),
+        // "app-cash-account-dropdownlist": () => import('@/components/dropdownlist/CashAccount'),
     },
     props: {
         initCashReconciliation: {
@@ -315,6 +327,7 @@ export default {
         },
     },
     data: () => ({
+        listAccounts: [],
         // Obj
         reconcile: new ReconcileModel(),
         adjustmentJournal: new JournalModel(),
@@ -343,17 +356,19 @@ export default {
         loadingAlert: false,
         loadingColorAlert: "",
         loadingTextAlert: "",
+        activeSession: {},
+        loggedUser: {
+            id: cookie.creator,
+            name: cookie.user['custom:firstName'] + ' ' + cookie.user['custom:lastName'],
+            username: cookie.email,
+            email: cookie.email
+        },
+        saleFormContent: {}
     }),
     methods: {
         // Initial Data
         initialData() {
-            this.loadSetting()
-            if (this.initCashReconciliation) {// Edit Mode
-                this.reconcile = this.initCashReconciliation;
-                this.bindData();
-            } else {// Brand New Mode
-                this.setDefaultData();
-            }
+            this.loadAccount()
         },
         // Set default data
         setDefaultData() {
@@ -361,9 +376,9 @@ export default {
             this.isEdit = false;
 
             this.reconcile = new ReconcileModel({
-                date: new Date().toISOString().substr(0, 10),
+                issuedDate: new Date().toISOString().substr(0, 10),
                 type: EntityType.CASH_RECONCILIATION,
-                ending_balance_date: new Date().toISOString().substr(0, 10),
+                endingBalanceDate: new Date().toISOString().substr(0, 10),
             });
 
             // Entry Uuid
@@ -374,8 +389,12 @@ export default {
             this.generateNumber();
 
             // Reset lines and Add 2 default lines
-            this.addRow();
-            this.addRow();
+            setTimeout(() => {
+                if(this.notes.length == 0) {
+                    this.addRow()
+                    this.addRow()
+                }
+            }, 500)
         },
         // Bind data from prop for edit mode
         bindData() {
@@ -421,17 +440,17 @@ export default {
             })
         },
         async generateNumber() {
-            window.console.log(this.reconcile.transactionType)
+            // window.console.log(this.reconcile.transactionType)
             if (!this.isEdit) {
-                let num = await Helper.generateAccountingNumber(this.reconcile.type, this.reconcile.date);
+                let num = await Helper.generateAccountingNumber(this.reconcile.type, this.reconcile.issuedDate);
 
-                this.reconcile.number = num.number;
+                this.reconcile.number = num.number + '-1';
                 this.reconcile.prefix_format = num.prefix_format;
             }
         },
         // Get Exchange Rate
         loadExchangeRate() {
-            currencyHandler.getLastExchangeRateByDate(this.reconcile.date)
+            currencyHandler.getLastExchangeRateByDate(this.reconcile.issuedDate)
                 .then(res => {
                     this.exchangeRates = res.data.data;
                 });
@@ -469,9 +488,9 @@ export default {
                     totalExchangeAmount += xamount;
                 }
             })
-
-            this.reconcile.actual_amount = totalExchangeAmount;
-            this.reconcile.variance_amount = this.reconcile.ending_balance - totalExchangeAmount;
+            let decimal = this.saleFormContent.decimal
+            this.reconcile.actualAmount = totalExchangeAmount;
+            this.reconcile.varianceAmount = parseFloat(this.reconcile.endingBalance.toFixed(decimal)) - parseFloat(totalExchangeAmount.toFixed(decimal))
         },
         // Row Number Template
         rowNumberTmpl(dataItem) {
@@ -516,7 +535,7 @@ export default {
         loadEndingBalance() {
             let currentFiscalDate = Helper.getFiscalDateByDate(new Date());
             let sdate = currentFiscalDate.start_date,
-                edate = this.reconcile.ending_balance_date;
+                edate = this.reconcile.endingBalanceDate;
 
             if (this.reconcile.account.uuid) {
                 if (sdate && edate) {
@@ -530,40 +549,40 @@ export default {
                 }
 
                 // Clear
-                this.reconcile.ending_balance = 0;
-                this.reconcile.variance_amount = 0;
-                this.reconcile.reconcile_entries = [];
+                this.reconcile.endingBalance = 0;
+                this.reconcile.varianceAmount = 0;
+                this.reconcile.reconcileEntries = [];
 
-                this.showLoading = true;
-                journalHandler.getEntryDetailByAccount(this.reconcile.account.uuid, {
-                    params: {
-                        start_date: sdate,
-                        end_date: edate,
-                    }
-                })
-                    .then(res => {
-                        if (!JQuery.isEmptyObject(res)) {
-                            // Bind ending balance
-                            this.reconcile.ending_balance = kendo.parseFloat(res.ending_balance);
-
-                            // Collect entries
-                            res.entries_detail.forEach(value => {
-                                this.reconcile.reconcile_entries.push(value.entry_uuid);
-                            })
-
-                            this.autoCalculate();
-                        }
-                    })
-                    .finally(() => {
-                        this.showLoading = false;
-                    })
+                // this.showLoading = true;
+                // journalHandler.getEntryDetailByAccount(this.reconcile.account.uuid, {
+                //     params: {
+                //         start_date: sdate,
+                //         end_date: edate,
+                //     }
+                // })
+                //     .then(res => {
+                //         if (!JQuery.isEmptyObject(res)) {
+                //             // Bind ending balance
+                //             this.reconcile.ending_balance = kendo.parseFloat(res.ending_balance);
+                //
+                //             // Collect entries
+                //             res.entries_detail.forEach(value => {
+                //                 this.reconcile.reconcile_entries.push(value.entry_uuid);
+                //             })
+                //
+                //             this.autoCalculate();
+                //         }
+                //     })
+                //     .finally(() => {
+                //         this.showLoading = false;
+                //     })
             }
         },
         // Shrink Data
         shrinkData() {
             // Date
-            this.reconcile.date = Helper.toISODate(this.reconcile.date);
-            this.reconcile.ending_balance_date = Helper.toISODate(this.reconcile.ending_balance_date);
+            this.reconcile.issuedDate = Date.parse(new Date(this.reconcile.issuedDate))
+            this.reconcile.endingBalanceDate = Date.parse(new Date(this.reconcile.endingBalanceDate))
 
             // Note
             let notes = [],
@@ -587,12 +606,12 @@ export default {
         addJournal() {
             let entries = [],
                 debitAccount = this.reconcile.account,
-                creditAccount = this.reconcile.adjustment_account,
-                amount = Math.abs(this.reconcile.variance_amount);
+                creditAccount = this.reconcile.adjustmentAccount,
+                amount = Math.abs(this.reconcile.varianceAmount);
 
             // Variance > 0
-            if (this.reconcile.variance_amount > 0) {
-                debitAccount = this.reconcile.adjustment_account;
+            if (this.reconcile.varianceAmount > 0) {
+                debitAccount = this.reconcile.adjustmentAccount;
                 creditAccount = this.reconcile.account;
             }
 
@@ -622,7 +641,7 @@ export default {
             this.adjustmentJournal.number = this.reconcile.number;
             this.adjustmentJournal.journal_type = EntityType.ADJUSTMENT;
             this.adjustmentJournal.transaction_type = EntityType.CASH_RECONCILIATION;
-            this.adjustmentJournal.journal_date = Helper.toISODate(this.reconcile.date);
+            this.adjustmentJournal.journal_date = Helper.toISODate(this.reconcile.issuedDate);
             this.adjustmentJournal.description = this.reconcile.description;
             this.adjustmentJournal.prefix_format = this.reconcile.prefix_format;
             this.adjustmentJournal.is_draft = this.reconcile.is_draft;
@@ -664,14 +683,6 @@ export default {
                 result = false;
             }
 
-            // Adjustment Account
-            if (this.reconcile.variance_amount !== 0) {
-                if (this.reconcile.adjustment_account.uuid === '') {
-                    result = false;
-                    msg += `<p>${i18n.t("please_select_adjustment_account")}</p>`;
-                }
-            }
-
             // Show Alert
             this.errorMessage = msg;
             this.alert = false;
@@ -684,7 +695,7 @@ export default {
         // All Saves
         async onSaveOptionClick(mode) {
             if (this.$refs.form.validate() && this.validateForm()) {
-                let isValidClosingDate = await Helper.validateClosingDate(this.reconcile.date);
+                let isValidClosingDate = await Helper.validateClosingDate(this.reconcile.issuedDate);
                 if (isValidClosingDate) {
                     this.saveMode = mode;
                     this.save();
@@ -733,42 +744,92 @@ export default {
                 this.reconcile.is_draft = 0;
 
                 // Adjustment Journal
-                if (this.reconcile.variance_amount !== 0) {
+                if (this.reconcile.varianceAmount !== 0) {
                     this.addJournal();
                 } else {
                     this.adjustmentJournal = null;
                     this.adjustmentEntries = null;
                 }
             }
+            // Adjustment Account
+            if (this.reconcile.varianceAmount !== 0 && this.reconcile.is_draft == 0) {
+                if (this.reconcile.adjustmentAccount.uuid === '') {
+                    this.$snotify.error(`<p>${i18n.t("please_select_adjustment_account")}</p>`);
+                    return
+                }
+            }
+            // update count notes
+            let ds = this.$refs.noteDS.kendoWidget()
+            let notes = []
+            if(ds.data().length > 0){
+                ds.data().forEach(e => {
+                    if (e.unit > 0) {
+                        notes.push({
+                            order: e.order,
+                            currency: e.currency,
+                            note: e.note,
+                            unit: e.unit,
+                            amount: e.amount,
+                            remark: e.remark,
+                            exchange_rate: e.exchange_rate,
+                            exchanged_amount: e.exchanged_amount
+                        })
+                    }
+                })
+            }
+
+            this.reconcile.countNotes = notes
+            this.reconcile.session = this.activeSession
+            this.reconcile.user = this.loggedUser
+            this.reconcile.reconcileEntries = this.adjustmentEntries
+            // remove empty
+            this.removeEmptyLine()
 
             // Sync Data
             this.showLoading = true
-            reconcileHandler.save({
-                reconcile: this.reconcile,
-                adjustment_journal: this.adjustmentJournal,
-                adjustment_entries: this.adjustmentEntries,
-            })
-                .then((response) => {
-                    if (response) {
-                        self.responseStatus(response.status);
-                    }
+            if(this.reconcile.is_draft == 0) {
+                this.adjustmentJournal.journal_entries = this.adjustmentEntries
+                window.console.log(this.adjustmentJournal, 'journal')
+                journalHandler.save(new JournalModel(this.adjustmentJournal)).then(function (response) {
+                    self.reconcile.journalId = response.data.uuid
+                    window.console.log(response, 'journal res')
+                    sessionHandler.reconcileCreate(new ReconcileModel(self.reconcile)).then(function (res) {
+                        self.responseStatus(res.status);
+                    })
                 })
-                .catch((error) => {
-                    Helper.alertErrorMsg(error);
-                });
+            }else{
+                this.activeSession.countNotes = notes
+                this.activeSession.adjustmentAccount = this.reconcile.adjustmentAccount
+                window.console.log(this.activeSession, 'b')
+                sessionHandler.create(new SessionModel(this.activeSession)).then(function () {
+                    self.showLoading = false
+                    self.$swal({
+                        position: 'products',
+                        icon: 'success',
+                        title: 'Your work has been saved',
+                        showConfirmButton: true,
+                    }).then((result) => {
+                        if (result.value) {
+                            self.$router.push(`${i18n.locale}`)
+                        }
+                    })
+                })
+            }
         },
         // Response Status
         responseStatus(status) {
+            window.console.log(status)
             switch (status) {
-                case 200: // Ok
+                case 201: // Ok
                     this.showAlert();
                     break;
-                case 201: // Duplicate
+                case 202: // Duplicate
                     Helper.alertErrorMsg("Duplicate entry!");
                     break;
                 default:
                     break;
             }
+            this.showLoading = false
         },
         // Sweetalert2
         changeAlertStatus() {
@@ -784,23 +845,14 @@ export default {
             this.loadingColorAlert = "#3DA72E";
             switch (this.saveMode) {
                 case 'saveClose':// Save Close
-                    // this.$swal({
-                    // 	position: 'products',
-                    // 	icon: 'success',
-                    // 	title: 'Your work has been saved',
-                    // 	showConfirmButton: true,
-                    // }).then((result) => {
-                    // 	if (result.value) {
-                    // 		window.history.go(-1)
-
-                    // 		return false
-                    // 	}
-                    // })
-                    if (this.isEdit) {
-                        this.goBackToViewPage();
-                    } else {
-                        this.$router.go(-1);
-                    }
+                    this.$swal({position: 'products', icon: 'success', title: 'Your work has been saved', showConfirmButton: true, }).then((result) => { if (result.value) { this.$router.push(`${i18n.locale}`) }
+                    })
+                    // if (this.isEdit) {
+                    //     this.goBackToViewPage();
+                    // } else {
+                        // this.$router.go(-1);
+                        this.$router.push(`${i18n.locale}`);
+                    // }
 
                     this.clear();
                     this.setDefaultData();
@@ -832,30 +884,166 @@ export default {
             sessionHandler.cashierSetting().then(res => {
                 if (res.data.statusCode === 200) {
                     const data = res.data.data.filter((obj) => {return obj.user.email == cookie.email})
+                    window.console.log(data, 'setting')
                     if (data.length > 0) {
-                        // this.setting = data[0]
-                        // window.console.log(this.setting.paymentOption, 'payment option')
+                        this.setDefaultData()
                         this.reconcile.account = data[0].paymentOption.account
-                        this.loadEndingBalance()
+                        this.notes = data[0].countNotes
                     }else{
                         this.$snotify.error('Please setup setting!')
                         this.$router.push(`${i18n.locale}` + '/setting');
                     }
                 }
             })
+            this.checkSession()
+        },
+        checkSession(){
+            this.showLoading = true
+            let data = {
+                user_name : cookie.email
+            }
+            sessionHandler.checkSession(data).then(res => {
+                this.showLoading = false
+                if(res.data.data.length > 0){
+                    this.hasSession = true
+                    this.activeSession = res.data.data[0]
+                    window.console.log(this.activeSession, 'active session')
+                    this.reconcile.session = this.activeSession
+                    this.loadTxn()
+                }else{
+                    this.$snotify.error('Please start session!')
+                    this.$router.push(`${i18n.locale}`);
+                }
+            }).catch(e => {
+                this.showLoading = false
+                this.$snotify.error('Something went wrong')
+                this.errors.push(e)
+                window.console.log(e)
+            })
+        },
+        loadTxn(){
+            this.showLoading = true
+            sessionHandler.getTxnBySession(this.activeSession.pk).then(res => {
+                this.showLoading = false
+                this.reconcile.endingBalance = 0
+                this.reconcile.varianceAmount = 0
+                if(res.data.data.length > 0){
+                    let data = res.data.data
+                    let totalR = 0
+                    data.forEach(e => {
+                        totalR += parseFloat(e.paidAmount)
+                    })
+                    this.reconcile.endingBalance = totalR
+                    this.reconcile.varianceAmount = totalR
+                    if(Object.keys(this.activeSession.countNotes).length > 0){
+                        this.notes = []
+                        this.notes = this.activeSession.countNotes
+                        setTimeout(() => {
+                            this.reconcile.adjustmentAccount = this.activeSession.adjustmentAccount
+                            this.autoCalculate()
+                        }, 500)
+                    }
+                }else{
+                    this.$snotify.error('មិនមានទទួលប្រាក់!')
+                    this.$router.push(`${i18n.locale}`);
+                }
+            }).catch(e => {
+                this.showLoading = false
+                this.$snotify.error('Something went wrong')
+                this.errors.push(e)
+                window.console.log(e)
+            })
+        },
+        async loadAccount() {
+            this.showLoading = true
+            accountHandler.getAll().then(res => {
+                this.showLoading = false
+                this.loadSetting()
+                //Receivable Account
+                this.listAccounts = res.filter(m => m.account_type.number === 40).map(itm => {
+                    return {
+                        id: itm.uuid,
+                        name: itm.name,
+                        local_name: itm.local_name,
+                        number: itm.number,
+                        is_taxable: itm.is_taxable,
+                        banhjiAccCode: itm.banhjiAccCode,
+                        group_code: itm.group_code,
+                        parent_account: itm.parent_account,
+                        type_code: itm.type_code,
+                        uuid: itm.uuid,
+                    }
+                })
+            })
+        },
+        async loadSingleData() {
+            window.console.log(this.$route.name, 'rout name')
+            if (this.$route.name === 'Reconcile') {
+                this.notes = []
+                this.initialData();
+            }
+        },
+        async loadSaleFormContent() {
+            new Promise(resolve => {
+                setTimeout(() => {
+                    resolve('resolved');
+                    saleFormContentHandler.list().then(res => {
+                        if (res.data.statusCode === 200) {
+                            const data = res.data.data
+                            if (data.length > 0) {
+                                this.saleFormContent = data[0]
+                            }
+                        }
+                    })
+                }, 10)
+            })
+        },
+        numFormat(value) {
+            value = parseFloat(value)
+            value = parseFloat(value.toFixed(this.saleFormContent.decimal))
+            return kendo.toString(value, 'n' + this.saleFormContent.decimal)
+        },
+        removeEmptyLine() {
+            let ds = this.$refs.noteDS.kendoWidget()
+            let notes = []
+            this.notes = []
+            if(ds.data().length > 0){
+                ds.data().forEach(e => {
+                    if (e.unit > 0) {
+                        notes.push({
+                            order: e.order,
+                            currency: e.currency,
+                            note: e.note,
+                            unit: e.unit,
+                            amount: e.amount,
+                            remark: e.remark,
+                            exchange_rate: e.exchange_rate,
+                            exchanged_amount: e.exchanged_amount
+                        })
+                    }
+                })
+            }
+            this.notes = notes
+            // const grid = $("#noteGrid").data("kendoGrid"),
+            //     dataSource = grid.dataSource
+            // dataSource.data().forEach(m => {
+            //     window.console.log(m, 'empty')
+            //     if (m.unit == 0) {
+            //         dataSource.remove(m)
+            //     }
+            // })
         },
     },
     watch: {
-        initCashReconciliation() {
-            this.initialData();
-        },
+        '$route': 'loadSingleData',
     },
     created() {
         this.loadExchangeRate();
     },
     mounted() {
         // Initial Data
-        this.initialData();
+        this.loadSingleData();
+        this.loadSaleFormContent()
     },
 };
 </script>

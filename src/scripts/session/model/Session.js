@@ -9,6 +9,8 @@ export default class Session {
         this.openBalance = data.openBalance || []
         this.status = data.status || 1
         this.totalReceipt = data.totalReceipt || 0
+        this.countNotes = data.countNotes || []
+        this.adjustmentAccount = data.adjustmentAccount || {}
     }
 
     constuct(data) {

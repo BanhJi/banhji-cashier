@@ -25,6 +25,7 @@ module.exports.get = async function (id) {
 // save
 module.exports.create = async (data) => {
     try {
+        window.console.log(data, 'handler')
         const response = await axios.post(apiUrl.session.sessionCreate, data)
         return response
     } catch (error) {
@@ -102,8 +103,24 @@ module.exports.cashierSettingCreate = async (data) => {
 }
 module.exports.collectionReport = async (data) => {
     try {
-        window.console.log(data, 'handler')
+        // window.console.log(data, 'handler')
         const response = await axios.post(apiUrl.session.collectionReport, data)
+        return response
+    } catch (error) {
+        window.console.error(error)
+    }
+}
+module.exports.getTxnBySession = async (id) => {
+    try {
+        const response = await axios.get(apiUrl.session.txnSession + '/' + id)
+        return response
+    } catch (error) {
+        window.console.error(error)
+    }
+}
+module.exports.reconcileCreate = async (data) => {
+    try {
+        const response = await axios.post(apiUrl.session.reconcileCreate, data)
         return response
     } catch (error) {
         window.console.error(error)
