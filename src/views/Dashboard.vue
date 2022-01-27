@@ -9,151 +9,6 @@
                             :fullPage="true"
                             :myLoading="true"/>
                         <v-col class="py-0 px-md-2" sm="12" cols="12">
-                            <!--                            <v-row>-->
-                            <!--                                <v-col class="py-0 px-md-2" sm="4" cols="4">-->
-                            <!--                                    <v-card-->
-                            <!--                                        color="white"-->
-                            <!--                                        outlined-->
-                            <!--                                        dense-->
-                            <!--                                        class="pa-4 mt-4 no_border"-->
-                            <!--                                        min-height="338"-->
-                            <!--                                        style="margin-top: 0!important;text-align: center;"-->
-                            <!--                                    >-->
-                            <!--                                        <img-->
-                            <!--                                            :src="logoUrl"-->
-                            <!--                                            width="55%"-->
-                            <!--                                            :alt="$t('please_upload_your_logo')"-->
-                            <!--                                            class="mt-4"-->
-                            <!--                                        />-->
-                            <!--                                        <h3 class="font_20 pb-1 mt-4">{{ institute.name }}</h3>-->
-                            <!--                                    </v-card>-->
-                            <!--                                </v-col>-->
-                            <!--                                <v-col class="py-0 px-md-2" sm="4" cols="4">-->
-                            <!--                                    <v-card-->
-                            <!--                                        color="white"-->
-                            <!--                                        outlined-->
-                            <!--                                        dense-->
-                            <!--                                        class="pa-4 no_border"-->
-                            <!--                                        min-height="338"-->
-                            <!--                                        >-->
-                            <!--                                        <h3 class="font_20 pb-1">{{ $t("share") }}</h3>-->
-                            <!--                                        <p class="mb-0">{{ $t("capital_credit_business_description") }}</p>-->
-                            <!--                                        <h2 class="primary&#45;&#45;text mb-0 niradei_black pa-0 col-sm-12 text-right">{{totalSharePrice}}</h2>-->
-                            <!--                                        <v-row>-->
-                            <!--                                            <v-col sm="12" cols="12" class="pr-0 pb-0">-->
-                            <!--                                                <template>-->
-                            <!--                                                    <v-simple-table>-->
-                            <!--                                                        <template>-->
-                            <!--                                                            <tbody>-->
-                            <!--                                                                <tr>-->
-                            <!--                                                                    <td class="text-left tdbig">-->
-                            <!--                                                                        <span class="niradei_medium font_14 grey&#45;&#45;text">-->
-                            <!--                                                                            {{ $t("total_share") }}-->
-                            <!--                                                                        </span>-->
-                            <!--                                                                    </td>-->
-                            <!--                                                                    <td class="text-right">-->
-                            <!--                                                                        <span class="niradei_heavy font_18 dark_grey">-->
-                            <!--                                                                            {{totalShare}}-->
-                            <!--                                                                        </span>-->
-                            <!--                                                                    </td>-->
-                            <!--                                                                </tr>-->
-                            <!--                                                                <tr>-->
-                            <!--                                                                    <td class="text-left tdbig">-->
-                            <!--                                                                        <span class="niradei_medium font_14 grey&#45;&#45;text">-->
-                            <!--                                                                            {{ $t("number_of_women") }}-->
-                            <!--                                                                        </span>-->
-                            <!--                                                                    </td>-->
-                            <!--                                                                    <td class="text-right">-->
-                            <!--                                                                        <span class="niradei_heavy font_18 dark_grey">-->
-                            <!--                                                                        {{totalFemaleShare}}-->
-                            <!--                                                                        </span>-->
-                            <!--                                                                    </td>-->
-                            <!--                                                                </tr>-->
-                            <!--                                                                <tr>-->
-                            <!--                                                                    <td class="text-left tdbig">-->
-                            <!--                                                                        <span class="niradei_medium font_14 grey&#45;&#45;text">-->
-                            <!--                                                                        {{ $t("_women") }}-->
-                            <!--                                                                        </span>-->
-                            <!--                                                                    </td>-->
-                            <!--                                                                    <td class="text-right">-->
-                            <!--                                                                        <span class="niradei_heavy font_18 dark_grey">-->
-                            <!--                                                                        {{totalFemaleP}}-->
-                            <!--                                                                        </span>-->
-                            <!--                                                                    </td>-->
-                            <!--                                                                </tr>-->
-                            <!--                                                                -->
-                            <!--                                                            </tbody>-->
-                            <!--                                                        </template>-->
-                            <!--                                                    </v-simple-table>-->
-                            <!--                                                </template>-->
-                            <!--                                            </v-col>-->
-                            <!--                                        </v-row>-->
-                            <!--                                    </v-card>-->
-                            <!--                                </v-col>-->
-                            <!--                                <v-col class="py-0 px-md-2" sm="4" cols="4">-->
-                            <!--                                    <v-card-->
-                            <!--                                        color="white"-->
-                            <!--                                        outlined-->
-                            <!--                                        dense-->
-                            <!--                                        class="pa-4 no_border"-->
-                            <!--                                        min-height="338"-->
-                            <!--                                        >-->
-                            <!--                                        <h3 class="font_20 pb-1">{{ $t("member") }}</h3>-->
-                            <!--                                        <p class="mb-0">{{ $t("as_of_today") }}</p>-->
-                            <!--                                        <h2 class="primary&#45;&#45;text mb-0 niradei_black pa-0 col-sm-12 text-right">{{totalMember}}</h2>-->
-                            <!--                                        <v-row>-->
-                            <!--                                            <v-col sm="12" cols="12" class="pr-0 pb-0">-->
-                            <!--                                                <template>-->
-                            <!--                                                    <v-simple-table>-->
-                            <!--                                                        <template>-->
-                            <!--                                                            <tbody>-->
-                            <!--                                                                <tr>-->
-                            <!--                                                                    <td class="text-left tdbig">-->
-                            <!--                                                                        <span class="niradei_medium font_14 grey&#45;&#45;text">-->
-                            <!--                                                                            {{ $t("total_members") }}-->
-                            <!--                                                                        </span>-->
-                            <!--                                                                    </td>-->
-                            <!--                                                                    <td class="text-right">-->
-                            <!--                                                                        <span class="niradei_heavy font_18 dark_grey">-->
-                            <!--                                                                            {{totalMember}}-->
-                            <!--                                                                        </span>-->
-                            <!--                                                                    </td>-->
-                            <!--                                                                </tr>-->
-                            <!--                                                                <tr>-->
-                            <!--                                                                    <td class="text-left tdbig">-->
-                            <!--                                                                        <span class="niradei_medium font_14 grey&#45;&#45;text">-->
-                            <!--                                                                            {{ $t("number_of_women") }}-->
-                            <!--                                                                        </span>-->
-                            <!--                                                                    </td>-->
-                            <!--                                                                    <td class="text-right">-->
-                            <!--                                                                        <span class="niradei_heavy font_18 dark_grey">-->
-                            <!--                                                                        {{totalFemaleMember}}-->
-                            <!--                                                                        </span>-->
-                            <!--                                                                    </td>-->
-                            <!--                                                                </tr>-->
-                            <!--                                                                <tr>-->
-                            <!--                                                                    <td class="text-left tdbig">-->
-                            <!--                                                                        <span class="niradei_medium font_14 grey&#45;&#45;text">-->
-                            <!--                                                                        {{ $t("man") }}-->
-                            <!--                                                                        </span>-->
-                            <!--                                                                    </td>-->
-                            <!--                                                                    <td class="text-right">-->
-                            <!--                                                                        <span class="niradei_heavy font_18 dark_grey">-->
-                            <!--                                                                        {{totalMaleMember}}-->
-                            <!--                                                                        </span>-->
-                            <!--                                                                    </td>-->
-                            <!--                                                                </tr>-->
-                            <!--                                                                -->
-                            <!--                                                            </tbody>-->
-                            <!--                                                        </template>-->
-                            <!--                                                    </v-simple-table>-->
-                            <!--                                                </template>-->
-                            <!--                                            </v-col>-->
-                            <!--                                        </v-row>-->
-                            <!--                                    </v-card>-->
-                            <!--                                </v-col>-->
-                            <!--                                -->
-                            <!--                            </v-row>-->
                             <v-row>
                                 <v-col sm="8" cols="8" class=" px-md-2">
                                     <h3 class="font_20 pb-1">{{ $t("session") }}</h3>
@@ -545,6 +400,7 @@ export default {
         // await this.loadLoan()
         // await this.loadPar()
         // await this.loadSaving()
+        this.pageLoad()
     },
     methods: {
         rowNumberTmpl(dataItem) {
@@ -701,17 +557,24 @@ export default {
         goReconcile(){
             window.console.log(this.activeSession, 'aactive session')
             this.$router.push(`${i18n.locale}` + '/reconcile');
-        }
+        },
+        async pageLoad() {
+            window.console.log(this.$route.name, 'rout name')
+            if (this.$route.name === 'HomeDashboard') {
+                await this.loadSessionByUser()
+                this.checkSession()
+            }
+        },
     },
     computed: {
         lang() {
             return "/" + i18n.locale;
         },
     },
+    watch: {
+        '$route': 'pageLoad',
+    },
     created: async function () {
-        // await this.loadSession()
-        await this.loadSessionByUser()
-        this.checkSession()
     }
 };
 </script>

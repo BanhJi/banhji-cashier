@@ -444,7 +444,7 @@ export default {
             if (!this.isEdit) {
                 let num = await Helper.generateAccountingNumber(this.reconcile.type, this.reconcile.issuedDate);
 
-                this.reconcile.number = num.number + '-1';
+                this.reconcile.number = num.number + '-2';
                 this.reconcile.prefix_format = num.prefix_format;
             }
         },

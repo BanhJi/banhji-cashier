@@ -42,7 +42,7 @@
                 </v-row>
 
                 <v-row class="mt-0">
-                    <v-col sm="4" cols="12" class="pt-0">
+                    <v-col sm="6" cols="12" class="pt-0">
                         <v-card
                             outlined
                             dense
@@ -58,7 +58,7 @@
                             </h3>
                         </v-card>
                     </v-col>
-                    <v-col sm="4" cols="12" class="pt-0">
+                    <v-col sm="6" cols="12" class="pt-0">
                         <v-card
                             outlined
                             dense
@@ -74,22 +74,22 @@
                             </h3>
                         </v-card>
                     </v-col>
-                    <v-col sm="4" cols="12" class="pt-0">
-                        <v-card
-                            outlined
-                            dense
-                            class="pa-3 rounded-4 no_border white--text "
-                            color="third"
-                            height="60px"
-                        >
-                            <h3 class="text-left flex-1  font_12 text-uppercase">
-                                {{ $t("overdue_invoice_collected") }}
-                            </h3>
-                            <h3 class="text-right flex-1 font_20">
-                                {{ collectedInvoiceOverDue }}
-                            </h3>
-                        </v-card>
-                    </v-col>
+<!--                    <v-col sm="4" cols="12" class="pt-0">-->
+<!--                        <v-card-->
+<!--                            outlined-->
+<!--                            dense-->
+<!--                            class="pa-3 rounded-4 no_border white&#45;&#45;text "-->
+<!--                            color="third"-->
+<!--                            height="60px"-->
+<!--                        >-->
+<!--                            <h3 class="text-left flex-1  font_12 text-uppercase">-->
+<!--                                {{ $t("overdue_invoice_collected") }}-->
+<!--                            </h3>-->
+<!--                            <h3 class="text-right flex-1 font_20">-->
+<!--                                {{ collectedInvoiceOverDue }}-->
+<!--                            </h3>-->
+<!--                        </v-card>-->
+<!--                    </v-col>-->
                 </v-row>
                 <v-row>
                     <v-col sm="12" cols="12" class="py-0">
@@ -558,9 +558,10 @@ export default {
                             })
                         })
                         this.transactions = transactions
-                        window.console.log(this.transactions, 'after txn')
+
                         this.collectedAmount = total;
-                        this.collectedInvoice = res.data.length || 0;
+                        this.collectedInvoice = res.data.data.length || 0;
+                        window.console.log(total, transactions, this.collectedAmount, 'after txn')
                     }
                 }
                 this.showLoading = false;

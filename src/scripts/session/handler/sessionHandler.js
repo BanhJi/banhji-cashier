@@ -1,6 +1,6 @@
 const axios = require('axios')
 const apiUrl = require('../../../apiUrl.js')
-
+const FormData = require('form-data')
 // List
 module.exports.list = async function () {
     try {
@@ -124,5 +124,61 @@ module.exports.reconcileCreate = async (data) => {
         return response
     } catch (error) {
         window.console.error(error)
+    }
+}
+
+module.exports.sessionTxnReport = async (data) => {
+    try {
+        // window.console.log(data, 'handler')
+        const response = await axios.post(apiUrl.session.sessionTxnReport, data)
+        return response
+    } catch (error) {
+        window.console.error(error)
+    }
+}
+
+const getToken = async () => {
+    // let url = process.env.deployStage === 'dev' ? process.env.camisDev : process.env.camisProd
+    let url = 'https://api-rupp.camemis-learn.com/rupp-api/v1'
+    let data = new FormData()
+    data.append('email', 'banhji@gmail.com')
+    data.append('password', 'Dfa$UZpaG4TT-k%e')
+    const config = {
+        method: 'post',
+        url: `${url}/identify`,
+        headers: { 
+          'Accept': 'application/json', 
+          'Content-Type': 'application/json', 
+          ...data.getHeaders()
+        },
+        data : data
+    }
+
+    try {
+        const result = await axios(config)
+        return result.data.token
+    } catch (err) {
+        return err
+    }
+}
+module.exports.notifyCamis = async (paymentCode) => {
+    try {
+        // let url = process.env.deployStage === 'dev' ? process.env.camisDev : process.env.camisProd
+        // let url = 'https://api-rupp.camemis-learn.com/rupp-api/v1'
+        let url = process.env.CAMIS_NOT
+        const token = await getToken()
+        const config = {
+            method: 'post',
+            url: `${url}/paymentcode/${paymentCode}`,
+            headers: {
+                'Accept': 'application/json', 
+                'Content-Type': 'application/json', 
+                'Authorization': `Bearer ${token}`
+            }
+        }
+        const result = await axios(config)
+        return result.data
+    } catch (error) {
+        return error
     }
 }

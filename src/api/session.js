@@ -17,4 +17,5 @@ module.exports = {
     cashierSetting                              : url + 'cashier/institute/' + instituteId + '/setting',
     collectionReport                            : url + 'session/institute/' + instituteId + '/collection',
     reconcileCreate                             : url + 'reconcile/institute/' + instituteId + '/create',
+    sessionTxnReport                            : url + 'session/institute/' + instituteId + '/txnreport',
 }
