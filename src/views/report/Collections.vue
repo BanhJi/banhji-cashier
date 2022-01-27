@@ -116,7 +116,6 @@
                                 :data-source-ref="'gridCollectionDS'"
                                 :editable="false"
                                 :groupable="true"
-                                :hidden="true"
                                 :column-menu="true"
                                 :resizable="true"
                                 :noRecords="true"
