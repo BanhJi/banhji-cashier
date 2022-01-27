@@ -119,6 +119,13 @@
                                 :column-menu="true"
                                 :resizable="true"
                                 :noRecords="true"
+
+                                :sortable="true"
+                                :excel-file-name="$t('customer_receipt_report')+'.xlsx'"
+                                :excel-filterable="true"
+                                :excel-all-pages="true"
+                                :toolbar="['excel']"
+
                                 :scrollable-virtual="true"
                             >
                                 <!--                                <kendo-grid-column-->
@@ -402,6 +409,9 @@ const instituteHandler = require("@/scripts/instituteHandler")
 const store = require("@/institute.js");
 const { instituteId } = store.default.state.cookies;
 import { Barcode } from '@progress/kendo-barcodes-vue-wrapper';
+
+import JSZip from "jszip";
+window.JSZip = JSZip;
 
 export default {
     data: () => ({

@@ -68,6 +68,13 @@
                                 :column-menu="true"
                                 :resizable="true"
                                 :noRecords="true"
+
+                                :sortable="true"
+                                :excel-file-name="$t('session_reconciliation_report')+'.xlsx'"
+                                :excel-filterable="true"
+                                :excel-all-pages="true"
+                                :toolbar="['excel']"
+
                                 :scrollable-virtual="true"
                             >
                                 <kendo-grid-column
@@ -142,6 +149,8 @@ const cookie = cookieJS.getCookie()
 const store = require("@/institute.js");
 const { instituteId } = store.default.state.cookies
 const saleFormContentHandler = require("@/scripts/saleFormContentHandler")
+import JSZip from "jszip";
+window.JSZip = JSZip;
 export default {
     data: () => ({
         startDate: new Date(),
