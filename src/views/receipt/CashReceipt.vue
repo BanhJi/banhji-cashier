@@ -1933,6 +1933,7 @@ export default {
                             this.showLoading = true
                             try {
                                 billingHandler.search(data).then(res => {
+                                    window.console.log(" billing search=", res)
                                     this.showLoading = false
                                     if (res.data.statusCode === 200) {
                                         const response = res.data.data
@@ -1960,7 +1961,7 @@ export default {
                                                     window.console.log(this.txnPrint.connectId, 'connect id')
                                                     // this.barcode = textToBase64Barcode(this.txnPrint.connectId)
                                                     window.console.log(this.txnPrint.connectId , 'connect id')
-                                                    let gender = obj.customer.gender ? obj.customer.gender : 'Male'
+                                                    let gender =  Object.keys(obj.customer.gender).length !=0  ? obj.customer.gender : 'Male'
                                                     this.txnPrint.gender = gender.toLowerCase()
                                                     this.txnPrint.customer = obj.customer
                                                 }
