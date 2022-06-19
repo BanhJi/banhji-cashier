@@ -634,7 +634,7 @@ export default {
             // window.console.log(this.mInstitute)
         },
         async loadInstitutes() {
-            window.console.log(this.mInstitute.creator);
+            // window.console.log(this.mInstitute.creator);
             new Promise((resolve) => {
                 setTimeout(() => {
                     resolve("resolved");

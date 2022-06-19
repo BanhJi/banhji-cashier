@@ -1,6 +1,6 @@
 const axios = require('axios')
 const apiUrl = require('../../../apiUrl.js')
-const FormData = require('form-data')
+
 // List
 module.exports.list = async function () {
     try {
@@ -136,11 +136,14 @@ module.exports.sessionTxnReport = async (data) => {
         window.console.error(error)
     }
 }
-
+const instance = axios.create();
 const getToken = async () => {
     // let url = process.env.deployStage === 'dev' ? process.env.camisDev : process.env.camisProd
+    // let url = 'https://api-rupp.camemis-learn.com/rupp-api/v1'
     let url = 'https://api-rupp.camemis-learn.com/rupp-api/v1'
+    const FormData = require('form-data')
     let data = new FormData()
+    window.console.log(data, 'formdata')
     data.append('email', 'banhji@gmail.com')
     data.append('password', 'Dfa$UZpaG4TT-k%e')
     const config = {
@@ -148,25 +151,27 @@ const getToken = async () => {
         url: `${url}/identify`,
         headers: { 
           'Accept': 'application/json', 
-          'Content-Type': 'application/json', 
-          ...data.getHeaders()
+          'Content-Type': 'application/json'
         },
         data : data
     }
 
     try {
-        const result = await axios(config)
+        const result = await instance(config)
         return result.data.token
     } catch (err) {
+        window.console.log(err, 'error on get token')
         return err
     }
 }
 module.exports.notifyCamis = async (paymentCode) => {
     try {
         // let url = process.env.deployStage === 'dev' ? process.env.camisDev : process.env.camisProd
-        // let url = 'https://api-rupp.camemis-learn.com/rupp-api/v1'
-        let url = process.env.CAMIS_NOT
+        let url = 'https://api-rupp.camemis-learn.com/rupp-api/v1'
+        // let url = process.env.CAMIS_NOT
+        // window.console.log(paymentCode, 'handler camis')
         const token = await getToken()
+        // window.console.log(token, 'camis token')
         const config = {
             method: 'post',
             url: `${url}/paymentcode/${paymentCode}`,
@@ -176,9 +181,12 @@ module.exports.notifyCamis = async (paymentCode) => {
                 'Authorization': `Bearer ${token}`
             }
         }
-        const result = await axios(config)
+        // window.console.log(config, 'camis config')
+        const result = await instance(config)
+        // window.console.log(result, 'camis result')
         return result.data
     } catch (error) {
+        window.console.log(error, 'error on noti camis')
         return error
     }
 }

@@ -98,16 +98,8 @@
                                             :noRecords="true"
                                             :scrollable-virtual="true">
                                             <kendo-grid-column
-                                                :title="$t('number')"
-                                                :width="100"
-                                                :template="rowNumberTmpl"
-                                                :column-menu="false"
-                                                :headerAttributes="{style: 'background-color: #EDF1F5;',class: 'text-products' }"
-                                                :attributes="{ style: 'text-align: products'}"
-                                            />
-                                            <kendo-grid-column
                                                 :field="'user'"
-                                                :title="$t('cahsier')"
+                                                :title="$t('name')"
                                                 :width="200"
                                                 :template="'<span>#= user.user[\'custom:firstName\'] + \' \' + user.user[\'custom:lastName\']#</span>'"
                                                 :headerAttributes="{ style: 'background-color: #EDF1F5, color: green !important' }"
@@ -507,6 +499,7 @@ export default {
                     setTimeout(() => {
                         resolve('resolved');
                         let data = {
+                            module: 'session'
                         }
                         sessionHandler.getLastNumber(data).then(res => {
                             // window.console.log(res.data.data, 'last number')

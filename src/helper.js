@@ -43,7 +43,7 @@ const {
     taxHandler,
 } = require("@/scripts/AppHandlers");
 const {AccountTypeCode} = require("@/scripts/default_setup/Collections");
-
+const sessionHandler = require("@/scripts/session/handler/sessionHandler")
 let exports = {};
 
 
@@ -165,6 +165,27 @@ exports.getMaxNumberOfAccount = async (accountTypeCode) => {
     }
 
     return number;
+}
+exports.generateAccountingNumberA = async (prefixType, transactionDate) => {
+    // Prefix
+    // const prefixes = await prefixHandler.getAll();
+    // let pf = prefixes.find(value => value.type.toLowerCase() === prefixType.toLowerCase());
+
+    // Prefix Format "JE-yymm-00000"
+    // let shortPrefix = pf.abbr + pf.prefixSeparator + pf.structure + pf.numberSeparator,
+    //     fullPrefix = shortPrefix + '0'.repeat(pf.format) + '@Year';
+
+    // Last Number
+    let data = {
+        module: 'reconcile'
+    }
+    let lastNumbers = 1
+    await sessionHandler.getLastNumber(data).then((res) => {
+        lastNumbers = res.data.data.lastNumber
+    })
+    window.console.log(lastNumbers, 'ln')
+
+    return exports.applyPrefixNumber(lastNumbers, prefixType, transactionDate);
 }
 
 // Get Last Exchange Rate By Date

@@ -389,10 +389,16 @@ export default {
             this.generateNumber();
 
             // Reset lines and Add 2 default lines
+            let self = this
             setTimeout(() => {
-                if(this.notes.length == 0) {
-                    this.addRow()
-                    this.addRow()
+                if(self.notes !== undefined){
+                    if(Object.keys(self.notes).length == 0) {
+                        self.addRow()
+                        self.addRow()
+                    }
+                }else{
+                    self.addRow()
+                    self.addRow()
                 }
             }, 500)
         },
@@ -442,8 +448,8 @@ export default {
         async generateNumber() {
             // window.console.log(this.reconcile.transactionType)
             if (!this.isEdit) {
-                let num = await Helper.generateAccountingNumber(this.reconcile.type, this.reconcile.issuedDate);
-
+                let num = await Helper.generateAccountingNumberA(this.reconcile.type, this.reconcile.issuedDate);
+                window.console.log(num, 'num')
                 this.reconcile.number = num.number + '-2';
                 this.reconcile.prefix_format = num.prefix_format;
             }
