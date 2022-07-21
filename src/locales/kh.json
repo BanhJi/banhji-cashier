@@ -239,7 +239,7 @@
   "bank_reconciliation_bank_feeds": "ការផ្ទៀតផ្ទាត់គណនីធនាគារ(ស្វ័យប្រវត្តិ)",
   "bank_reconciliation_manually": "ការផ្ទៀតផ្ទាត់គណនីធនាគារ",
   "reconcile_date": "ថ្ងៃបិទបញ្ជី",
-  "ending_balance_date": "Ending Balance Date",
+  "ending_balance_date": "កាលបរិច្ឆេទចុងគ្រា",
   "select_cash_account": "ជ្រើសរើសគណនីសាច់ប្រាក់",
   "reported_beginning_balance": "Reported Beginning Balance",
   "cash_in": "សាច់ប្រាក់ចូល",
@@ -343,7 +343,7 @@
   "month": "ខែ",
   "year/month": "ឆ្នាំ/ខែ",
   "close_loan": "បិទសេវាឥណទាន",
-  "cash_reconciliation": "Cash Reconciliation",
+  "cash_reconciliation": "ការផ្ទៀងផ្ទាត់គណនីសាច់ប្រាក់",
   "counted_noted_amount": "ចំនួនទឹកប្រាក់ដែលបានកត់ត្រា",
   "add_new_transactions": "បង្កើតប្រតិបត្តិការថ្មី",
   "add_new_transaction": "បង្កើតប្រតិបត្តិការថ្ម",
@@ -3465,7 +3465,9 @@
   "print_receipt": "បោះពុម្ព",
   "default_last_reference_no": "លំនាំដើមលេខយោងចុងក្រោយ",
   "default_reconciliation_report_rorm": "លំនាំដើមទម្រង់របាយការណ៏ផ្ទៀងផ្ទាត់សាច់ប្រាក់",
-  "select": "ជ្រើសរើស"
+  "select": "ជ្រើសរើស",
+  "session_receipt_report": "របាយការណ៍ទទួលប្រាក់តាមវេន"
+
 
 
 

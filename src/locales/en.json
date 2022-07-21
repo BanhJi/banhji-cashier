@@ -3490,7 +3490,9 @@
     "banhji_cashier": "BanhJi Cashier",
     "print_receipt": "Print Receipt",
     "default_reconciliation_report_rorm": "Default Reconciliation Report Form",
-    "select": "Select"
+    "select": "Select",
+    "default_last_reference_no": "Default last reference no",
+    "session_receipt_report": "Session receipt report"
 
 
 
