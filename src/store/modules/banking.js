@@ -1,6 +1,6 @@
 const BankHandler = require("@/scripts/bankHandler.js");
 const BankAccountHandler = require("@/scripts/bankAccountHandler.js");
-const BankTransactionMappingHandler = require("@/scripts/bankTransactionMappingHandler.js");
+const bankMappingHandler = require("@/scripts/bankMappingHandler.js");
 
 // initial state
 const state = () => ({
@@ -96,7 +96,7 @@ const actions = {
     /* BANK MAPPING */
     async getBankMappings({ state, commit }) {
         if(!state.bankMappingLoaded){
-            let response = await BankTransactionMappingHandler.getAll();
+            let response = await bankMappingHandler.getAll();
             commit("setBankMappingLoaded", true);
             commit("setBankMappings", response.data);
         }

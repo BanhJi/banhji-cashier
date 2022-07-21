@@ -232,3 +232,10 @@ module.exports.fundingGet = async function () {
         window.console.error(error)
     }
 }
+module.exports.customerDetail = async function (strFilter = '') {
+    try {
+      return await axios.get(apiUrl.customer.customer_linev1 + strFilter)
+    } catch (error) {
+      window.console.error(error)
+    }
+  }

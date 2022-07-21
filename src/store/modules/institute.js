@@ -5,6 +5,7 @@ const { instituteId } = cookieJS.getCookie();
 const instituteHandler = require("@/scripts/instituteHandler.js");
 
 const defaultData = {
+    id : '',
     dateFormat : "dd-MM-yyyy",
     baseCurrency : {
         name : "United States dollar",
@@ -16,6 +17,7 @@ const defaultData = {
         symbol : "៛",
         code : "KHR"
     },
+    approvedReportingDate : new Date().getFullYear() + "-04-30T00:00:00.000Z",
     fiscalDate : [{
         end_date : new Date().getFullYear() + '-12-31',
         institute : "",
@@ -35,7 +37,26 @@ const state = () => ({
 })
 
 // getters
-const getters = {};
+const getters = {
+    instituteId (state) {
+        return state.institute.id;
+    },
+    dateFormat (state) {
+        return state.institute.dateFormat;
+    },
+    baseCurrency (state) {
+        return state.institute.baseCurrency;
+    },
+    reportingCurrency (state) {
+        return state.institute.reportingCurrency;
+    },
+    approvedReportingDate (state) {
+        return state.institute.approvedReportingDate;
+    },
+    fiscalDate (state) {
+        return state.institute.fiscalDate;
+    },
+};
 
 // actions
 const actions = {

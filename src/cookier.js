@@ -20,7 +20,7 @@ let getCookie = function (cname) {
 
 let getCookieData =  function (){
     // window.console.log('banhji-token-cashier' + process.env.VUE_APP_MODE, 'coookie')
-    let cookie = getCookie('banhji-token' + process.env.VUE_APP_MODE);
+    let cookie = getCookie('banhji-token-cashier' + process.env.VUE_APP_MODE);
     if (cookie !== ''){
         jwt.verify(cookie,process.env.VUE_APP_JWT_SESCRET, (err, decoded) => {
             if (!err){

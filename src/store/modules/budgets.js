@@ -1,4 +1,5 @@
 const BudgetHandler = require('@/scripts/handler/workingcapital/budgetHandler');
+const BudgetTypes = require('@/scripts/default_setup/BudgetTypes');
 
 // initial state
 const state = () => ({
@@ -7,7 +8,17 @@ const state = () => ({
 })
 
 // getters
-const getters = {}
+const getters = {
+    segment (state) {
+        return state.list.filter((item) => item.budget_type === BudgetTypes.STANDARD && item.segment_uuid !== "");
+    },
+    location (state) {
+        return state.list.filter((item) => item.budget_type === BudgetTypes.STANDARD && item.location_uuid !== "");
+    },
+    project (state) {
+        return state.list.filter((item) => item.budget_type === BudgetTypes.STANDARD && item.project_uuid !== "");
+    },
+}
 
 // actions
 const actions = {
@@ -20,20 +31,6 @@ const actions = {
 
         return state.list;
     },
-    addList({ commit }, list) {
-        commit("setList", list);
-        commit("setLoaded", true);
-    },
-    saveBudget({ state, commit }, budget) {
-        let index = state.list.findIndex(i => i.uuid === budget.uuid)
-        if (index > -1) { /* Update budget */
-            /* Replaces 1 element at specific index */
-            state.list.splice(index, 1, budget);
-        }else{
-            /* Add new budget */
-            commit("pushBudget", budget);
-        }
-    },
 }
 
 // mutations
@@ -44,8 +41,14 @@ const mutations = {
     setLoaded (state, status) {
         state.isLoaded = status
     },
-    pushBudget(state, budget) {
-        state.list.push(budget);
+    save(state, value){
+        let index = state.list.findIndex((item) => item.uuid === value.uuid);
+
+        if (index > -1) { /* Update */
+            Object.assign(state.list[index], value);
+        }else{/* Add New */
+            state.list.push(value);
+        }
     },
 }
 

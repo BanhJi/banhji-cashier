@@ -1,5 +1,7 @@
-const store = require("@/institute")
-const {institute} = store.default.state
+/* Store */
+import store from "@/store"
+const institute = store.state.institute.institute
+
 export default class CashReceipt {
     constructor(data = {}) {
             this.id                         = data.id || ''

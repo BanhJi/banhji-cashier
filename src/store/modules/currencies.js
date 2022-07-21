@@ -1,3 +1,4 @@
+import CurrencyModel from "@/scripts/model/Currency";
 const currencyHandler = require('@/scripts/currency/handler/currencyHandler');
 
 // initial state
@@ -7,7 +8,16 @@ const state = () => ({
 })
 
 // getters
-const getters = {}
+const getters = {
+    getByCode: (state) => (code) => {
+        let index = state.list.findIndex(item => item.code === code);
+        if(index > -1){
+            return state.list[index];
+        }else{
+            return new CurrencyModel();
+        }
+    },
+}
 
 // actions
 const actions = {

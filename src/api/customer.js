@@ -71,4 +71,5 @@ module.exports = {
     funding_get                                 : url + 'funding/institute/' + instituteId + '/get',
 
     customer_searchv1                           : url + 'customer-v1/institute/' + instituteId + '/search',
+    customer_linev1                             : url + 'customer-v1/institute/' + instituteId + '/customer-detail',
 }   

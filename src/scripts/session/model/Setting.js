@@ -7,6 +7,7 @@ export default class Setting {
         this.paymentOption = data.paymentOption || {}
         this.msgJournal = data.msgJournal || ''
         this.user = data.user || {}
+        this.segment = data.segment || ''
     }
 
     constuct(data) {

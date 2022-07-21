@@ -52,6 +52,19 @@
                                     ></v-text-field>
                             </td>
                         </tr>
+                        <tr>
+                            <td class="text-bold">{{ $t('segment') }}</td>
+                            <td style=""  class="primary--text align-center justify-center d-flex text-bold">
+                                <v-select class="mt-1"
+                                          v-model="s.segment"
+                                          :items="segments"
+                                          item-text="name"
+                                          item-value="id"
+                                          :placeholder="$t('search')"
+                                          outlined>
+                                </v-select>
+                            </td>
+                        </tr>
 <!--                        <tr>-->
 <!--                            <td class="text-bold">{{ $t('default_receipt_form') }}</td>-->
 <!--                            <td style=""  class="primary&#45;&#45;text align-center justify-center d-flex text-bold">-->
@@ -94,7 +107,7 @@ const OPTION_TYPE = 'Customer'
 const strFilter = '?optionType=' + OPTION_TYPE
 const cookieJS = require("@/cookie.js");
 const cookie = cookieJS.getCookie();
-
+const settingsHandler = require("@/scripts/settingsHandler");
 export default {
     components: {},
     data: () => ({
@@ -103,7 +116,8 @@ export default {
         decimalStyle: [2, 3, 4, 5],
         searchOptions: ['Invoice', 'CRN', 'Payment Code', 'Customer'],
         paymentOptions: [],
-        s: new SettingModel({})
+        s: new SettingModel({}),
+        segments: [],
     }),
     methods: {
         async onSaveClose() {
@@ -111,11 +125,9 @@ export default {
             this.s.user = cookie
             sessionHandler.cashierSettingCreate(new SettingModel(this.s)).then(response => {
                 if (response.data.statusCode === 201) {
-                    const res = response.data.data
                     window.console.log(response,'response')
-                    this.s = res
+                    this.loadSetting()
                     this.$snotify.success('Update Successfully')
-                    // this.$refs.form.reset()
                 }
             }).catch(e => {
                 this.$snotify.error('Something went wrong')
@@ -126,7 +138,7 @@ export default {
             sessionHandler.cashierSetting().then(res => {
                 if (res.data.statusCode === 200) {
                     const data = res.data.data.filter((obj) => {return obj.user.email == cookie.email})
-                    window.console.log(data, 'data email', res)
+                    window.console.log(data, 'setting', res)
                     if (data.length > 0) {
                         this.s = data[0]
                     }
@@ -150,10 +162,19 @@ export default {
                 }, 10)
             })
         },
+        loadSegment() {
+            settingsHandler.getSeg().then((res) => {
+                if (res.data.statusCode === 200) {
+                    this.segments = res.data.data
+                    window.console.log(this.segments)
+                }
+            })
+        },
     },
     mounted: async function () {
         await this.loadPaymentOption()
         await this.loadSetting()
+        await this.loadSegment();
     }
 }
 ;

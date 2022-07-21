@@ -25,6 +25,12 @@
                           {{ $t("session_reconciliation_report") }}
                         </span>
                       </v-tab>
+
+                       <v-tab :key="2" >
+                        <span>
+                          {{ $t("session_receipt_report") }}
+                        </span>
+                      </v-tab>
                
                     </v-col>
                   </v-row>
@@ -39,6 +45,13 @@
                     <v-card flat>
                       <v-card-text class="">
                         <SessionReconciliation/>
+                      </v-card-text>
+                    </v-card>
+                  </v-tab-item>
+                  <v-tab-item >
+                    <v-card flat>
+                      <v-card-text class="">
+                        <SessionReceipt/>
                       </v-card-text>
                     </v-card>
                   </v-tab-item>
@@ -60,7 +73,8 @@ export default {
   name: "Customers",
   components: {
     Collections: () => import("./Collections"),
-    SessionReconciliation: () => import("./SessionReconciliation")
+    SessionReconciliation: () => import("./SessionReconciliation"),
+    SessionReceipt: () => import("./SessionReceipt")
   },
   data: () => ({
     // active_tab: data.customer_tab.main

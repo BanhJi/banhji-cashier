@@ -281,7 +281,7 @@
 import kendo from '@progress/kendo-ui';
 import {i18n} from '@/i18n';
 import Helper from "@/helper.js";
-// import JQuery from 'jquery';
+import {uuid} from 'vue-uuid'
 import {
     ReconcileDetailModel,
     JournalModel,
@@ -294,9 +294,9 @@ import ReconcileModel from "@/scripts/session/model/Reconcile";
 const $ = kendo.jQuery;
 
 /* Store */
-import store from "@/store"
+// import store from "@/store"
 
-const institute = store.state.institute.institute
+// const institute = store.state.institute.institute
 const prefixHandler = require("@/scripts/prefixHandler")
 const {
     journalHandler,
@@ -313,6 +313,7 @@ const cookie = cookieJS.getCookie();
 const accountHandler = require("@/scripts/accountHandler")
 const saleFormContentHandler = require("@/scripts/saleFormContentHandler")
 import SessionModel from '@/scripts/session/model/Session'
+const instituteHandler = require("@/scripts/instituteHandler")
 export default {
     name: "CashReconciliation",
     components: {
@@ -363,7 +364,11 @@ export default {
             username: cookie.email,
             email: cookie.email
         },
-        saleFormContent: {}
+        saleFormContent: {},
+        baseCurrency: {},
+        setting: {},
+        journalId: uuid.v1(),
+        journal: new JournalModel(),
     }),
     methods: {
         // Initial Data
@@ -627,7 +632,7 @@ export default {
                 account: new AccountModel(debitAccount),
                 account_uuid: debitAccount.uuid,
                 description: this.reconcile.description,
-                currency: new CurrencyModel(institute.baseCurrency),
+                currency: new CurrencyModel(this.baseCurrency),
                 amount: amount,
                 exchange_rate: 1,// Base Currency always = 1
             }));
@@ -638,22 +643,25 @@ export default {
                 account: new AccountModel(creditAccount),
                 account_uuid: creditAccount.uuid,
                 description: this.reconcile.description,
-                currency: new CurrencyModel(institute.baseCurrency),
+                currency: new CurrencyModel(this.baseCurrency),
                 amount: amount * -1,
                 exchange_rate: 1,// Base Currency always = 1
             }));
 
             // Adjustment Journal
-            this.adjustmentJournal.number = this.reconcile.number;
+            this.adjustmentJournal.uuid = this.journalId;
+            this.adjustmentJournal.base_currency = this.baseCurrency;
+            this.adjustmentJournal.number = this.journal.number;
             this.adjustmentJournal.journal_type = EntityType.ADJUSTMENT;
             this.adjustmentJournal.transaction_type = EntityType.CASH_RECONCILIATION;
             this.adjustmentJournal.journal_date = Helper.toISODate(this.reconcile.issuedDate);
             this.adjustmentJournal.description = this.reconcile.description;
-            this.adjustmentJournal.prefix_format = this.reconcile.prefix_format;
+            this.adjustmentJournal.prefix_format = this.journal.prefix_format;
             this.adjustmentJournal.is_draft = this.reconcile.is_draft;
             this.adjustmentJournal.created_by = this.reconcile.created_by;
             this.adjustmentJournal.modified_by = this.reconcile.modified_by;
-
+            this.adjustmentJournal.segment_uuid = this.setting.segment;
+            this.adjustmentJournal.is_new = true;
             // Adjustment Entries
             this.adjustmentEntries = entries;
         },
@@ -795,13 +803,12 @@ export default {
             this.showLoading = true
             if(this.reconcile.is_draft == 0) {
                 this.adjustmentJournal.journal_entries = this.adjustmentEntries
+                window.console.log(this.setting, 'setting')
                 window.console.log(this.adjustmentJournal, 'journal')
-                journalHandler.save(new JournalModel(this.adjustmentJournal)).then(function (response) {
-                    self.reconcile.journalId = response.data.uuid
-                    window.console.log(response, 'journal res')
-                    sessionHandler.reconcileCreate(new ReconcileModel(self.reconcile)).then(function (res) {
-                        self.responseStatus(res.status);
-                    })
+                journalHandler.save(new JournalModel(this.adjustmentJournal))
+                this.reconcile.journalId = this.journalId
+                sessionHandler.reconcileCreate(new ReconcileModel(self.reconcile)).then(function (res) {
+                    self.responseStatus(res.status);
                 })
             }else{
                 this.activeSession.countNotes = notes
@@ -895,6 +902,7 @@ export default {
                         this.setDefaultData()
                         this.reconcile.account = data[0].paymentOption.account
                         this.notes = data[0].countNotes
+                        this.setting = data[0]
                     }else{
                         this.$snotify.error('Please setup setting!')
                         this.$router.push(`${i18n.locale}` + '/setting');
@@ -966,20 +974,21 @@ export default {
                 this.showLoading = false
                 this.loadSetting()
                 //Receivable Account
-                this.listAccounts = res.filter(m => m.account_type.number === 40).map(itm => {
-                    return {
-                        id: itm.uuid,
-                        name: itm.name,
-                        local_name: itm.local_name,
-                        number: itm.number,
-                        is_taxable: itm.is_taxable,
-                        banhjiAccCode: itm.banhjiAccCode,
-                        group_code: itm.group_code,
-                        parent_account: itm.parent_account,
-                        type_code: itm.type_code,
-                        uuid: itm.uuid,
-                    }
-                })
+                this.listAccounts = res.filter((m) => {return m.account_type.number == 40 })
+                //.filter(m => m.account_type.number === 40).map(itm => {
+                //     return {
+                //         id: itm.uuid,
+                //         name: itm.name,
+                //         local_name: itm.local_name,
+                //         number: itm.number,
+                //         is_taxable: itm.is_taxable,
+                //         banhjiAccCode: itm.banhjiAccCode,
+                //         group_code: itm.group_code,
+                //         parent_account: itm.parent_account,
+                //         type_code: itm.type_code,
+                //         uuid: itm.uuid,
+                //     }
+                // })
             })
         },
         async loadSingleData() {
@@ -1039,6 +1048,27 @@ export default {
             //     }
             // })
         },
+        async loadBaseCurrency() {
+            new Promise(resolve => {
+                setTimeout(() => {
+                    instituteHandler.getOneCompany(cookie.instituteId).then(res => {
+                        this.baseCurrency = res.baseCurrency
+                    })
+                    resolve('resolved');
+                }, 200);
+            });
+        },
+        // Number
+		async generateJNumber() {
+            let num = await Helper.generateAccountingNumber(
+                'cash_reconciliation',
+                this.journal.journal_date
+            );
+
+            this.journal.number = num.number;
+            this.journal.prefix_format = num.prefix_format;
+            window.console.log(this.journal, 'journal num get')
+		},
     },
     watch: {
         '$route': 'loadSingleData',
@@ -1050,6 +1080,8 @@ export default {
         // Initial Data
         this.loadSingleData();
         this.loadSaleFormContent()
+        this.loadBaseCurrency()
+        this.generateJNumber()
     },
 };
 </script>

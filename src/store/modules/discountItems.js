@@ -1,4 +1,5 @@
 const discountItemHandler = require('@/scripts/discountItemHandler');
+const defaultDiscountItem = {id:"",name:""};
 
 // initial state
 const state = () => ({
@@ -7,22 +8,34 @@ const state = () => ({
 })
 
 // getters
-const getters = {}
+const getters = {
+    getById: (state) => (id) => {
+        let index = state.list.findIndex(item => item.id === id);
+        if(index > -1){
+            return state.list[index];
+        }else{
+            return defaultDiscountItem;
+        }
+    },
+    purchase (state) {
+        return state.list.filter(item => item.type.toLowerCase() === "purchase");
+    },
+}
 
 // actions
 const actions = {
     async getList ({ state, commit }) {
         if(!state.isLoaded){
+            commit("setLoaded", true);
             let response = await discountItemHandler.getAll();
             commit("setList", response.data.data);
-            commit("setLoaded", true);
         }
 
         return state.list;
     },
     addList({ commit }, list) {
-        commit("setList", list);
         commit("setLoaded", true);
+        commit("setList", list);
     },
 }
 

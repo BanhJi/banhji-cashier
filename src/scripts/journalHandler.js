@@ -59,7 +59,11 @@ module.exports.getJournalByPrimaryContact = async (id, params) => {
 // SAVE
 module.exports.save = async (data) => {
     try {
-        const response = await axios.post(apiUrl.journals, data);
+        let str = ''
+        if(data.is_new == true){
+            str = '?is_new=true'
+        }
+        const response = await axios.post(apiUrl.journals + str, data);
         
         return response;
     } catch (error) {

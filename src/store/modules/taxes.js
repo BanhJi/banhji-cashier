@@ -1,4 +1,5 @@
 const taxHandler = require('@/scripts/taxHandler');
+const defaultTax = {id:"",name:""};
 
 // initial state
 const state = () => ({
@@ -7,22 +8,30 @@ const state = () => ({
 })
 
 // getters
-const getters = {}
+const getters = {
+    getById: (state) => (id) => {
+        let index = state.list.findIndex(item => item.id === id);
+        if(index > -1){
+            return state.list[index];
+        }else{
+            return defaultTax;
+        }
+    },
+    purchase (state) {
+        return state.list.filter(item => item.transactionType.toLowerCase() === "purchase");
+    },
+}
 
 // actions
 const actions = {
     async getList ({ state, commit }) {
         if(!state.isLoaded){
+            commit("setLoaded", true);
             let response = await taxHandler.getAll();
             commit("setList", response.data.data);
-            commit("setLoaded", true);
         }
 
         return state.list;
-    },
-    addList({ commit }, list) {
-        commit("setList", list);
-        commit("setLoaded", true);
     },
 }
 

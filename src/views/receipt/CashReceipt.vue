@@ -653,7 +653,7 @@
 <script>
 import {i18n} from '@/i18n';
 import {DropDownList} from '@progress/kendo-vue-dropdowns'
-
+const axios = require('axios')
 import DatePickerComponent from '@/components/custom_templates/DatePickerComponent'
 import CashReceiptModel from "@/scripts/cash-receipt/model/CashReceipt";
 import ItemLineModel from "@/scripts/cash-receipt/model/ItemLine";
@@ -709,6 +709,7 @@ export default {
         'barcode': Barcode
     },
     data: () => ({
+        camisRefNum: [],
         check_id_edit: false,
         PaymentOptionEditor: PaymentOptionEditor,
         showLoading: false,
@@ -745,6 +746,7 @@ export default {
         transactionTypes: [],
         customers: [],
         mCustomer: {},
+        customer: {},
         defaultItem: defaultItem,
         cusBaseUrl: customerHandler.search(),
         filter: '',
@@ -912,51 +914,59 @@ export default {
                 window.console.log(e)
             })
         },
-        // loadPaymentOption(){
-        //     this.showLoading = true
-        //     let data = {
-        //         user_name : cookie.email
-        //     }
-        //     sessionHandler.checkSession(data).then(res => {
-        //         this.showLoading = false
-        //         if(res.data.data.length > 0){
-        //             this.hasSession = true
-        //             this.activeSession = res.data.data[0]
-        //         }else{
-        //             this.$snotify.error('Please start session!')
-        //             this.$router.go(-1);
-        //         }
-        //     }).catch(e => {
-        //         this.showLoading = false
-        //         this.$snotify.error('Something went wrong')
-        //         this.errors.push(e)
-        //         window.console.log(e)
-        //     })
-        // },
-        // async loadTransactionRate(code) {
-        //     new Promise(resolve => {
-        //         setTimeout(() => {
-        //             resolve('resolved')
-        //             const date = new Date(this.transactionDate).toISOString().substr(0, 10)
-        //             // const priceLevel = this.invoice.priceLevel
-        //             if (code !== undefined || code !== '') {
-        //                 this.showLoading = true
-        //                 currencyHandler.getLastExchangeRateByDate(date, code).then(res => {
-        //                     if (res.data.statusCode === 200) {
-        //                         this.showLoading = false
-        //                         const exchangeRate = res.data.data
-        //                         this.currencyCode = exchangeRate.code
-        //                         this.transactionRate = exchangeRate.rate
-        //                         this.cashReceipt.txnRate = exchangeRate.rate
-        //                         this.cashReceipt.exchangeRate = exchangeRate
-        //                         this.showLoading = false
-        //                     }
-        //                 })
-        //             }
-        //
-        //         }, 10)
-        //     })
-        // },
+        async getToken(){
+            const instance = axios.create();
+            let url = 'https://api-rupp.camemis-learn.com/rupp-api/v1'
+            const FormData = require('form-data')
+            let data = new FormData()
+            window.console.log(data, 'formdata')
+            data.append('email', 'banhji@gmail.com')
+            data.append('password', 'Dfa$UZpaG4TT-k%e')
+            const config = {
+                method: 'post',
+                url: `${url}/identify`,
+                headers: { 
+                'Accept': 'application/json', 
+                'Content-Type': 'application/json'
+                },
+                data : data
+            }
+
+            try {
+                const result = await instance(config)
+                return result.data.token
+            } catch (err) {
+                window.console.log(err, 'error on get token')
+                return err
+            }
+        },
+        async notifyCamis (paymentCode){
+            const instance = axios.create();
+            try {
+                // let url = process.env.deployStage === 'dev' ? process.env.camisDev : process.env.camisProd
+                let url = 'https://api-rupp.camemis-learn.com/rupp-api/v1'
+                // let url = process.env.CAMIS_NOT
+                // window.console.log(paymentCode, 'handler camis')
+                const token = await this.getToken()
+                // window.console.log(token, 'camis token')
+                const config = {
+                    method: 'post',
+                    url: `${url}/paymentcode/${paymentCode}`,
+                    headers: {
+                        'Accept': 'application/json', 
+                        'Content-Type': 'application/json', 
+                        'Authorization': `Bearer ${token}`
+                    }
+                }
+                // window.console.log(config, 'camis config')
+                const result = await instance(config)
+                window.console.log(result, 'camis result')
+                // return result.data
+            } catch (error) {
+                window.console.log(error, 'error on noti camis')
+                // return error
+            }
+        },
         async initData() {
             this.checkSession()
             if (this.$route.params.id !== undefined) {
@@ -1694,11 +1704,65 @@ export default {
             }
             return ''
         },
-        onCustomerChanged(event) {
+        async onCustomerChanged(event) {
             const value = event.value
             if (value && value[textField] === emptyItem[textField]) {
                 return;
             }
+            this.mCustomer = value
+            this.cashReceipt.customer = value
+            await this.loadCustomerDetail(value.id);
+        },
+        async loadCustomerDetail(customerId) {
+            try {
+                const strFilter = "?id=" + customerId;
+                customerHandler.customerDetail(strFilter).then((res) => {
+                    if (res.data.statusCode === 200) {
+                        const lines = res.data.data || [];
+                        lines.forEach((item) => {
+                            this.customer = {
+                                id: item.id,
+                                type: item.type || {},
+                                isDonor: item.isDonor || false,
+                                crn: item.crn || "",
+                                customerType: item.customerType || {},
+                                number: item.number || "",
+                                numberName: (item.number || "") + " - " + (item.name || ""),
+                                name: item.name || "",
+                                connectId: item.connectId || "",
+                                gender: item.gender || "",
+                                alternativeName: item.alternativeName || "",
+                                taxId: item.taxId || "",
+                                consumerId: item.consumerId || "",
+                                registeredDate: item.registeredDate || "",
+                                customerGroup: item.customerGroup,
+                                receivableAcc: item.receivableAcc,
+                                saleDepositAcc: item.saleDepositAcc,
+                                saleDiscountAcc: item.saleDiscountAcc,
+                                priceLevel: item.priceLevel,
+                                billPayment: item.billPayment,
+                                cashPayment: item.cashPayment || {},
+                                qrPayment: item.qrPayment || {},
+                                nature: item.nature,
+                                image: item.image || {},
+                                noteOnInvoice: item.noteOnInvoice || "",
+                                billingAddress: item.billingAddress,
+                                contactPerson: item.contactPerson,
+                                deliveryAddress: item.deliveryAddress,
+                                email: item.email,
+                                baseCurrency: item.baseCurrency,
+                                decimalFormat: item.decimalFormat,
+                            };
+                        });
+                        window.console.log("this.customer", this.customer);
+                        this.onCustomerDropdownChange(this.customer);
+                    }
+                });
+            } catch (e) {
+                window.console.log("Error on customer detail", e);
+            }
+        },
+        onCustomerDropdownChange(value){
             this.mCustomer = value
             this.cashReceipt.customer = value
         },
@@ -1935,6 +1999,7 @@ export default {
                                 billingHandler.search(data).then(res => {
                                     window.console.log(" billing search=", res)
                                     this.showLoading = false
+                                    this.camisRefNum = []
                                     if (res.data.statusCode === 200) {
                                         const response = res.data.data
                                         const result = res.data.result
@@ -1947,6 +2012,11 @@ export default {
                                                 this.txnPrint.transactionNote = ele.txnNote
                                                 this.txnPrint.invoiceNumber = ele.referenceNo
                                                 this.txnPrint.paymentCode = ele.paymentCode
+                                                if(ele.refNum != ''){
+                                                    this.camisRefNum.push({
+                                                        refNum: ele.refNum
+                                                    })
+                                                }
                                             })
                                             this.itemLines = response
                                             window.console.log(this.itemLines, 'after search')
@@ -2018,6 +2088,10 @@ export default {
                         dataValidate += 1
                     }
                 });
+                window.console.log(this.camisRefNum, 'reffff camis')
+                // this.camisRefNum.push({
+                //     refNum: 'abc'
+                // })
                 if (dataRow.length === dataValidate) {
                     let isAutoGenerate = 1
                     // this.autoCalculate()
@@ -2033,7 +2107,8 @@ export default {
                     //todo: match Cash receipt model
                     this.cashReceipt.paidOption = this.mPaymentOption
                     this.cashReceipt.transactionDateTZ = Helper.toISODate(this.cashReceipt.transactionDate)
-                    this.cashReceipt.paidOptionText = this.search ? this.search : this.mCustomer
+                    this.cashReceipt.paidOptionText = this.search ? this.search : this.customer
+                    window.console.log(this.cashReceipt.paidOptionText, this.search, this.customer, 'paid option text')
                     this.cashReceipt.itemLine = dataRow
                     this.cashReceipt['jRaw'] = this.jRaw
                     this.cashReceipt.loggedUser = this.loggedUser
@@ -2059,6 +2134,11 @@ export default {
                     billingHandler.createReceipt(this.cashReceipt).then(response => {
                         if (response.data.statusCode === 201) {
                             this.showLoading = false
+                            if(this.camisRefNum.length > 0){
+                                this.camisRefNum.forEach(r => {
+                                    this.notifyCamis(r.refNum)
+                                })
+                            }
                             this.printForm()
                             window.console.log(response, 'response')
                             this.saveTxnSession(response.data.data.id)

@@ -1,3 +1,4 @@
+import PaymentTermModel from "@/scripts/model/PaymentTerm";
 const paymentTermHandler = require('@/scripts/paymentTermHandler');
 
 // initial state
@@ -7,22 +8,31 @@ const state = () => ({
 })
 
 // getters
-const getters = {}
+const getters = {
+    getById: (state) => (id) => {
+        let index = state.list.findIndex(item => item.id === id);
+        if(index > -1){
+            return state.list[index];
+        }else{
+            return new PaymentTermModel();
+        }
+    },
+}
 
 // actions
 const actions = {
     async getList({state, commit}) {
         if (!state.isLoaded) {
+            commit("setLoaded", true);
             let response = await paymentTermHandler.getAll();
             commit("setList", response.data.data);
-            commit("setLoaded", true);
         }
 
         return state.list;
     },
     addList({commit}, list) {
-        commit("setList", list);
         commit("setLoaded", true);
+        commit("setList", list);
     },
 }
 

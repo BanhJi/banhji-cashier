@@ -83,7 +83,8 @@ exports.applyPrefixNumber = async (lastNumber, prefixType, transactionDate) => {
     num.prefix = pf
     if (pf) {
         // Prefix Format "JE-yymm-00000"
-        num.prefix_format = pf.abbr + pf.prefixSeparator + pf.structure + pf.numberSeparator + '0'.repeat(pf.format);
+        num.prefix_format = pf.abbr + pf.prefixSeparator + pf.structure + pf.numberSeparator + '0'.repeat(pf.format) + `@${pf.sequcencing}`;
+        //pf.abbr + pf.prefixSeparator + pf.structure + pf.numberSeparator + '0'.repeat(pf.format);
 
         // Structure
         let structure = '', txnDate = new Date(transactionDate);
@@ -135,18 +136,87 @@ exports.applyPrefixNumber = async (lastNumber, prefixType, transactionDate) => {
 
 // Get Last Number
 exports.generateAccountingNumber = async (prefixType, transactionDate) => {
-    // Prefix
-    const prefixes = await prefixHandler.getAll();
-    let pf = prefixes.find(value => value.type.toLowerCase() === prefixType.toLowerCase());
+    // window.console.log(prefixType, 'pp type')
+    // Call All Prefixes
+    // window.console.log(store, 'stor')
+    let prefixes = await prefixHandler.getAll();
+    prefixes.forEach(e => {
+        window.console.log(e.type)
+    })
+    let pp = prefixes.filter((m) => {return m.type.toLowerCase() == prefixType.toLowerCase()})
+    window.console.log(pp, 'pfilter')
+    if(pp.length == 0){
+        alert('No transaction type')
+        return;
+    }
+    let pf = pp[0] //prefixes.find(value => value.type.toLowerCase() === prefixType.toLowerCase());
+    // Structure
+    let structure = '', txnDate = new Date(transactionDate);
+    switch (pf.structure.toLowerCase()) {
+        case 'yyyy':
+            structure = txnDate.getFullYear().toString();
+            break;
+        case 'yy':
+            structure = txnDate.getFullYear().toString().substr(2);
+            break;
+        case 'yyyymm':
+            structure = txnDate.getFullYear().toString() + (txnDate.getMonth() + 1).toString().padStart(2, '0');
+            break;
+        case 'yymm':
+            structure = txnDate.getFullYear().toString().substr(2) + (txnDate.getMonth() + 1).toString().padStart(2, '0');
+            break;
+
+        default:// None structure
+            break;
+    }
 
     // Prefix Format "JE-yymm-00000"
-    let shortPrefix = pf.abbr + pf.prefixSeparator + pf.structure + pf.numberSeparator,
-        fullPrefix = shortPrefix + '0'.repeat(pf.format) + '@Year';
+    let shortPrefix = pf.abbr + pf.prefixSeparator + structure + pf.numberSeparator,
+        fullPrefix = pf.abbr + pf.prefixSeparator + pf.structure + pf.numberSeparator + '0'.repeat(pf.format) + `@${pf.sequcencing}`;
+    // Call Last Number
+    const lastNumberResponse = await prefixHandler.lastNumber({
+        params : {
+            prefix          : fullPrefix,
+            shorten_prefix  : shortPrefix,
+            journal_date    : transactionDate,
+        }
+    });
+    const lastNumbers = lastNumberResponse.data;
 
-    // Last Number
-    const lastNumbers = await prefixHandler.lastNumber(fullPrefix, transactionDate, shortPrefix);
+    /* Starting Number */
+    let lastNumber = pf.number;
+    /* Sequcencing */
+    switch (pf.sequcencing.toLowerCase()) {
+        case 'month':// Month
+            if(kendo.parseInt(lastNumbers.monthly_last_number) !== 0){
+                lastNumber = kendo.parseInt(lastNumbers.monthly_last_number) + 1;
+            }
 
-    return exports.applyPrefixNumber(lastNumbers.data.last_number, prefixType, transactionDate);
+            break;
+        case 'year':// Year
+            if(kendo.parseInt(lastNumbers.yearly_last_number) !== 0){
+                lastNumber = kendo.parseInt(lastNumbers.yearly_last_number) + 1;
+            }
+
+            break;
+        default:// Prefix
+            if(kendo.parseInt(lastNumbers.last_number) !== 0){
+                lastNumber = kendo.parseInt(lastNumbers.last_number) + 1;
+            }
+            
+            break;
+    }
+
+    /* Full Number */
+    let number = pf.abbr + pf.prefixSeparator + structure + pf.numberSeparator + lastNumber.toString().padStart(pf.format, '0');
+
+    /* Result */
+    return {
+        number: number,
+        last_number: lastNumber,
+        prefix_format: fullPrefix,
+        prefix: pf,
+    }
 }
 
 // Get Max Number Of Account
